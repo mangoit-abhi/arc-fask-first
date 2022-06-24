@@ -1,0 +1,100 @@
+
+.toolbar {
+    padding: 5px;
+    margin: 10px;
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+#editor {
+    position: relative;
+}
+
+#pair_editor {
+    width: 1000px;
+}
+
+#grids_space {
+    width: 1000px;
+    position: relative;
+}
+
+.edition_grid {
+    width: 470px;
+    height: 470px;
+    padding: 10px;
+}
+
+#input_window {
+    width: 490px;
+    background-color: #eee;
+    position: absolute;
+    top: 0;
+    left: 10px;
+}
+
+#output_window {
+    width: 490px;
+    background-color: #eee;
+    position: absolute;
+    top: 0;
+    left: 500px;
+}
+
+#error_display {
+    height: 90px;
+    width: 550px;
+    position: absolute;
+    left: 1000px;
+    top: 0;
+    display: none;
+}
+
+#info_display {
+    height: 90px;
+    width: 550px;
+    position: absolute;
+    left: 1000px;
+    top: 0;
+}
+
+#task_preview {
+    position: absolute;
+    left: 1000px;
+    top: 120px;
+    background: #eee;
+    width: 590px;
+    overflow-y: scroll;
+}
+
+#symbol_toolbar {
+    height: 25px;
+}
+
+#symbol_actions {
+    float: left;
+    margin-right: 15px;
+}
+
+.pair_preview {
+    height: 200px;
+    width: 100%;
+    padding: 3px;
+}
+.pair_preview button {
+    margin: 4px;
+}
+.input_preview {
+    height: 190px;
+    width: 200px;
+    margin: 4px;
+    float: left;
+}
+.output_preview {
+    height: 190px;
+    width: 200px;
+    margin: 4px;
+    float: left;
+}
+.selected_for_testing {
+    background: #65d789;
+}

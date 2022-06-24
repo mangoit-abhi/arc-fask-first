@@ -1,0 +1,11 @@
+<div class="navbar">
+  <a {% if location == "home" %}class="active"{% endif %} href="/">ARC Home</a>
+  <a {% if location == "playground" %}class="active"{% endif %} href="/playground">Playground</a>
+  {% if logged_in %}
+  <a {% if location == "editor" %}class="active"{% endif %} href="/editor">Task editor</a>
+  <a href="/logout">Logout</a>
+  {% else %}
+  <a {% if location == "login" %}class="active"{% endif %} href="/logout">Login</a>
+  <a {% if location == "register" %}class="active"{% endif %} href="/register">Register</a>
+  {% endif %}
+</div>
