@@ -1,3 +1,4 @@
 google-cloud-ndb==1.11.1
 flask==2.1.2
 flask-login==0.6.1
+SQLAlchemy==1.4.37
