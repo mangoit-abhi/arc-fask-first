@@ -96,12 +96,12 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     }
     var jqInputGrid = pairSlot.find('.input_preview');
     if (!jqInputGrid.length) {
-        jqInputGrid = $('<div class="input_preview"></div>');
+        jqInputGrid = $('<div class="input_preview"> <span>test<span></div>');
         jqInputGrid.appendTo(pairSlot);
     }
     var jqOutputGrid = pairSlot.find('.output_preview');
     if (!jqOutputGrid.length) {
-        jqOutputGrid = $('<div class="output_preview"></div>');
+        jqOutputGrid = $('<div class="output_preview"><span>test<span></div>');
         jqOutputGrid.appendTo(pairSlot);
     }
 

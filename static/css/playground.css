@@ -20,11 +20,11 @@
 
 #input-view {
     float: left;
-    width: 400px;
+    width: 100%;
     margin: 10px;
-    background-color: #eee;
-    padding: 10px;
-}
+    background-color: transparent;
+    padding: 0;
+  }
 
 #evaluation_output_editor {
     float: left;
@@ -109,6 +109,47 @@ input, button {
     margin-left: 0;
 }
 
+.evalution_outer_box {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #evaluation_input {
+    width: 48%;
+    flex: 0 0 49%;
+    margin-left: 0px;
+    padding: 0 25px;
+    margin-right: 2%;
+    background: #f2f2f2;
+    border-radius: 10px;
+  }
+
+  .toolbar-outer > div {
+    width: 49%;
+    float: right;
+  }
+
+  #evaluation_view {
+    float: left;
+    width: 50%;
+    flex: 0 0 48%;
+    padding-right: 15px;
+    background: #f2f2f2;
+    border-radius: 10px;
+    padding: 0 24px;
+  }
+
+  #evaluation_view {
+    float: left;
+    width: 50%;
+    flex: 0 0 49%;
+    padding-right: 15px;
+  }
+
+  .toolbar-outer {
+    width: 100%;
+    margin-top: 25px;
+  }
+
 /*Task demonstration*/
 
 .pair_preview {
@@ -120,13 +161,13 @@ input, button {
     height: 200px;
     width: 200px;
     float: left;
-}
-.output_preview {
+  }
+  .output_preview {
     height: 200px;
     width: 200px;
     float: left;
-    margin-left: 10px;
-}
+    margin-left: 0;
+  }
 
 .text {
     text-align: center;
@@ -135,6 +176,10 @@ input, button {
     padding-bottom: 5px;
     margin-bottom: 10px;
 }
+
+#demonstration_examples_view #task_preview .row > div {
+    width: 100% !important;
+  }
 
 #task_demo_header {
     margin: 0px;

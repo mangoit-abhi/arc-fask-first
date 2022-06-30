@@ -540,9 +540,13 @@ body .text {
 #demonstration_examples_view #task_preview .pair_preview {
   
  
-  padding: 20px 0;
+  padding: 20px 10px;
   font-size: 30px;
   text-align: center;
+}
+
+#demonstration_examples_view #task_preview .pair_preview > div {
+  padding: 0 10px;
 }
 
 
