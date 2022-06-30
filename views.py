@@ -41,7 +41,7 @@ def logout():
 
 def login_post():
     if request.method == "POST":
-        email = flask.request.form.get('email')
+        email = flask.request.form.get('login_email')
         error = user_utils.validate_email_string(email)
         if error:
             login_err_data = error
@@ -52,7 +52,7 @@ def login_post():
             login_err_data = 'Email not Registered'
             login_error = True
             return jsonify(login_err_data)
-        password = flask.request.form.get('password') + user.password_salt
+        password = flask.request.form.get('login_password') + user.password_salt
         valid = security.check_password_hash(user.password_hash, password)
         if not valid:
             login_err_data = 'email/password Combination Mismatch'
@@ -66,9 +66,9 @@ def login_post():
 def register_post():
     if request.method == "POST":
         register_error = False
-        email = request.form.get('email')
-        password = request.form.get('password')
-        confirm_password = request.form.get('confirm_password')
+        email = request.form.get('register_email')
+        password = request.form.get('register_password')
+        confirm_password = request.form.get('register_confirm_password')
 
         error_email = user_utils.validate_email_string(email)
         if error_email:
