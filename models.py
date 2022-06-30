@@ -1,6 +1,8 @@
 # from google.cloud import ndb
 from datetime import datetime
 from main import db
+from itsdangerous.serializer import Serializer
+import config
 
 
 class Task(db.Model):
@@ -32,7 +34,20 @@ class User(db.Model):
 
     def is_anonymous(self):
         return False
-
+    
     def get_id(self):
-        return True
+        return self.id
+    
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(config.SECRET_KEY)
+        return s.dumps({'user_id': self.id})
+    
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(config.SECRET_KEY)
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
      

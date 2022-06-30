@@ -1,4 +1,3 @@
-
 MAX_SYMBOL = 9
 
 def validate_task_format(data):

@@ -9,7 +9,24 @@
         <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
     </head>
     <body>
-        {{navbar|safe}}
+        {% include "navbar.html" %}
+        <!-- <div>
+            {% if data%}
+            <div>
+                <b> Whole Json Data is</b>
+                <p>{{ data }}</p>
+            </div>
+            <div>
+                <b> Json Text is</b>
+                <p>{{ data.text }}</p>
+            </div>
+            <div>
+                <b> Json Image File is</b><br>
+                <img src="{{ data.image }}">
+            </div>
+            {% endif %}
+
+        </div> -->
 
         <div class="text_content">
             <h1>Welcome to the ARC 2 launchpad.</h1>

@@ -1,0 +1,26 @@
+
+<div class="container">
+    <div class="title-wrapper">
+        <h1 class="title">Reset Pasword</h1>
+    </div>
+    <div class="login-wrapper">
+        {% if error %}
+        <p id="reset_error_data">{{ error }}</p>
+        {% endif %}
+        <form class="login-form" method="POST">
+            <div class="form_input">
+                <label for="reset_password">Password:</label>
+                <input id="reset_password" name="reset_password" type="password" placeholder="" class="textbox"/><br>
+            </div>
+            <div class="form_input">
+                <label for="reset_confirm_password">Confirm Password:</label>
+                <input id="reset_confirm_password" name="reset_confirm_password" type="password" placeholder="" class="textbox"/><br>
+            </div>
+            <div class="form-input">
+                <button type="submit" id="new_password">New Password</button>
+            </div>
+        </form>
+        
+    </div>
+</div>
+

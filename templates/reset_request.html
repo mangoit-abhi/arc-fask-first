@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        {{navbar|safe}}
+        <div class="container">
+            {% if msg %}
+            {{ msg }}
+            {% endif %}
+            <div class="title-wrapper">
+                <h1 class="title">Reset Pasword</h1>
+            </div>
+            <div class="login-wrapper">
+                <form class="login-form" action="" method="POST">
+                    <div class="form_input">
+                        <label for="email">Email:</label>
+                        <input id="email" name="email" type="text" class="textbox"/>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" id="reset_button">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
