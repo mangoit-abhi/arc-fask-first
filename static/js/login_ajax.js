@@ -8,7 +8,7 @@ $(document).ready(function(){
             $.ajax({
                 url:"/login_post",
                 method:"POST",
-                data:{email:email, password:password},
+                data:{login_email:email, login_password:password},
                 success:function(data)
                     {
                         if(data)

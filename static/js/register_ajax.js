@@ -10,7 +10,7 @@ $(document).ready(function(){
             $.ajax({
                 url:"/register_post",
                 method:"POST",
-                data:{email:email, password:password, confirm_password:confirm_password},
+                data:{register_email:email, register_password:password, register_confirm_password:confirm_password},
                 success:function(data)
                     {
                         if(data)
