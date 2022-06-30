@@ -139,7 +139,7 @@ function loadJSONTask(train, test) {
 function display_task_name(task_name, task_index, number_of_tasks) {
     big_space = '&nbsp;'.repeat(4); 
     document.getElementById('task_name').innerHTML = (
-        'Task name:' + big_space + task_name + big_space + (
+        '<strong>Task name: </strong>'+  task_name + big_space + '<strong>Task Number: </strong>' +  (
             task_index===null ? '' :
             ( String(task_index) + ' out of ' + String(number_of_tasks) )
         )
@@ -186,7 +186,7 @@ function randomTask() {
                 return;
             }
             loadJSONTask(train, test);
-            infoMsg('Loaded ARC 1 task training/' + task["name"] + '. ' +
+            infoMsg('Loaded ARC 1 task training/' + task["name"] + '. ' + '<br/>' +
                     'Given the task demonstration on the right, ' +
                     'can you find the correct output grid for this test input grid?');
             display_task_name(task['name'], task_index, tasks.length);
