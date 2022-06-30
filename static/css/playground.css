@@ -1,23 +1,21 @@
+
+
 #workspace {
-    width: 1500px;
-    margin-left: 10px;
+    width: 100%;
+    
 }
 
 #demonstration_examples_view {
     float: left;
-    width: 450px;
-    margin: 10px;
+    width: 100%;
+    margin: 15px 0;
     margin-right: 5px;
-    background-color: #eee;
+    
 }
 
 #evaluation_view {
     float: left;
-    width: 520px;
-    margin: 10px;
-    margin-left: 5px;
-    background-color: #eee;
-    overflow: hidden;
+    width: 100%;
 }
 
 #input-view {
@@ -114,9 +112,9 @@ input, button {
 /*Task demonstration*/
 
 .pair_preview {
-    height: 200px;
+    
     padding: 5px;
-    border-bottom: solid 5px #fff;
+    
 }
 .input_preview {
     height: 200px;
@@ -127,7 +125,7 @@ input, button {
     height: 200px;
     width: 200px;
     float: left;
-    margin-left: 35px;
+    margin-left: 10px;
 }
 
 .text {
@@ -139,7 +137,7 @@ input, button {
 }
 
 #task_demo_header {
-    margin: 10px;
+    margin: 0px;
 }
 
 #error_display {

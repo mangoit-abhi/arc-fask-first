@@ -74,15 +74,15 @@
 /*Message display*/
 
 #error_display {
-    background-color: red;
-    color: white;
+   
+    color: red;
     float: left;
     padding: 10px;
 }
 
 #info_display {
-    background-color: green;
-    color: white;
+   
+    color: green;
     float: left;
     padding: 20px;
 }

@@ -6,6 +6,8 @@
   --border-color:#ECE9E9;
   --grey-bg : #FAFAFA;
   --bg-white :#fff;
+  --dark-grey:#EFEFEF;
+  --primary-button : #FC6B2C;
 }
 
 * {
@@ -415,6 +417,135 @@ body .f-right {
 .grey-bg .container img {
   width: 600px;
 }
+
+.modal-dialog{
+  max-width: 90%;
+}
+.login-register-popup-wrapper {
+  display: flex;
+}
+.login-register-popup-left, .login-register-popup-right {
+  max-width: 50%;
+  flex: 0 0 50%;
+  padding: 0 15px;
+}
+
+.login-register-popup-right h3, .login-register-popup-left h3{
+  text-transform: uppercase;
+  font-size: 17px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-open .modal {
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.6);
+}
+
+.show {
+  opacity: 1;
+}
+
+
+/* playground */
+
+body #evaluation_output_editor.load-task {
+  width: 100%;
+  background: var(--dark-grey);
+  margin-top: 15px;
+  border-radius: 15px;
+}
+
+
+
+.load-task #load_task_control_btns {
+  background: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.load-task #load_task_control_btns label {
+  margin-bottom: 0px;
+  font-size: 20px;
+  font-weight: 400;
+  color: #000;
+}
+
+.load-task #load_task_control_btns button,
+.load-task #load_task_control_btns input[type="button"] {
+  background: var(--primary-button);
+  font-size: 20px;
+  color: #fff;
+  height: 37px;
+  line-height: 37px;
+  padding: 0 15px;
+  border:none;
+  border-radius: 10px;
+}
+
+.error-display-outer {
+  width: 100%;
+  display: inline-block;
+  background: var(--dark-grey);
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 400;
+}
+body .text {
+   background: #999999;
+   text-align: left;
+   padding: 10px 20px;
+   font-size: 25px;
+   border-radius: 10px;
+   color: #fff;
+   margin-bottom: 25px !important;
+}
+
+#demonstration_examples_view #task_preview .row {
+  margin: 0;
+}
+
+#demonstration_examples_view #task_preview {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* #demonstration_examples_view #task_preview > div {
+  width: 50%;
+  margin-bottom: 50px;
+}
+
+#demonstration_examples_view #task_preview > div .output_preview,
+#demonstration_examples_view #task_preview > div .input_preview {
+  width: 49%;
+  float: right;
+}
+
+#demonstration_examples_view #task_preview > div .input_preview div,
+#demonstration_examples_view #task_preview > div .output_preview div {
+  width: 100% !important;
+}
+
+#demonstration_examples_view #task_preview > div .input_preview { float: left;} */
+
+#demonstration_examples_view #task_preview {
+  display: grid;
+  grid-template-columns: auto auto ;
+  
+  padding: 0px;
+}
+#demonstration_examples_view #task_preview .pair_preview {
+  
+ 
+  padding: 20px 0;
+  font-size: 30px;
+  text-align: center;
+}
+
+
 
 
 @media(min-width:768px) and (max-width:1200px) {
