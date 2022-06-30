@@ -1,3 +1,26 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<style>
+  .modal-dialog{
+    max-width: 90%;
+  }
+  .login-register-popup-wrapper {
+    display: flex;
+  }
+  .login-register-popup-left, .login-register-popup-right {
+    max-width: 50%;
+    flex: 0 0 50%;
+    padding: 0 15px;
+  }
+
+  .login-register-popup-right h3, .login-register-popup-left h3{
+    text-transform: uppercase;
+    font-size: 17px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+</style>
+
 <div class="navbar-outer">
     <div class="container">
         <div class="navbar ">
@@ -13,14 +36,13 @@
               <ul class="nav navbar-nav">
                 <li><a {% if location == "home" %}class="active"{% endif %} href="/">ARC Home</a></li>
                 <li><a {% if location == "playground" %}class="active"{% endif %} href="/playground">Playground</a></li>
+                {% if logged_in %}
+                <li><a {% if location == "editor" %}class="active"{% endif %} href="/editor">Task editor</a></li>
+                <li><a {% if location == "logout" %}class="active"{% endif %} href="/logout">Logout</a></li>
+                {% else %}
                 <li><a {% if location == "editor" %}class="active"{% endif %} href="/editor" data-bs-toggle="modal" data-bs-target="#RegisterLogin">Task editor</a></li>
-            <!-- {% if logged_in %} -->
-                
-            <!-- <a href="/logout">Logout</a> -->
-            <!-- {% else %} -->
-            <!-- <li><a {% if location == "login" %}class="active"{% endif %} href="/logout">Login</a></li>
-            <li><a {% if location == "register" %}class="active"{% endif %} href="/register">Register</a></li> -->
-            <!-- {% endif %}--> </ul> 
+                {% endif %}
+              </ul>
               
             </div>
             <div class="modal fade" id="RegisterLogin" tabindex="-1" aria-labelledby="RegisterLoginLabel" aria-hidden="true">
@@ -42,7 +64,7 @@
                             <form action="" method="POST" id="register_post">
                               <div class="form_input">
                                 <label for="register_email">Email:</label>
-                                <input id="register_email" name="register_email" type="text" placeholder="" class="textbox" value="{{email}}"/>
+                                <input id="register_email" name="register_email" type="text" placeholder="" class="textbox"/>
                               </div>
                               <div class="form_input">
                                 <label for="register_password">Password:</label>
@@ -64,7 +86,7 @@
                             <form action="" method="POST" id="login_post">
                               <div class="form_input">
                                 <label for="login_email">Email:</label>
-                                <input id="login_email" name="login_email" type="text" value="{{email}}" class="textbox"/>
+                                <input id="login_email" name="login_email" type="text" class="textbox"/>
                               </div>
                               <div class="form_input">
                                 <label for="login_password">Password:</label>
