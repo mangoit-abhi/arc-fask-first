@@ -3,40 +3,142 @@
     <head>
         <meta charset="utf-8">
         <title>Home</title>
-
-        <link rel="stylesheet" type="text/css" href="/css/base.css">
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
         <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
+       
     </head>
-    <body>
-        {% include "navbar.html" %}
-        <!-- <div>
-            {% if data%}
-            <div>
-                <b> Whole Json Data is</b>
-                <p>{{ data }}</p>
-            </div>
-            <div>
-                <b> Json Text is</b>
-                <p>{{ data.text }}</p>
-            </div>
-            <div>
-                <b> Json Image File is</b><br>
-                <img src="{{ data.image }}">
-            </div>
-            {% endif %}
+    <body class="home">
+        <section class="banner">
+            <div class="header">
+                <div class="col-md-12 col-12">{% include "navbar.html" %}</div>
+                <div class="banner-container container">
+                    <div class="banner-text">
+                        <h1>Welcome to the ARC 2 launchpad.</h1>
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                        <a href="/playground">Go to Playground</a>
+                    </div>
+                    <div class="banner-img">
+                          <img src="img/banner-img.png"/>
+                    </div>
+                </div>
 
-        </div> -->
+            </div>
+        </section>    
+        
 
-        <div class="text_content">
-            <h1>Welcome to the ARC 2 launchpad.</h1>
-            <h2>What is ARC?</h2>
-            <h2>ARC 1</h2>
-            <h2>ARC 2</h2>
-            <h2>ARC 2 crowdsourcing process</h2>
-            <h2>ARC 2 yearly competition</h2>
-            <h2>Limitations of ARC</h2>
-            <h2>Related research</h2>
-        </div>
+        <section class="text_content">
+            
+           <div class="container">
+              <div class="what-arc">
+                <h2>What is <span>ARC</span>?</h2>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+              </div>
+              <div class="arc1-arc2">
+                    <div class="arc-des">
+                        <div class="arc-des-left">
+                            <h2>ARC 1</h2>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        </div>
+                        <div class="arc-des-right">
+                            <img src="img/arc1.jpg" />
+                        </div>
+                    </div>
+                    <div class="arc-des des-bottom">
+                        <div class="arc-des-left">
+                            <h2>ARC 2</h2>
+                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        </div>
+                        <div class="arc-des-right">
+                            <img src="img/arc2.png" />
+                        </div>
+                    </div>
+              </div>
+             
+            </div>   
+            
+        </section>
+        <section class="container-fluid grey-bg">
+            <div class="container text-center">
+                <h2>ARC 2 <span>Crowdsourcing</span> Process</h2>
+                <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                   Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. </p>
+                <img src="img/crowdsourcing.png" />
+
+            </div>
+        </section>
+        <section>
+            <div class="container">
+                <div class="compeltion">
+                   <div >
+                       <h2>ARC 2 <span>yearly competition</span></h2>
+                       <p class="p-large">Starting in late 2022, we will run a competition on ARC 2 and make the crowdsourced tasks accessible.</p>
+                       <p class="p-large">The goal of the competition is to develop a program that is able to solve at least 90.0% of the tasks in the private test set, without advance knowledge of the tasks. Lab42 plans to run the competition until the goal is achieved.</p>
+                       <p class="p-large">This time not only will there be prize money, but successful participants will also have their names engraved in stone for eternity in the Swiss mountains and the winners will be invited to a special trip to Davos, Switzerland. Depending on progress, Lab42 can award intermediate results, eg half-yearly so as to communicate the current state.</p>
+                       <p class="p-large">AI-enthusiasts are invited to sign-up to receive the latest news and be one of the first to generate unique tests that will be included in the ARC 2 Challenge, as well as participate in the ARC 2 Challenge itself. Be successful and get a chance to win prizes and literally carve your name in stone for eternity by tackling one of the greatest endeavors of humankind.</p>
+                           
+                   </div>
+                   <div><img src="img/ARC-challenge-Imagem.png"/></div>
+                </div>
+           </div>
+        </section>
+        
+        <section class="limitation">
+            <div class="container">
+                <h2><span>Limitations of </span> ARC</h2>
+                <div class="row">
+                    <ul>
+                        <li class="text-center">
+                            <div class="image"></div>
+                            <h3>ARC 2 Limitation</h3>
+                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                        </li>
+                        <li class="text-center">
+                            <div class="image"></div>
+                            <h3>ARC 2 Limitation</h3>
+                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                        </li>
+                        <li class="text-center">
+                            <div class="image"></div>
+                            <h3>ARC 2 Limitation</h3>
+                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section> 
+        <section class="container-fluid grey-bg related-research">
+            <div class="container text-center">
+                <h2 class="mt-0">Related research</h2>
+                <div class="row">
+                    <div class="col-md-6  p-15">
+                        <div class="border p-20 text-left bg-white b-radius-15">
+                            <h3>Research</h3>
+                             <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6  p-15">
+                        <div class="border p-20 text-left bg-white b-radius-15">
+                            <h3>Research</h3>
+                             <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. </p>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </section>
+
+        <section class="container-fluid orange footer">
+            <div class="container text-center">
+                <span> © 2022 Arc. All rights reserved.</span>
+            </div>
+        </section>    
+        
     </body>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+     <!-- Latest compiled and minified JavaScript -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </html>
