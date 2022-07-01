@@ -28,7 +28,7 @@
             <div id="evaluation_output_editor" class="load-task">
 
                 <div id="load_task_control_btns">
-                    <label id='task_name' for="random_task_btn"> Task name:</label>
+                    <label id='task_name' for="random_task_btn"> Task Name:</label>
                     <div>
                         
                         <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
@@ -41,21 +41,25 @@
             </div>
 
             <div class="error-display-outer">
-                <div id="error_display"></div>
+                
                 <div id="info_display"></div>
             </div>
                 
                 <div id="demonstration_examples_view">
-                    <div class="text" id="task_demo_header">Task demonstration</div>
+                    <div class="text" id="task_demo_header">Task demonstration <span>
+                        <img src="img/bi_question-circle.svg" />
+                    </span></div>
                     <div id="task_preview"></div>
                 </div>
 
                 <div id="input-view">
-                    <div class="text">Test
+                    <div class="text">Test <span>
+                        <img src="img/bi_question-circle.svg" />
+                    </span>
                     </div>
 
                    <div class="evalution_outer_box">
-                      <div id="evaluation_input" class="selectable_grid"></div>
+                      <div class="evalution_input-outer"><div id="evaluation_input" class="selectable_grid"></div> </div>
                       <div id="evaluation_view">
                     
 
@@ -91,8 +95,28 @@
                             </div>
                             
                         </div>
+                        
                         <div class="toolbar-outer">
-                           <div> <div><div id="toolbar">
+                           <div> <div class="toolbar-outer-box">
+                            <div class="error-display-outer">
+                                <div id="error_display"></div>
+                                
+                            </div>
+                            <div id="editor_grid_control_btns">
+                                <div id="resize_control_btns">
+                                    <label for="output_grid_size">Change grid size: </label>
+                                    <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="3x3">
+                                    <button onclick="resizeOutputGrid()" id="resize_btn">Resize</button>
+                                </div>
+                                <div>
+                                    <button onclick="copyFromInput()">Copy from input</button>
+                                    <button onclick="resetOutputGrid()">Reset grid</button>
+                                    
+                                </div>
+                                
+                               
+                               
+                            </div><div id="toolbar">
                                 <div>
                                     <input type="radio" id="tool_edit"
                                     name="tool_switching" value="edit" checked>
@@ -108,7 +132,7 @@
                                 </div>
                             </div>
 
-                            <div id="symbol_picker">
+                            <div class="symbol-outer"><div id="symbol_picker">
                                 <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                                 <div class="symbol_preview symbol_1" symbol="1"></div>
                                 <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -119,22 +143,16 @@
                                 <div class="symbol_preview symbol_7" symbol="7"></div>
                                 <div class="symbol_preview symbol_8" symbol="8"></div>
                                 <div class="symbol_preview symbol_9" symbol="9"></div>
-                            </div></div>
-                            <div id="editor_grid_control_btns">
-                                <div id="resize_control_btns">
-                                    <label for="output_grid_size">Change grid size: </label>
-                                    <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="3x3">
-                                    <button onclick="resizeOutputGrid()" id="resize_btn">Resize</button>
-                                </div>
-
-                                <button onclick="copyFromInput()">Copy from input</button>
-                                <button onclick="resetOutputGrid()">Reset grid</button>
-                                <button onclick="submitSolution()" id="submit_solution_btn">Submit!</button>
                             </div>
+                            <button onclick="submitSolution()" id="submit_solution_btn">Submit!</button></div>
+                        </div>
+                            
+                            
 
                         </div>
                         </div>
                     </div>
+                    
                 </div>
 
                 

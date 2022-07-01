@@ -21,7 +21,7 @@
 #input-view {
     float: left;
     width: 100%;
-    margin: 10px;
+    margin: 0px;
     background-color: transparent;
     padding: 0;
   }
@@ -30,7 +30,7 @@
     float: left;
     width: 500px;
     margin-bottom: 20px;
-    padding: 10px;
+    padding: 10px 20px;
     padding-top: 0;
 }
 
@@ -46,24 +46,78 @@
 
 #editor_grid_control_btns {
     float: left;
-    margin-top: 10px;
+    margin-top: 0px;
     margin-bottom: 10px;
-    background: white;
+    background: none;
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
+#editor_grid_control_btns {
+  display: flex;
+  justify-content: space-between;
+  margin: 0px;
+  flex-wrap: wrap;
+}
+
+#editor_grid_control_btns label {
+  font-weight: 400;
+  font-size: 18px;
+}
+
 #resize_control_btns {
-    width: 100%;
+    width: auto;
     float:left;
     margin-bottom: 10px;
+}
+
+#output_grid_size {
+  border: 1px solid #A8A8A8;
+  width: 70px;
+  height: 30px;
+  border-radius: 5px;
+  background: none;
+  padding: 7px;
+  margin-right: 7px;
+}
+
+#editor_grid_control_btns button {
+  height: 30px;
+  background: #525252;
+  color: #fff;
+  border: none;
+  padding: 0 8px;
+  font-size: 18px;
+  border-radius: 5px;
+}
+
+#symbol_picker {
+  float: left;
+  margin-left: 11px;
+  width: 100%;
+}
+
+.symbol-outer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#toolbar label {
+  margin-left: 5px;
+  margin-right: 15px;
 }
 
 #submit_solution_btn {
     color: white;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    background: rgb(28, 184, 65);
+    background: #FC6B2C;
+    height: 30px;
+    font-size: 18px;
+    border: none;
+padding: 0 15px;
+border-radius: 5px;
 }
 
 #submit_solution_btn:active {
@@ -76,18 +130,34 @@ button:focus {outline:0;}
 
 }
 
+.input_preview {
+  height: 200px;
+  width: 200px;
+  float: left;
+}
+.output_preview {
+  height: 200px;
+  width: 200px;
+  float: left;
+  margin-left: 35px;
+}
+
 #toolbar {
     float: left;
-    margin-left: 10px;
+    margin-left: 0px;
     margin-top: 18px;
     margin-bottom: 10px;
     width: 100%;
 
 }
 
+.preview_header span:nth-child(2n + 0) {
+   margin-left: 33px;
+}
+
 #symbol_picker {
     float: left;
-    margin-left: 20px;
+    margin-left: 0px;
     width: 100%;
 }
 
@@ -97,9 +167,14 @@ button:focus {outline:0;}
     float: left;
 }
 
-label {
-    margin-left: 10px;
+#task_demo_header span, body .text span {
+  float: right;
+  margin-top: -1px;
 }
+
+/* label {
+    margin-left: 10px;
+} */
 
 input, button {
     margin-left: 10px;
@@ -113,14 +188,23 @@ input, button {
     display: flex;
     flex-wrap: wrap;
   }
-  #evaluation_input {
+  .evalution_input-outer {
     width: 48%;
     flex: 0 0 49%;
     margin-left: 0px;
     padding: 0 25px;
     margin-right: 2%;
-    background: #f2f2f2;
+    background: #fbfbfb;
     border-radius: 10px;
+  }
+
+  #evaluation_input  {
+    float: left;
+    width: 700px;
+    margin-bottom: 20px;
+    padding: 10px;
+      padding-top: 10px;
+    padding-top: 0;
   }
 
   .toolbar-outer > div {
@@ -133,14 +217,14 @@ input, button {
     width: 50%;
     flex: 0 0 48%;
     padding-right: 15px;
-    background: #f2f2f2;
+    background: #fbfbfb;
     border-radius: 10px;
     padding: 0 24px;
   }
 
   #evaluation_view {
     float: left;
-    width: 50%;
+    width: 49%;
     flex: 0 0 49%;
     padding-right: 15px;
   }
@@ -157,17 +241,17 @@ input, button {
     padding: 5px;
     
 }
-.input_preview {
-    height: 200px;
-    width: 200px;
+/* .input_preview {
+    height: 100%;
+    width: 50%;
     float: left;
   }
   .output_preview {
-    height: 200px;
-    width: 200px;
+    height: 100%;
+    width: 50%;
     float: left;
     margin-left: 0;
-  }
+  } */
 
 .text {
     text-align: center;
@@ -177,9 +261,9 @@ input, button {
     margin-bottom: 10px;
 }
 
-#demonstration_examples_view #task_preview .row > div {
+/* #demonstration_examples_view #task_preview .row > div {
     width: 100% !important;
-  }
+  } */
 
 #task_demo_header {
     margin: 0px;
@@ -187,4 +271,107 @@ input, button {
 
 #error_display {
     display: none;
+}
+
+.toolbar-outer-box {
+  width: 100%;
+  display: inline-block;
+  border: 1px solid #E0DFDF;
+  border-radius: 10px;
+  background: #F8F8F8;
+  padding: 10px;
+}
+
+.preview_header span {
+  width: 200px;
+  display: inline-block;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 18px;
+  color: #000;
+}
+
+.preview_header {
+  text-align: left;
+}
+
+.preview_header {
+  width: 100%;
+}
+
+
+.preview_header span{
+
+}
+
+@media(max-width:1200px) {
+  #demonstration_examples_view #task_preview {
+    display: grid;
+    grid-template-columns: auto;
+    padding: 0px;
+  }
+
+  .load-task #load_task_control_btns {
+    background: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media(max-width:767px) {
+  
+  .evalution_input-outer {
+    width: 100%;
+    flex: 100%;
+    margin-left: 0px;
+    padding: 0 25px;
+    margin-right: 0%;
+    background: #f2f2f2;
+    border-radius: 10px;
+    margin-bottom: 25px;
+  }
+
+  #evaluation_view {
+    float: left;
+    width: 100%;
+    flex: 100%;
+    padding-right: 0;
+    margin-right: 0%;
+  }
+
+  .toolbar-outer > div {
+    width: 100%;
+    float: left;
+    margin-right: 0%;
+  }
+
+  #input-view {
+    float: left;
+    width: 100%;
+    margin: 0;
+    background-color: transparent;
+    padding: 0;
+  }
+
+  #editor_grid_control_btns {
+    
+   
+    
+  }
+
+  #demonstration_examples_view #task_preview .pair_preview {
+    padding: 20px 10px;
+    font-size: 30px;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+
+  #demonstration_examples_view #task_preview .pair_preview > div {
+    padding: 0 10px;
+    /* margin: 0 auto 15px; */
+  }
 }
