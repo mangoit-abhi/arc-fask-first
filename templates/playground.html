@@ -1,165 +1,131 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>ARC testing playground</title>
+{% extends "base.html" %}
+{% block title %}
+    <title>ARC testing playground</title>
+{% endblock title %}
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/arc_common.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/playground.css') }}">
+{% endblock head %}
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="js/arc_common.js"></script>
-        <script src="js/playground.js"></script>
+{% block content %}
+    <!-- <div id="modal_bg">
+    </div> -->
 
-      
-        {% include 'head.html' %}
-
-      
-        <link rel="stylesheet" type="text/css" href="css/arc_common.css">
-        <link rel="stylesheet" type="text/css" href="css/playground.css">
-
-    </head>
-    <body>
-        {{navbar|safe}}
-
-        <!-- <div id="modal_bg">
-        </div> -->
-
-        <div id="workspace" >
-           <div class="container">
-            <div id="evaluation_output_editor" class="load-task">
-
-                <div id="load_task_control_btns">
-                    <label id='task_name' for="random_task_btn"> Task Name:</label>
-                    <div>
-                        
-                        <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
-                        <input type="button" value="Browse for another task" onclick="document.getElementById('load_task_file_input').click();" />
-                        <button onclick="randomTask()" id="random_task_btn"> Show a new random task </button>
-                    </div>   
-                    
+    <div id="workspace" >
+        <div class="container">
+        <div id="evaluation_output_editor" class="load-task">
+            <div id="load_task_control_btns">
+                <label id='task_name' for="random_task_btn"> Task Name:</label>
+                <div>
+                    <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
+                    <input type="button" value="Browse for another task" onclick="document.getElementById('load_task_file_input').click();" />
+                    <button onclick="randomTask()" id="random_task_btn"> Show a new random task </button>
                 </div>
-              
-            </div>
-
-            <div class="error-display-outer">
-                
-                <div id="info_display"></div>
-            </div>
-                
-                <div id="demonstration_examples_view">
-                    <div class="text" id="task_demo_header">Task demonstration <span>
-                        <img src="img/bi_question-circle.svg" />
-                    </span></div>
-                    <div id="task_preview"></div>
-                </div>
-
-                <div id="input-view">
-                    <div class="text">Test <span>
-                        <img src="img/bi_question-circle.svg" />
-                    </span>
-                    </div>
-
-                   <div class="evalution_outer_box">
-                      <div class="evalution_input-outer"><div id="evaluation_input" class="selectable_grid"></div> </div>
-                      <div id="evaluation_view">
-                    
-
-                            <div id="evaluation_output_editor">
-        
-                                
-                                <div id="edition_view">
-                                   
-        
-                                    <div id="output_grid">
-                                        <div class="edition_grid selectable_grid">
-                                            <div class="row">
-                                                <div class="cell" symbol="0" x="0" y="0"></div>
-                                                <div class="cell" symbol="0" x="0" y="1"></div>
-                                                <div class="cell" symbol="0" x="0" y="2"></div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="cell" symbol="0" x="1" y="0"></div>
-                                                <div class="cell" symbol="0" x="1" y="1"></div>
-                                                <div class="cell" symbol="0" x="1" y="2"></div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="cell" symbol="0" x="2" y="0"></div>
-                                                <div class="cell" symbol="0" x="2" y="1"></div>
-                                                <div class="cell" symbol="0" x="2" y="2"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-        
-        
-                                    
-                                </div>
-                            </div>
-                            
-                        </div>
-                        
-                        <div class="toolbar-outer">
-                           <div> <div class="toolbar-outer-box">
-                            <div class="error-display-outer">
-                                <div id="error_display"></div>
-                                
-                            </div>
-                            <div id="editor_grid_control_btns">
-                                <div id="resize_control_btns">
-                                    <label for="output_grid_size">Change grid size: </label>
-                                    <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="3x3">
-                                    <button onclick="resizeOutputGrid()" id="resize_btn">Resize</button>
-                                </div>
-                                <div>
-                                    <button onclick="copyFromInput()">Copy from input</button>
-                                    <button onclick="resetOutputGrid()">Reset grid</button>
-                                    
-                                </div>
-                                
-                               
-                               
-                            </div><div id="toolbar">
-                                <div>
-                                    <input type="radio" id="tool_edit"
-                                    name="tool_switching" value="edit" checked>
-                                    <label for="tool_edit">Edit</label>
-
-                                    <input type="radio" id="tool_select"
-                                    name="tool_switching" value="select">
-                                    <label for="tool_select">Select</label>
-
-                                    <input type="radio" id="tool_floodfill"
-                                    name="tool_switching" value="floodfill">
-                                    <label for="tool_floodfill">Flood fill</label>
-                                </div>
-                            </div>
-
-                            <div class="symbol-outer"><div id="symbol_picker">
-                                <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                                <div class="symbol_preview symbol_1" symbol="1"></div>
-                                <div class="symbol_preview symbol_2" symbol="2"></div>
-                                <div class="symbol_preview symbol_3" symbol="3"></div>
-                                <div class="symbol_preview symbol_4" symbol="4"></div>
-                                <div class="symbol_preview symbol_5" symbol="5"></div>
-                                <div class="symbol_preview symbol_6" symbol="6"></div>
-                                <div class="symbol_preview symbol_7" symbol="7"></div>
-                                <div class="symbol_preview symbol_8" symbol="8"></div>
-                                <div class="symbol_preview symbol_9" symbol="9"></div>
-                            </div>
-                            <button onclick="submitSolution()" id="submit_solution_btn">Submit!</button></div>
-                        </div>
-                            
-                            
-
-                        </div>
-                        </div>
-                    </div>
-                    
-                </div>
-
-                
             </div>
         </div>
-    </body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+
+        <div class="error-display-outer">
+            <div id="error_display"></div>
+            <div id="info_display"></div>
+        </div>
+
+            <div id="demonstration_examples_view">
+                <div class="text" id="task_demo_header">Task demonstration <span>
+                    <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                </span></div>
+                <div id="task_preview"></div>
+            </div>
+
+            <div id="input-view">
+                <div class="text">Test <span>
+                    <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                </span>
+                </div>
+
+                <div class="evalution_outer_box">
+                    <div class="evalution_input-outer"><div id="evaluation_input" class="selectable_grid"></div> </div>
+                    <div id="evaluation_view">
+                        <div id="evaluation_output_editor">
+                            <div id="edition_view">
+                                <div id="output_grid">
+                                    <div class="edition_grid selectable_grid">
+                                        <div class="row">
+                                            <div class="cell" symbol="0" x="0" y="0"></div>
+                                            <div class="cell" symbol="0" x="0" y="1"></div>
+                                            <div class="cell" symbol="0" x="0" y="2"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="cell" symbol="0" x="1" y="0"></div>
+                                            <div class="cell" symbol="0" x="1" y="1"></div>
+                                            <div class="cell" symbol="0" x="1" y="2"></div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="cell" symbol="0" x="2" y="0"></div>
+                                            <div class="cell" symbol="0" x="2" y="1"></div>
+                                            <div class="cell" symbol="0" x="2" y="2"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="toolbar-outer">
+                        <div> <div class="toolbar-outer-box">
+                        <div id="editor_grid_control_btns">
+                            <div id="resize_control_btns">
+                                <label for="output_grid_size">Change grid size: </label>
+                                <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="3x3">
+                                <button onclick="resizeOutputGrid()" id="resize_btn">Resize</button>
+                            </div>
+                            <div>
+                                <button onclick="copyFromInput()">Copy from input</button>
+                                <button onclick="resetOutputGrid()">Reset grid</button>
+
+                            </div>
+
+                        </div><div id="toolbar">
+                            <div>
+                                <input type="radio" id="tool_edit"
+                                name="tool_switching" value="edit" checked>
+                                <label for="tool_edit">Edit</label>
+
+                                <input type="radio" id="tool_select"
+                                name="tool_switching" value="select">
+                                <label for="tool_select">Select</label>
+
+                                <input type="radio" id="tool_floodfill"
+                                name="tool_switching" value="floodfill">
+                                <label for="tool_floodfill">Flood fill</label>
+                            </div>
+                        </div>
+
+                        <div class="symbol-outer"><div id="symbol_picker">
+                            <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
+                            <div class="symbol_preview symbol_1" symbol="1"></div>
+                            <div class="symbol_preview symbol_2" symbol="2"></div>
+                            <div class="symbol_preview symbol_3" symbol="3"></div>
+                            <div class="symbol_preview symbol_4" symbol="4"></div>
+                            <div class="symbol_preview symbol_5" symbol="5"></div>
+                            <div class="symbol_preview symbol_6" symbol="6"></div>
+                            <div class="symbol_preview symbol_7" symbol="7"></div>
+                            <div class="symbol_preview symbol_8" symbol="8"></div>
+                            <div class="symbol_preview symbol_9" symbol="9"></div>
+                        </div>
+                        <button onclick="submitSolution()" id="submit_solution_btn">Submit!</button></div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script> 
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-</html>
+
+    <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/arc_common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/playground.js') }}"></script>
+{% endblock script %}

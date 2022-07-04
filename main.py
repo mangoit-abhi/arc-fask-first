@@ -3,7 +3,7 @@ import flask_login
 from flask_mail import Mail
 # from google.cloud import ndb
 from flask_sqlalchemy import SQLAlchemy
-
+from flask import render_template
 
 import config
 
@@ -107,8 +107,12 @@ def reset_request():
 def reset_token(token):
     return views.reset_token(token)
 
+@app.route("/reset_done", methods=['GET','POST'])
+def reset_done():
+    return flask.render_template('reset_thanks.html')
+
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. You
     # can configure startup instructions by adding `entrypoint` to app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host='https://arc-first.herokuapp.com', port=8080, debug=False)

@@ -1012,40 +1012,4 @@ img { max-width: 100%;}
     background: #fff;
   }
 
-  #RegisterLogin .modal-dialog {
-    width: 100%;
-    margin: 30px auto;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%) !important;
-    max-width: 1000px !important;
-  }
-
-  #RegisterLogin .modal-body {
-    position: relative;
-    padding: 0;
-  }
-  #RegisterLogin .modal-content {
-     background: none;
-     border-radius: 20px;
-  }
-
-  .login-register-popup-left, .login-register-popup-right {
-    max-width: 100%;
-    flex: 0 0 100%;
-    padding: 0 15px;
-      padding-top: 0px;
-      padding-bottom: 0px;
-    padding-bottom: 40px;
-    padding-top: 21px;
-  }
-
-  .login-register-popup-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .modal-backdrop.fade { display: none !important; }
-
 }

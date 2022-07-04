@@ -372,6 +372,6 @@ input, button {
 
   #demonstration_examples_view #task_preview .pair_preview > div {
     padding: 0 10px;
-    /* margin: 0 auto 15px; */
+    margin: 0 auto 15px;
   }
 }

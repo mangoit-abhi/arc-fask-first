@@ -8,7 +8,7 @@ var COPY_PASTE_DATA = new Array();
 
 // Cosmetic.
 var EDITION_GRID_HEIGHT = 402;
-var EDITION_GRID_WIDTH = 640;
+var EDITION_GRID_WIDTH = 650;
 var MAX_CELL_SIZE = 100;
 
 
@@ -101,12 +101,12 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     }
     var jqInputGrid = pairSlot.find('.input_preview');
     if (!jqInputGrid.length) {
-        jqInputGrid = $('<div class="input_preview"></div>');
+        jqInputGrid = $('<div class="input_preview"><span>test<span></div>');
         jqInputGrid.appendTo(pairSlot);
     }
     var jqOutputGrid = pairSlot.find('.output_preview');
     if (!jqOutputGrid.length) {
-        jqOutputGrid = $('<div class="output_preview"></div>');
+        jqOutputGrid = $('<div class="output_preview"><span>test<span></div>');
         jqOutputGrid.appendTo(pairSlot);
     }
 
@@ -144,7 +144,7 @@ function loadJSONTask(train, test) {
 function display_task_name(task_name, task_index, number_of_tasks) {
     big_space = '&nbsp;'.repeat(4); 
     document.getElementById('task_name').innerHTML = (
-        '<strong>Task Name: </strong>'+  task_name + big_space + '<strong>Task Number: </strong>' +  (
+        '<strong>Task name: </strong>'+  task_name + big_space + '<strong>Task Number: </strong>' +  (
             task_index===null ? '' :
             ( String(task_index) + ' out of ' + String(number_of_tasks) )
         )
@@ -192,7 +192,7 @@ function randomTask() {
             }
             loadJSONTask(train, test);
             infoMsg('Loaded ARC 1 task training/' + task["name"] + '. ' + '<br/>' +
-                    'Given the task demonstration on the top, ' +
+                    'Given the task demonstration on the right, ' +
                     'can you find the correct output grid for this test input grid?');
             display_task_name(task['name'], task_index, tasks.length);
         })

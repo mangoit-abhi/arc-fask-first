@@ -1,126 +1,127 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Task editor</title>
+{% extends "base.html" %}
+    
+{% block title %}
+<title>Task editor</title>
+{% endblock title %}
 
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="/js/arc_common.js"></script>
-        <script src="/js/editor.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/arc_common.css">
-        <link rel="stylesheet" type="text/css" href="/css/editor.css">
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/arc_common.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/editor.css') }}">
 
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        {{navbar|safe}}
-        <div id="editor">
-            <div id="pair_editor">
-                <div id="task_toolbar" class="toolbar">
-                    <label for="task_name">Task name: </label>
-                    <input type="text" id="task_name" name="task_name" value="">
-                    <button id="save_task" onclick="saveTask()">Save task</button>
-                    <button id="download_task" onclick="downloadTask()">Download task</button>
-                    <input type="file" id="load_task_file_input"/>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+{% endblock head %}
+
+
+{% block content %}
+    <div id="editor">
+        <div id="pair_editor">
+            <div id="task_toolbar" class="toolbar">
+                <label for="task_name">Task name: </label>
+                <input type="text" id="task_name" name="task_name" value="">
+                <button id="save_task" onclick="saveTask()">Save task</button>
+                <button id="download_task" onclick="downloadTask()">Download task</button>
+                <input type="file" id="load_task_file_input"/>
+            </div>
+            <div id="pair_toolbar" class="toolbar">
+                <button id="save_pair" onclick="stashCurrentPair()">Save pair</button>
+                <button id="new_pair" onclick="newPair()">New pair</button>
+                <button id="reset_current_pair" onclick="resetCurrentPair()">Reset current pair</button>
+            </div>
+            <div id="symbol_toolbar" class="toolbar">
+                <div id="symbol_actions">
+                    <input type="radio" id="tool_edit"
+                        name="tool_switching" value="edit" checked>
+                    <label for="tool_edit">Edit</label>
+
+                    <input type="radio" id="tool_select"
+                        name="tool_switching" value="select">
+                    <label for="tool_select">Select</label>
+
+                    <input type="radio" id="tool_floodfill"
+                        name="tool_switching" value="floodfill">
+                    <label for="tool_floodfill">Flood fill</label>
                 </div>
-                <div id="pair_toolbar" class="toolbar">
-                    <button id="save_pair" onclick="stashCurrentPair()">Save pair</button>
-                    <button id="new_pair" onclick="newPair()">New pair</button>
-                    <button id="reset_current_pair" onclick="resetCurrentPair()">Reset current pair</button>
-                </div>
-                <div id="symbol_toolbar" class="toolbar">
-                    <div id="symbol_actions">
-                        <input type="radio" id="tool_edit"
-                         name="tool_switching" value="edit" checked>
-                        <label for="tool_edit">Edit</label>
-
-                        <input type="radio" id="tool_select"
-                         name="tool_switching" value="select">
-                        <label for="tool_select">Select</label>
-
-                        <input type="radio" id="tool_floodfill"
-                         name="tool_switching" value="floodfill">
-                        <label for="tool_floodfill">Flood fill</label>
-                    </div>
-                    <div id="symbol_picker">
-                        <div class="symbol_preview symbol_0 selected" symbol="0"></div>
-                        <div class="symbol_preview symbol_1" symbol="1"></div>
-                        <div class="symbol_preview symbol_2" symbol="2"></div>
-                        <div class="symbol_preview symbol_3" symbol="3"></div>
-                        <div class="symbol_preview symbol_4" symbol="4"></div>
-                        <div class="symbol_preview symbol_5" symbol="5"></div>
-                        <div class="symbol_preview symbol_6" symbol="6"></div>
-                        <div class="symbol_preview symbol_7" symbol="7"></div>
-                        <div class="symbol_preview symbol_8" symbol="8"></div>
-                        <div class="symbol_preview symbol_9" symbol="9"></div>
-                    </div>
-                </div>
-
-                <div id="grids_space">
-                    <div id="input_window">
-                        <div class="toolbar">
-                            <label for="input_grid_size">Input grid size: </label>
-                            <input type="text" id="input_grid_size" class="grid_size_field" name="size" value="16x16">
-                            <button onclick="resizeInputGrid()">Resize</button>
-                            <button onclick="resetInputGrid()">Reset grid</button>
-                            <button onclick="copyToOutput()">Copy to output</button>
-                        </div>
-
-                        <div id="input_grid">
-                            <div class="edition_grid">
-                            </div>
-                        </div>
-
-                        <div class="toolbar">
-                            <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
-                            <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
-                        </div>
-
-                        <div class="toolbar">
-                            <label for="eval_expr_input">Expression of i, j: </label>
-                            <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
-                            <button onclick="evalExpressionOnInputGrid()">Eval</button>
-                        </div>
-                    </div>
-
-                    <div id="output_window">
-                        <div class="toolbar">
-                            <label for="output_grid_size">Output grid size: </label>
-                            <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
-                            <button onclick="resizeOutputGrid()">Resize</button>
-                            <button onclick="resetOutputGrid()">Reset grid</button>
-                        </div>
-
-                        <div id="output_grid">
-                            <div class="edition_grid">
-                            </div>
-                        </div>
-
-                        <div class="toolbar">
-                            <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
-                            <button onclick="multicolorNoiseOnGrid('output')">Multicolor noise</button>
-                        </div>
-
-                        <div class="toolbar">
-                            <label for="eval_expr_output">Expression of i, j: </label>
-                            <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
-                            <button onclick="evalExpressionOnOutputGrid()">Eval</button>
-                        </div>
-                    </div>
+                <div id="symbol_picker">
+                    <div class="symbol_preview symbol_0 selected" symbol="0"></div>
+                    <div class="symbol_preview symbol_1" symbol="1"></div>
+                    <div class="symbol_preview symbol_2" symbol="2"></div>
+                    <div class="symbol_preview symbol_3" symbol="3"></div>
+                    <div class="symbol_preview symbol_4" symbol="4"></div>
+                    <div class="symbol_preview symbol_5" symbol="5"></div>
+                    <div class="symbol_preview symbol_6" symbol="6"></div>
+                    <div class="symbol_preview symbol_7" symbol="7"></div>
+                    <div class="symbol_preview symbol_8" symbol="8"></div>
+                    <div class="symbol_preview symbol_9" symbol="9"></div>
                 </div>
             </div>
 
-            <div id="error_display"></div>
-            <div id="info_display">
-                Use the two grids on the left to create a "pair", consisting of an INPUT GRID and its corresponding OUTPUT GRID.<br><br>
-                When done, click "NEW PAIR" to switch to the next pair.
-            </div>
-            <div id="task_preview">
+            <div id="grids_space">
+                <div id="input_window">
+                    <div class="toolbar">
+                        <label for="input_grid_size">Input grid size: </label>
+                        <input type="text" id="input_grid_size" class="grid_size_field" name="size" value="16x16">
+                        <button onclick="resizeInputGrid()">Resize</button>
+                        <button onclick="resetInputGrid()">Reset grid</button>
+                        <button onclick="copyToOutput()">Copy to output</button>
+                    </div>
+
+                    <div id="input_grid">
+                        <div class="edition_grid">
+                        </div>
+                    </div>
+
+                    <div class="toolbar">
+                        <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
+                        <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
+                    </div>
+
+                    <div class="toolbar">
+                        <label for="eval_expr_input">Expression of i, j: </label>
+                        <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
+                        <button onclick="evalExpressionOnInputGrid()">Eval</button>
+                    </div>
+                </div>
+
+                <div id="output_window">
+                    <div class="toolbar">
+                        <label for="output_grid_size">Output grid size: </label>
+                        <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
+                        <button onclick="resizeOutputGrid()">Resize</button>
+                        <button onclick="resetOutputGrid()">Reset grid</button>
+                    </div>
+
+                    <div id="output_grid">
+                        <div class="edition_grid">
+                        </div>
+                    </div>
+
+                    <div class="toolbar">
+                        <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
+                        <button onclick="multicolorNoiseOnGrid('output')">Multicolor noise</button>
+                    </div>
+
+                    <div class="toolbar">
+                        <label for="eval_expr_output">Expression of i, j: </label>
+                        <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
+                        <button onclick="evalExpressionOnOutputGrid()">Eval</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-    </body>
-</html>
+        <div id="error_display"></div>
+        <div id="info_display">
+            Use the two grids on the left to create a "pair", consisting of an INPUT GRID and its corresponding OUTPUT GRID.<br><br>
+            When done, click "NEW PAIR" to switch to the next pair.
+        </div>
+        <div id="task_preview">
+        </div>
+    </div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/arc_common.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
+{% endblock script %}

@@ -16,22 +16,15 @@ import config
 
 
 def get_navbar(location):
-    return flask.render_template(
-        'navbar.html',
-        location=location,
-        logged_in=flask_login.current_user.is_authenticated)
+    return flask.render_template('navbar.html', location=location)
 
 
 def login():
-    return flask.render_template(
-        'login.html',
-        navbar=get_navbar(location='login'))
+    return flask.render_template('login.html',navbar=get_navbar(location='login'))
 
 
 def register():
-    return flask.render_template(
-        'register.html',
-        navbar=get_navbar(location='register'))
+    return flask.render_template('register.html',navbar=get_navbar(location='register'))
 
 
 def logout():
@@ -42,6 +35,7 @@ def logout():
 def login_post():
     if request.method == "POST":
         email = flask.request.form.get('login_email')
+        print(email)
         error = user_utils.validate_email_string(email)
         if error:
             login_err_data = error
@@ -111,9 +105,7 @@ def register_post():
 
 @flask_login.login_required
 def welcome():
-    return flask.render_template(
-        'welcome.html',
-        navbar=get_navbar(location='welcome'))
+    return flask.render_template('welcome.html', navbar=get_navbar(location='welcome'))
 
 
 def landing():
@@ -162,13 +154,19 @@ def reset_request():
         return redirect(url_for('landing'))
     if request.method == "POST":
         email = request.form.get('email')
-        print(email)
+        error = user_utils.validate_email_string(email)
+        if error:
+            reset_email_error = error
+            reset_error = True
+            return jsonify(reset_email_error)
         user = User.query.filter_by(email=email).first()
-        if user is None:
-            msg = "There is no account with that email. You must register first."
-            return render_template('reset_request.html', msg=msg)
+        if not user:
+            reset_email_error = "There is no account with that email. You must register first."
+            reset_error = True
+            return jsonify(reset_email_error)
         send_reset_email(user)
-        return redirect(url_for('login'))
+        reset_error = False
+        return jsonify(reset_error)
     return render_template('reset_request.html')
 
 def reset_token(token):
@@ -180,7 +178,6 @@ def reset_token(token):
     if request.method == "POST":
         reset_error = False
         password = request.form.get('reset_password')
-        print(password)
         confirm_password = request.form.get('reset_confirm_password')
         error_password = user_utils.validate_password_string(password)
         if error_password:
@@ -196,8 +193,6 @@ def reset_token(token):
         if reset_error == False:
             user.password_hash = password_hash
             user.password_salt = password_salt
-            print(user.password_hash)
-            print(user.password_salt)
             db.session.commit()
             reset_error_data = 'Your password has been Updated! You are now able to login'
             return redirect(url_for('landing'))

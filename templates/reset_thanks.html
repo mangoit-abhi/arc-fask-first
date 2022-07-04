@@ -2,12 +2,14 @@
 {% block title %}
     <title>Welcome</title>
 {% endblock title %}
+
 {% block head %}
     <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
 {% endblock head %}
 
 {% block content %}
     <div class="text_content">
-        Welcome
+        <p><b>Your Password has been Changed</b></p>
+        <a href="{{ url_for('landing') }}">Home Page</a>
     </div>
 {% endblock content %}

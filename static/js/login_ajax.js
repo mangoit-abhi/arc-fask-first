@@ -2,8 +2,26 @@ $(document).ready(function(){
     $('#login_post').submit(function(event){
         event.preventDefault();
         var email=$('#login_email').val();
+        find_attherate = /@/;
+        result_attherate = find_attherate.test(email)
         var password=$('#login_password').val();
-        if(email != '' && password != '')
+        var length_password = password.length
+        if(email == '' && password == '')
+        {
+            $('#login_error').attr('class','error')
+            $("#login_error").html("<b>Both Fields are Required.</b>. "); 
+        }
+        else if(result_attherate == false)
+        {
+            $('#login_error').attr('class','error')
+            $("#login_error").html("<b>Email Format is not correct-(@ needed).</b>. "); 
+        }
+        else if(length_password < 5)
+        {
+            $('#login_error').attr('class','error')
+            $("#login_error").html("<b>Your password should be at least 5 characters long.</b>. "); 
+        }
+        else
         {
             $.ajax({
                 url:"/login_post",
@@ -22,11 +40,6 @@ $(document).ready(function(){
                         }
                     }
             });
-        }
-        else
-        {
-            $('#login_error').attr('class','error')
-            $("#login_error").html("<b>Both Fields are Required</b>. "); 
         }
     
     });
