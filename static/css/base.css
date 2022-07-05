@@ -551,12 +551,46 @@ body #evaluation_output_editor.load-task {
   align-items: center;
 }
 
-.load-task #load_task_control_btns label {
+.load-task #load_task_control_btns label,
+#task_toolbar label {
   margin-bottom: 0px;
   font-size: 20px;
   font-weight: 400;
   color: #000;
 }
+
+#task_toolbar label { 
+  font-weight: 700;
+}
+#task_toolbar input[type = "text"]{
+  height: 35px;
+  width: 230px;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  border-radius: 5px;}
+
+  #pair_toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+ 
+  #task_toolbar button {
+    background: var(--primary-button);
+    font-size: 20px;
+    color: #fff;
+    height: 37px;
+    line-height: 37px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 10px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  #load_task_file_input {
+    margin-top: 13px;
+  }
 
 .load-task #load_task_control_btns button,
 .load-task #load_task_control_btns input[type="button"] {

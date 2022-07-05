@@ -5,12 +5,14 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/arc_common.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/playground.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/introjs.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/introjs.min.css.map') }}">
 {% endblock head %}
 
 {% block content %}
     <!-- <div id="modal_bg">
     </div> -->
-
     <div id="workspace" >
         <div class="container">
         <div id="evaluation_output_editor" class="load-task">
@@ -24,21 +26,24 @@
             </div>
         </div>
 
-        <div class="error-display-outer">
+        <div class="error-display-outer" >
             <div id="error_display"></div>
             <div id="info_display"></div>
+            <span onclick="introjs.start()">
+                <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+            </span>
         </div>
-
             <div id="demonstration_examples_view">
-                <div class="text" id="task_demo_header">Task demonstration <span>
-                    <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                
+                <div class="text">Task demonstration <span onclick="introjs.start()">
+                        <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
                 </span></div>
                 <div id="task_preview"></div>
             </div>
 
             <div id="input-view">
-                <div class="text">Test <span>
-                    <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                <div class="text" data-hint="second">Test <span onclick="introjs.start()">
+                        <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
                 </span>
                 </div>
 
@@ -119,10 +124,17 @@
             </div>
         </div>
     </div>
+    <section class="container-fluid orange footer">
+        <div class="container text-center">
+            <span> © 2022 Arc. All rights reserved.</span>
+        </div>
+    </section>    
 {% endblock content %}
 {% block script %}
+    <script src="{{ url_for('static', filename='js/intro.min.js') }}"></script>
+    <script  src="{{ url_for('static', filename='js/help_popup.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script> 
-    <!-- Latest compiled and minified JavaScript -->
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>

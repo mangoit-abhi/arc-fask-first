@@ -1,17 +1,30 @@
 
 .toolbar {
-    padding: 5px;
-    margin: 10px;
-    background-color: rgba(128, 128, 128, 0.2);
-}
+    padding: 18px;
+    margin: 10px 0 14px;
+    background-color: rgb(239, 239, 239);
+    border-radius: 10px;
+  }
+
+/* .toolbar button {
+    background: #FC6B2C;
+font-size: 20px;
+color: #fff;
+height: 37px;
+line-height: 37px;
+padding: 0 15px;
+border: none;
+border-radius: 10px;
+} */
 
 #editor {
     position: relative;
 }
 
 #pair_editor {
-    width: 1000px;
-}
+    width: 100%;
+    display: inline-block;
+  }
 
 #grids_space {
     width: 1000px;
@@ -24,55 +37,44 @@
     padding: 10px;
 }
 
-#input_window {
-    width: 490px;
-    background-color: #eee;
-    position: absolute;
-    top: 0;
-    left: 10px;
+
+
+#editor .error-display-outer {
+    margin-top: 15px;
 }
 
-#output_window {
-    width: 490px;
-    background-color: #eee;
-    position: absolute;
-    top: 0;
-    left: 500px;
+#grids_space {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+
+
+#grids_space .row {
+    margin: 0px;
 }
 
-#error_display {
-    height: 90px;
-    width: 550px;
-    position: absolute;
-    left: 1000px;
-    top: 0;
-    display: none;
-}
 
-#info_display {
-    height: 90px;
-    width: 550px;
-    position: absolute;
-    left: 1000px;
-    top: 0;
-}
 
-#task_preview {
-    position: absolute;
-    left: 1000px;
-    top: 120px;
-    background: #eee;
-    width: 590px;
-    overflow-y: scroll;
-}
-
-#symbol_toolbar {
+/* #symbol_toolbar {
     height: 25px;
-}
+} */
 
 #symbol_actions {
     float: left;
     margin-right: 15px;
+}
+
+.pair_button button {
+    height: 30px;
+    background: #525252;
+    color: #fff;
+    border: none;
+    padding: 0 8px;
+    font-size: 18px;
+    border-radius: 5px;
+    margin: 0 3px;
 }
 
 .pair_preview {

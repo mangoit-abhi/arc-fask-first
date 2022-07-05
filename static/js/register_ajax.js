@@ -43,7 +43,7 @@ $(document).ready(function(){
                         }
                         else if(data == false)
                         {
-                            window.location = '/';
+                            window.location = '/editor';
                         }
                     }
             });
