@@ -159,8 +159,8 @@ tr.introjs-showElement>th {
 	position: absolute;
 	visibility: visible;
 	background-color: #fff;
-	min-width: 250px;
-	max-width: 300px;
+	min-width: 400px;
+	max-width: 400px;
 	border-radius: 5px;
 	-webkit-box-shadow: 0 3px 30px rgba(33, 33, 33, .3);
 	box-shadow: 0 3px 30px rgba(33, 33, 33, .3);
@@ -170,8 +170,11 @@ tr.introjs-showElement>th {
 }
 
 .introjs-tooltiptext {
-	padding: 20px
-}
+	padding: 10px 23px;
+	text-align: center;
+	font-size: 18px;
+	line-height: 33px;
+  }
 
 .introjs-dontShowAgain {
 	padding-left: 20px;
@@ -202,6 +205,37 @@ tr.introjs-showElement>th {
 	user-select: none
 }
 
+.introjs-tooltip-header h1 {
+	font-size: 21px;
+	text-align: center;
+  }
+
+  .introjs-skipbutton::before {
+	content: "skip";
+	font-size: 16px;
+	font-weight: 400;
+	color: #333;
+  }
+  .introjs-skipbutton {
+	position: absolute;
+	bottom: 11px;
+	left: 5px;
+	font-size: 0;
+  }
+
+  .introjs-tooltip-header h1 {
+	font-size: 29px;
+	text-align: center;
+	width: 100%;
+	line-height: 37px;
+	color: #EC441B;
+	margin-top: 15px;
+	margin-bottom: 10px;
+  }
+
+ 
+  
+
 .introjs-tooltip-title {
 	font-size: 18px;
 	margin: 0;
@@ -229,7 +263,9 @@ tr.introjs-showElement>th {
 	border-top: 1px solid #e0e0e0;
 	padding: 10px;
 	text-align: right;
-	white-space: nowrap
+	white-space: nowrap;
+	display: flex;
+justify-content: flex-end;
 }
 
 .introjs-tooltipbuttons:after {
@@ -247,44 +283,51 @@ tr.introjs-showElement>th {
 	overflow: visible;
 	display: inline-block;
 	padding: .5rem 1rem;
-	border: 1px solid #bdbdbd;
+	border: 1px solid #EC441B;
 	text-decoration: none;
-	text-shadow: 1px 1px 0 #fff;
+	
 	font-size: 14px;
-	color: #424242;
+	color: #fff;
 	white-space: nowrap;
 	cursor: pointer;
 	outline: 0;
-	background-color: #f4f4f4;
+	background-color: #EC441B;
 	border-radius: .2em;
 	zoom: 1;
-	display: inline
+	display: inline;
+	font-size: 18px;
 }
 
 .introjs-button:hover {
 	outline: 0;
 	text-decoration: none;
-	border-color: #9e9e9e;
-	background-color: #e0e0e0;
-	color: #212121
-}
+	border-color: #ec441b;
+	background-color: #ec441b;
+	color: #fff;
+  }
 
+
+  .introjs-tooltiptext ul li {
+	margin-bottom: 14px;
+  }
+  .introjs-tooltiptext ul {
+	padding: 0 0 0 10px;
+	text-align: left;
+  }
 .introjs-button:focus {
 	outline: 0;
 	text-decoration: none;
-	background-color: #eee;
-	-webkit-box-shadow: 0 0 0 .2rem rgba(158, 158, 158, .5);
-	box-shadow: 0 0 0 .2rem rgba(158, 158, 158, .5);
-	border: 1px solid #616161;
-	color: #212121
+	border-color: #ec441b;
+	background-color: #ec441b;
+	color: #fff
 }
 
 .introjs-button:active {
 	outline: 0;
 	text-decoration: none;
-	background-color: #e0e0e0;
-	border-color: #9e9e9e;
-	color: #212121
+	border-color: #ec441b;
+	background-color: #ec441b;
+	color: #fff
 }
 
 .introjs-button::-moz-focus-inner {
@@ -297,7 +340,7 @@ tr.introjs-showElement>th {
 	box-sizing: content-box;
 	color: #616161;
 	float: right;
-	font-size: 20px;
+	/* font-size: 20px; */
 	cursor: pointer;
 	font-weight: 700;
 	line-height: 1;
@@ -313,9 +356,11 @@ tr.introjs-showElement>th {
 }
 
 .introjs-prevbutton {
-	float: left
-}
-
+	float: left;
+	margin-right: 10px;
+	background: #333;
+	border-color: #333;
+  }
 .introjs-nextbutton {
 	float: right
 }
@@ -395,8 +440,8 @@ tr.introjs-showElement>th {
 
 .introjs-bullets ul li a.active {
 	width: 15px;
-	background: #999
-}
+	background: #EC441B;;
+  }
 
 .introjs-progress {
 	-webkit-box-sizing: content-box;

@@ -11,12 +11,12 @@ $(document).ready(function(){
         if(email == '' && password == '' && confirm_password == '')
         {
             $('#registration_error').attr('class','error')
-            $("#registration_error").html("<b>All Fields are Required</b>. "); 
+            $("#registration_error").html("<b>All fields are required</b>. "); 
         }
         else if(result_attherate == false)
         {
             $('#registration_error').attr('class','error')
-            $("#registration_error").html("<b>Email Format is not correct-(@ needed).</b>. "); 
+            $("#registration_error").html("<b>Email format is not correct-(@ needed).</b>. "); 
         }
         else if(length_password < 5)
         {
@@ -26,7 +26,7 @@ $(document).ready(function(){
         else if(password != confirm_password)
         {
             $('#registration_error').attr('class','error')
-            $("#registration_error").html("<b>Both Password and Confirm Password Did not Match</b>. "); 
+            $("#registration_error").html("<b>Both password and confirm password did not match</b>. "); 
         }
         else
         {

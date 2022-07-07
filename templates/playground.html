@@ -29,21 +29,28 @@
         <div class="error-display-outer" >
             <div id="error_display"></div>
             <div id="info_display"></div>
-            <span onclick="introjs.start()">
-                <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+            <span id="tutorialpopup" onclick="introjs.start()">
+                <div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" />
+                    <span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span>
+                  </div>
             </span>
         </div>
             <div id="demonstration_examples_view">
                 
-                <div class="text">Task demonstration <span onclick="introjs.start()">
-                        <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                <div class="text">Task demonstration <span id="tutorialpopup" onclick="introjs.start()">
+                    <div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                        <span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span>
+                      </div>
+                        
                 </span></div>
                 <div id="task_preview"></div>
             </div>
 
             <div id="input-view">
-                <div class="text" data-hint="second">Test <span onclick="introjs.start()">
-                        <img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                <div class="text" data-hint="second">Test <span id="tutorialpopup" onclick="introjs.start()">
+                    <div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle.svg') }}" />
+                        <span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span>
+                      </div>
                 </span>
                 </div>
 

@@ -18,19 +18,15 @@ import config
 def get_navbar(location):
     return flask.render_template('navbar.html', location=location)
 
+# def login():
+#     return flask.render_template('login.html',navbar=get_navbar(location='login'))
 
-def login():
-    return flask.render_template('login.html',navbar=get_navbar(location='login'))
-
-
-def register():
-    return flask.render_template('register.html',navbar=get_navbar(location='register'))
-
+# def register():
+#     return flask.render_template('register.html',navbar=get_navbar(location='register'))
 
 def logout():
     flask_login.logout_user()
     return flask.redirect('/')
-
 
 def login_post():
     if request.method == "POST":
@@ -43,19 +39,18 @@ def login_post():
             return jsonify(login_err_data)
         user = User.query.filter_by(email=email).first()
         if not user:
-            login_err_data = 'Email not Registered'
+            login_err_data = 'Email not registered'
             login_error = True
             return jsonify(login_err_data)
         password = flask.request.form.get('login_password') + user.password_salt
         valid = security.check_password_hash(user.password_hash, password)
         if not valid:
-            login_err_data = 'email/password Combination Mismatch'
+            login_err_data = 'email/password combination mismatch'
             login_error = True
             return jsonify(login_err_data,login_error)
         flask_login.login_user(user, remember=True)
         login_error = False
         return jsonify(login_error)
-
 
 def register_post():
     if request.method == "POST":
@@ -83,7 +78,7 @@ def register_post():
             return jsonify(register_error_data)
 
         if password != confirm_password:
-            register_error_data = "Password and Confirm Password Did not Match"
+            register_error_data = "Password and confirm password did not match"
             register_error = True
             return jsonify(register_error_data)
             
@@ -102,31 +97,17 @@ def register_post():
         register_error = False
         return jsonify(register_error)
 
-
-@flask_login.login_required
-def welcome():
-    return flask.render_template('welcome.html', navbar=get_navbar(location='welcome'))
-
-
 def landing():
-    # data = requests.get('https://furniture.mangoitsol.com/wp-json/api-test/v1/testing')
-    # print(type(data))
-    # # new_data = data.json()
-    # # print(type(new_data))
-    # latest_data = json.loads(data.text)
-    # print(type(latest_data))
-    # print(latest_data)
-    return flask.render_template('home.html')
-
+    data = requests.get('http://94.237.64.209/arc_wordpress/arc_wp/wp-json/arc-api/home')
+    latest_data = json.loads(data.text)
+    return flask.render_template('home.html',apidata=latest_data)
 
 @flask_login.login_required
 def editor():
     return flask.render_template('editor.html', navbar=get_navbar(location='editor'))
 
-
 def playground():
     return flask.render_template('playground.html', navbar=get_navbar(location='playground'))
-
 
 @flask_login.login_required
 def create_task():
@@ -185,7 +166,7 @@ def reset_token(token):
             reset_error = True
             return render_template('rest_token.html', error=reset_error_data)
         if password != confirm_password:
-            reset_error_data = "Password and Confirm Password Did not Match"
+            reset_error_data = "Password and confirm password did not match"
             reset_error = True
             return render_template('rest_token.html', error=reset_error_data)
         password_salt = str(random.randint(1, 1e9))
@@ -194,6 +175,6 @@ def reset_token(token):
             user.password_hash = password_hash
             user.password_salt = password_salt
             db.session.commit()
-            reset_error_data = 'Your password has been Updated! You are now able to login'
+            reset_error_data = 'Your password has been updated! You are now able to login'
             return redirect(url_for('landing'))
     return render_template('rest_token.html')

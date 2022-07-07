@@ -36,7 +36,7 @@ app.config['MAIL_USERNAME'] = 'abhilash.mangoit@gmail.com'
 app.config['MAIL_PASSWORD'] = 'yebuqafkqkhwfruc'
 db = SQLAlchemy(app)
 login_manager = flask_login.LoginManager()
-login_manager.login_view = '/login'
+login_manager.login_view = '/'
 login_manager.init_app(app)
 mail = Mail(app)
 
@@ -55,9 +55,9 @@ def landing():
     return views.landing()
 
 
-@app.route('/login')
-def login():
-    return views.login()
+# @app.route('/login')
+# def login():
+#     return views.login()
 
 
 @app.route('/logout')
@@ -70,19 +70,14 @@ def login_post():
     return views.login_post()
 
 
-@app.route('/register')
-def register():
-    return views.register()
+# @app.route('/register')
+# def register():
+#     return views.register()
 
 
 @app.route('/register_post', methods=['POST'])
 def register_post():
     return views.register_post()
-
-
-@app.route('/welcome')
-def welcome():
-    return views.welcome()
 
 
 @app.route('/create_task', methods=['POST'])

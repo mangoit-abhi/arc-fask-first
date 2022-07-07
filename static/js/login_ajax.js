@@ -9,12 +9,12 @@ $(document).ready(function(){
         if(email == '' && password == '')
         {
             $('#login_error').attr('class','error')
-            $("#login_error").html("<b>Both Fields are Required.</b>. "); 
+            $("#login_error").html("<b>Email and Password are required.</b>. "); 
         }
         else if(result_attherate == false)
         {
             $('#login_error').attr('class','error')
-            $("#login_error").html("<b>Email Format is not correct-(@ needed).</b>. "); 
+            $("#login_error").html("<b>Email format is not correct-(@ needed).</b>. "); 
         }
         else if(length_password < 5)
         {

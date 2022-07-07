@@ -2,43 +2,57 @@ var introjs =
 introJs().setOptions({
     disableInteraction: true,
     showBullets: true,
-    dontShowAgain: true,
     hidePrev: true,
     nextToDone: true,
     doneLabel: 'Let’s start!',
     steps: [{
-        intro: "Welcome to the playground! </br></br> Here you can solve ARC tasks on your own. </br></br> Do you want to have a short introduction?"
+        title: 'Welcome to the playground!',
+        intro: "Here you can solve ARC tasks on your own. </br> Do you want to have a short introduction?"
     },
     {
-        intro: "An ARC task consists of several example tests of how to solve the task and usually one test that you must solve. </br></br>Each test consists of one input - what it looks like before - and one output - what it should look like after. </br></br>Each test input consists of a grid with a certain height and width, where each of the cells can have one of ten colors. </br></br>Your task is to find out how to transform the input to achieve the output, based on the examples!"
+        intro: "<ul> <li>An ARC task consists of several example tests of how to solve the task and usually one test that you must solve.</li> <li>Each test consists of one input - what it looks like before - and one output - what it should look like after. </li><li>Each test input consists of a grid with a certain height and width, where each of the cells can have one of ten colors.</li> <li>Your task is to find out how to transform the input to achieve the output, based on the examples! </li></ul>"
     },
     {
         element: document.querySelector('#demonstration_examples_view'),
-        intro: "Here you can see the example tests. </br></br>Each line stands for one example. Usually there are between two and five examples. </br></br>Each example has its input on the left, which shows how it looks at the beginning, and its output on the right, which shows how it should look at the end"
+        intro: "<ul> <li>Here you can see the example tests. <li><li>Each line stands for one example. Usually there are between two and five examples.</li> <li>Each example has its input on the left, which shows how it looks at the beginning, and its output on the right, which shows how it should look at the end</li></ul>"
     },
     {
         element: document.querySelector('.evalution_input-outer'),
-        intro: "Here you see the input(s) for the test(s) you must solve. </br></br>From the examples you must find out how to transform the input to get the correct output. "
+        intro: "<ul> <li>Here you see the input(s) for the test(s) you must solve. </li><li>From the examples you must find out how to transform the input to get the correct output.</li></ul> "
     },
     {
         element: document.querySelector('#editor_grid_control_btns'),
-        intro: "Here you can create the correct output for the test input just shown. </br></br>'Copy from input' lets you copy the input grid into the drawing field. </br></br>'Reset Grid' lets you empty the grid and make it completely black. </br></br>'Resize' allows you to adjust the height and broadness of the output field."
+        intro: "<ul> <li>Here you can create the correct output for the test input just shown.</li> <li>'Copy from input' lets you copy the input grid into the drawing field.</li> <li>'Reset Grid' lets you empty the grid and make it completely black. </li><li>'Resize' allows you to adjust the height and broadness of the output field.</li></ul>"
     },
     {
         element: document.querySelector('#symbol_picker'),
-        intro: "Here you can select a color and the edit mode to change the color of the output cells. </br></br>'Edit' lets you fill a cell with the selected color when you click on that cell. </br></br>'Select' lets you fill several cells with one color by first dragging a frame over the cells by holding down the left mouse button and then clicking on that color. </br></br>'Fill' lets you fill a black area all at once."
+        intro: "<ul> <li>Here you can select a color and the edit mode to change the color of the output cells. </li><li>'Edit' lets you fill a cell with the selected color when you click on that cell. </li><li>'Select' lets you fill several cells with one color by first dragging a frame over the cells by holding down the left mouse button and then clicking on that color. </li><li>'Fill' lets you fill a black area all at once.</li></ul>"
     },
     {
         element: document.querySelector('#submit_solution_btn'),
-        intro: "Here you can submit your solution to see if you are correct. </br></br>Even though you can make an infinite number of attempts - it's a playground - a task is only considered solved if you find the correct solutions within three submitted attempts."
+        intro: "<ul> <li> Here you can submit your solution to see if you are correct. </li><li>Even though you can make an infinite number of attempts - it's a playground - a task is only considered solved if you find the correct solutions within three submitted attempts.</li></ul>"
     },
     {
         element: document.querySelector('#evaluation_output_editor'),
         intro: "Here you can load another task by opening its *.json file or you can click on 'Random' to open a new random task."
     },
     {
-        intro: "That's it. </br></br>We hope you enjoy the tasks. </br></br>We wish you all the best!."
+        title: "That's it.",
+        intro: " We hope you enjoy the tasks. </br>We wish you all the best!."
     },
 ]
 })
-introjs.start();
+
+window.onload = function () {
+    if (localStorage.getItem("hasCodeRunBefore") === null) 
+    {
+        localStorage.setItem("hasCodeRunBefore", true);
+        introjs.start();
+    }
+    else if (localStorage.getItem("hasCodeRunBefore") != null)
+    {
+        $('#tutorialpopup').click(function(){
+            introjs.refresh();
+        });
+    }
+}

@@ -441,6 +441,7 @@ body .f-right {
    margin: 0px;
    display: flex;
    align-items: center;
+   width: 100%;
 }
 
 .limitation ul li {
@@ -464,6 +465,7 @@ body .f-right {
   height: 400px;
   background: #D9D9D9;
   display: inline-block;
+  overflow: hidden;
 }
 
 .p-10 {
@@ -604,6 +606,51 @@ body #evaluation_output_editor.load-task {
   border-radius: 10px;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+  
+  opacity: 1;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  width: 250px;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  padding: 5px 10px;
+  border-radius: 6px;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  border: 1px solid #E2E2E2;
+  font-size: 16px;
+}
+
+.tooltip-left {
+  top: -5px;
+  bottom: auto;
+  right: 128%;
+}
+
+.tooltip-left::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #fff;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
 .error-display-outer {
   width: 100%;
   display: inline-block;
@@ -611,15 +658,75 @@ body #evaluation_output_editor.load-task {
   border-radius: 10px;
   font-size: 20px;
   font-weight: 400;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 15px;
+  align-content: center;
+  align-items: center;
 }
 body .text {
    background: #999999;
    text-align: left;
-   padding: 10px 20px;
+   padding: 10px 15px;
    font-size: 25px;
    border-radius: 10px;
    color: #fff;
    margin-bottom: 25px !important;
+}
+
+.reset-password {
+  width: 500px;
+  margin: auto;
+    margin-top: auto;
+  border: 1px solid #eee;
+  margin-top: 65px;
+  padding: 20px;
+}
+
+p.error, #reset_error_data {
+  color: red;
+  font-size: 15px;
+  
+}
+
+#reset_password {
+  margin-bottom: 15px;
+}
+
+#reset_button,
+#new_password {
+  background: var(--main-color);
+  color: #fff;
+  border: none;
+  width: 100%;
+  height: 60px;
+  margin: 10px 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  font-size: 20px;
+  
+  text-transform: uppercase;
+  border-radius: 10px;
+  font-weight: 400;
+  margin-top: 15px;
+}
+
+.reset-password .login-wrapper input{
+  width: 100%;
+height: 60px;
+border: 1px solid #D0D0D0;
+border-radius: 10px;
+margin-left: 0px;
+padding-left: 20px;
+}
+
+.reset-password  h1 {
+  margin-top: 0;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
 #demonstration_examples_view #task_preview .row {

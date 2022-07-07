@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    <title>Welcome</title>
+    <title>Password Reset Done</title>
 {% endblock title %}
 
 {% block head %}
@@ -8,8 +8,16 @@
 {% endblock head %}
 
 {% block content %}
-    <div class="text_content">
-        <p><b>Your Password has been Changed</b></p>
-        <a href="{{ url_for('landing') }}">Home Page</a>
+    <div class="container">
+        <div class="text_content reset-password" style="text-align: center;">
+            <p style="font-size:18px; color:#000;"><b>Your Password has been Changed</b></p>
+            <a href="{{ url_for('landing') }}" data-bs-toggle="modal" data-bs-target="#RegisterLogin">Login Page</a>
+        </div>
     </div>
+
+    <section class="container-fluid orange footer " style="position: fixed; width:100%; bottom:0; left:0px;">
+        <div class="container text-center">
+            <span> © 2022 Arc. All rights reserved.</span>
+        </div>
+    </section>
 {% endblock content %}

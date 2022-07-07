@@ -4,8 +4,9 @@
 {% endblock title %}
 {% block content %}
     <div class="container">
+        <div class="reset-password">
         <div class="title-wrapper">
-            <h1 class="title">Reset Pasword</h1>
+            <h1 class="title">Reset Password</h1>
         </div>
         <div class="login-wrapper">
             {% if error %}
@@ -13,12 +14,12 @@
             {% endif %}
             <form class="login-form" method="POST">
                 <div class="form_input">
-                    <label for="reset_password">New Password:</label>
-                    <input id="reset_password" name="reset_password" type="password" placeholder="" class="textbox"/><br>
+                    
+                    <input id="reset_password" name="reset_password" type="password" placeholder="New Password" class="textbox"/><br>
                 </div>
                 <div class="form_input">
-                    <label for="reset_confirm_password">Confirm New Password:</label>
-                    <input id="reset_confirm_password" name="reset_confirm_password" type="password" placeholder="" class="textbox"/><br>
+                   
+                    <input id="reset_confirm_password" name="reset_confirm_password" type="password" placeholder="Confirm New Password" class="textbox"/><br>
                 </div>
                 <div class="form-input">
                     <button type="submit" id="new_password">Reset Password</button>
@@ -27,4 +28,10 @@
             
         </div>
     </div>
+    </div>
+    <section class="container-fluid orange footer " style="position: fixed; width:100%; bottom:0; left:0px;">
+        <div class="container text-center">
+            <span> © 2022 Arc. All rights reserved.</span>
+        </div>
+    </section>
 {% endblock content %}
