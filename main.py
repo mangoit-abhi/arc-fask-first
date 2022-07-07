@@ -4,6 +4,7 @@ from flask_mail import Mail
 # from google.cloud import ndb
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
+from flask_talisman import Talisman
 
 import config
 
@@ -39,6 +40,7 @@ login_manager = flask_login.LoginManager()
 login_manager.login_view = '/'
 login_manager.init_app(app)
 mail = Mail(app)
+Talisman(app, content_security_policy=None, force_https=False)
 
 import views
 import models
