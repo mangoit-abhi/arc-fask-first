@@ -4,7 +4,6 @@ from flask_mail import Mail
 # from google.cloud import ndb
 from flask_sqlalchemy import SQLAlchemy
 from flask import render_template
-from flask_talisman import Talisman
 
 import config
 
@@ -40,7 +39,7 @@ login_manager = flask_login.LoginManager()
 login_manager.login_view = '/'
 login_manager.init_app(app)
 mail = Mail(app)
-Talisman(app, content_security_policy=None)
+
 
 import views
 import models
@@ -112,4 +111,4 @@ if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. You
     # can configure startup instructions by adding `entrypoint` to app.yaml.
-    app.run(host='arc-first.herokuapp.com', port=8080, debug=False)
+    app.run(host='arc-first.herokuapp.com', port=8080, debug=True)

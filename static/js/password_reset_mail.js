@@ -9,17 +9,17 @@ $(document).ready(function(){
         if(email == '')
         {
             $('#password_reset_email_error').attr('class','error')
-            $("#password_reset_email_error").html("<b>Email is Required.</b>. "); 
+            $("#password_reset_email_error").html("<b>Email is required.</b>. "); 
         }
         else if(result_attherate == false)
         {
             $('#password_reset_email_error').attr('class','error')
-            $("#password_reset_email_error").html("<b>Email Format is not correct(@ needed).</b>. "); 
+            $("#password_reset_email_error").html("<b>Email format is not correct(@ needed).</b>. "); 
         }
         else if(result_dot == false)
         {
             $('#password_reset_email_error').attr('class','error')
-            $("#password_reset_email_error").html("<b>Email Format is not correct(dot(.) needed).</b>. "); 
+            $("#password_reset_email_error").html("<b>Email format is not correct(dot(.) needed).</b>. "); 
         }
         else
         {
