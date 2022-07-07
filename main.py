@@ -40,7 +40,7 @@ login_manager = flask_login.LoginManager()
 login_manager.login_view = '/'
 login_manager.init_app(app)
 mail = Mail(app)
-Talisman(app, content_security_policy=None, force_https=False)
+Talisman(app, content_security_policy=None)
 
 import views
 import models
