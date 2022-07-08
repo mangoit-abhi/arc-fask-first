@@ -10,12 +10,12 @@
                 <div class="col-md-12 col-12"></div>
                 <div class="banner-container container" data-title="Welcome!" data-intro="You are Now in ARC 2 Home Page">
                     <div class="banner-text">
-                        <h1>{{ apidata.arc_welcome_heading }}</h1>
-                        <p>{{ apidata.arc_welcome_description }}</p>
+                        {{ apidata.arc_welcome_heading | safe }}
+                        {{ apidata.arc_welcome_description | safe }}
                         <a data-title="Visit Game" data-intro="You can Play Here Psychology Games" href="{{ url_for('playground') }}">Go to Playground</a>
                     </div>
                     <div class="banner-img">
-                          <img src="{{ apidata.arc_welcome_image[0] }}" />
+                          <img src="{{ apidata.arc_welcome_image[0] }}"/>
                     </div>
                 </div>
             </div>
@@ -30,8 +30,8 @@
               <div class="arc1-arc2">
                     <div class="arc-des" data-intro="We have Fascinated AI based Games">
                         <div class="arc-des-left">
-                            <h2>{{ apidata.arc_1_heading }}</h2>
-                            <p>{{ apidata.arc_1_description }}</p>
+                            {{ apidata.arc_1_heading | safe }}
+                            {{ apidata.arc_1_description | safe }}
                         </div>
                         <div class="arc-des-right">
                             <img src="{{ apidata.arc_1_image[0] }}" />
@@ -39,8 +39,8 @@
                     </div>
                     <div class="arc-des des-bottom">
                         <div class="arc-des-left">
-                            <h2>{{ apidata.arc_2_heading }}</h2>
-                            <p>{{ apidata.arc_2_description }}</p>
+                            {{ apidata.arc_2_heading | safe }}
+                            {{ apidata.arc_2_description | safe }}
                         </div>
                         <div class="arc-des-right">
                             <img src="{{ apidata.arc_2_image[0] }}" />
@@ -54,7 +54,7 @@
         <section class="container-fluid grey-bg">
             <div class="container text-center">
                 {{ apidata.arc_2_Crowdsourcing_heeading | safe }}
-                <p class="p-large">{{ apidata.arc_2_crowdsourcing_description }} </p>
+                {{ apidata.arc_2_crowdsourcing_description | safe }}
                 <img src="{{ apidata.arc_2_Crowdsourcing_Image[0] }}" />
 
             </div>
@@ -78,18 +78,12 @@
                     <ul>
                         <li class="text-center">
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_1[0] }}"></div>
-                            <h3>{{ apidata.limitations_of_arc_heading_1 }}</h3>
-                            <p class="p-large">{{ apidata.limitations_of_arc_description_1 }}</p>
                         </li>
                         <li class="text-center">
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_2[0] }}"></div>
-                            <h3>{{ apidata.limitations_of_arc_heading_2 }}</h3>
-                            <p class="p-large">{{ apidata.limitations_of_arc_description_2 }}</p>
                         </li>
                         <li class="text-center">
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_3[0] }}"></div>
-                            <h3>{{ apidata.limitations_of_arc_heading_3 }}</h3>
-                            <p class="p-large">{{ apidata.limitations_of_arc_description_3 }}</p>
                         </li>
                     </ul>
                 </div>
@@ -97,18 +91,18 @@
         </section> 
         <section class="container-fluid grey-bg related-research">
             <div class="container text-center">
-                <h2 class="mt-0">{{ apidata.related_research_heading }}</h2>
+                {{ apidata.related_research_heading | safe }}
                 <div class="row">
                     <div class="col-md-6  p-15">
                         <div class="border p-20 text-left bg-white b-radius-15">
-                            <h3>{{ apidata.related_research_title_1 }}</h3>
-                             <p class="p-large">{{ apidata.related_research_description_1 }} </p>
+                            {{ apidata.related_research_title_1 | safe }}
+                             {{ apidata.related_research_description_1 | safe }}
                         </div>
                     </div>
                     <div class="col-md-6  p-15">
                         <div class="border p-20 text-left bg-white b-radius-15">
-                            <h3>{{ apidata.related_research_title_2 }}</h3>
-                             <p class="p-large">{{ apidata.related_research_description_2 }} </p>
+                            <h3>{{ apidata.related_research_title_2 | safe }}</h3>
+                             <p class="p-large">{{ apidata.related_research_description_2 | safe }} </p>
                         </div>
                     </div>
                 </div>
