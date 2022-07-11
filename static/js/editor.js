@@ -229,7 +229,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     }
     var jqSelectForTestingBtn = pairSlot.find('.select_for_testing_button');
     if (!jqSelectForTestingBtn.length) {
-        jqSelectForTestingBtn = $('<button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Add to test set</button>');
+        jqSelectForTestingBtn = $('<button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as test pair</button>');
         jqSelectForTestingBtn.appendTo(pairSlot);
     }
 
@@ -259,7 +259,7 @@ function stashCurrentPair() {
         infoMsg('Now create a third pair and save it.')
     }
     if ((PAIRS.length > 2) & (TEST_PAIR_INDICES.length == 0)) {
-        infoMsg('At some point, click "ADD TO TEST SET" to add one or more pairs to the test set for the task.')
+        infoMsg('At some point, click "Mark as test pair" to add one or more pairs to the test set for the task.')
     }
     if ((PAIRS.length > 2) & (TEST_PAIR_INDICES.length > 0)) {
         infoMsg('Once your task is ready, click "SAVE" to save it to the ARC server.')
@@ -309,7 +309,7 @@ function selectPairForTesting(pairId) {
         }
         // Modify text on button
         preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Remove from test set');
+            $(btn).html('Unmark as test pair');
         })
         // Highlight pair preview
         preview_div.addClass('selected_for_testing');
@@ -324,7 +324,7 @@ function selectPairForTesting(pairId) {
         }
         // Modify text on button
         preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Add to test set');
+            $(btn).html('Mark as test pair');
         })
         // Un-highlight pair preview
         preview_div.removeClass('selected_for_testing');
