@@ -14,14 +14,9 @@
 
 
 {% block content %}
-    <div id="editor">
-        <div class="container">
-            <div class="error-display-outer"><div id="error_display"></div>
-            <div id="info_display">
-                Use the two grids on the left to create a "pair", consisting of an INPUT GRID and its corresponding OUTPUT GRID.<br>
-                When done, click "NEW PAIR" to switch to the next pair.
-            </div>
-            </div>
+<div id="editor">
+    <div class="container">
+        <div id="error_display"></div>
         <div id="pair_editor">
             <div id="task_toolbar" class="toolbar">
                 <label for="task_name">Task name: </label>
@@ -33,16 +28,11 @@
             <div id="pair_toolbar" class="toolbar">
                 <div id="symbol_toolbar" >
                     <div id="symbol_actions">
-                        <input type="radio" id="tool_edit"
-                            name="tool_switching" value="edit" checked>
+                        <input type="radio" id="tool_edit" name="tool_switching" value="edit" checked>
                         <label for="tool_edit">Edit</label>
-    
-                        <input type="radio" id="tool_select"
-                            name="tool_switching" value="select">
+                        <input type="radio" id="tool_select" name="tool_switching" value="select">
                         <label for="tool_select">Select</label>
-    
-                        <input type="radio" id="tool_floodfill"
-                            name="tool_switching" value="floodfill">
+                        <input type="radio" id="tool_floodfill" name="tool_switching" value="floodfill">
                         <label for="tool_floodfill">Flood fill</label>
                     </div>
                     <div id="symbol_picker">
@@ -62,11 +52,8 @@
                     <button id="save_pair" onclick="stashCurrentPair()">Save pair</button>
                     <button id="new_pair" onclick="newPair()">New pair</button>
                     <button id="reset_current_pair" onclick="resetCurrentPair()">Reset current pair</button>
-                </div>    
-
-                
+                </div>
             </div>
-           
 
             <div id="grids_space">
                 <div id="input_window">
@@ -79,8 +66,7 @@
                     </div>
 
                     <div id="input_grid">
-                        <div class="edition_grid">
-                        </div>
+                        <div class="edition_grid"></div>
                     </div>
 
                     <div class="toolbar">
@@ -121,12 +107,9 @@
                 </div>
             </div>
         </div>
-
-      
-        <div id="task_preview">
-        </div>
-        </div>
+        <div id="task_preview"></div>
     </div>
+</div>
 {% endblock content %}
 
 {% block script %}
