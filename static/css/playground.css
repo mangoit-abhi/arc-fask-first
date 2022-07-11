@@ -29,7 +29,7 @@
 
 #evaluation_output_editor {
     float: left;
-    width: 500px;
+    width: 100%;
     margin-bottom: 20px;
     padding: 10px 20px;
     padding-top: 0;
@@ -43,6 +43,13 @@
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
+}
+
+.introjs-tooltiptext b {
+  text-align: left !important;
+  display: inline-block;
+  line-height: 29px;
+  margin-bottom: 20px;
 }
 
 #editor_grid_control_btns {
@@ -127,20 +134,26 @@ border-radius: 5px;
 
 button:focus {outline:0;}
 
-#output_grid {
 
-}
 
 .input_preview {
   height: 200px;
-  width: 200px;
+  width: 250px;
   float: left;
+  border: 1px solid #f9f9f9;
+}
+
+#demonstration_examples_view #task_preview .row {
+  margin: 0;
+  justify-items: center;
+  justify-content: center;
 }
 .output_preview {
   height: 200px;
-  width: 200px;
+  width: 250px;
   float: left;
-  margin-left: 35px;
+  /* margin-left: 35px; */
+  border: 1px solid #f9f9f9;
 }
 
 #toolbar {
@@ -152,9 +165,9 @@ button:focus {outline:0;}
 
 }
 
-.preview_header span:nth-child(2n + 0) {
+/* .preview_header span:nth-child(2n + 0) {
    margin-left: 33px;
-}
+} */
 
 #symbol_picker {
     float: left;
@@ -201,11 +214,32 @@ input, button {
 
   #evaluation_input  {
     float: left;
-    width: 700px;
+    width: 100%;
     margin-bottom: 20px;
     padding: 10px;
       padding-top: 10px;
     padding-top: 0;
+  }
+
+  #toolbar_symbol_picker {
+    width: 100%;
+    display: inline-block;
+  }
+
+  .test-heading {
+    width: 100%;
+    text-align: center;
+    display: inline-block;
+    padding: 0 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 5px;
+  }
+
+  #evaluation_input .row,
+  #evaluation_output_editor .row{
+    justify-content: center;
   }
 
   .toolbar-outer > div {
@@ -218,7 +252,7 @@ input, button {
     width: 50%;
     flex: 0 0 48%;
     padding-right: 15px;
-    background: #fbfbfb;
+   
     border-radius: 10px;
     padding: 0 24px;
   }
@@ -285,7 +319,7 @@ input, button {
 }
 
 .preview_header span {
-  width: 200px;
+  width: 250px;
   display: inline-block;
   padding: 0 10px;
   text-align: center;

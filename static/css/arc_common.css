@@ -74,18 +74,23 @@
 /*Message display*/
 
 #error_display {
-   
     color: red;
-    float: left;
+    text-align: right;
+    padding: 10px;
+}
+
+#correct_display {
+    color: green;
+    text-align: right;
     padding: 10px;
 }
 
 #info_display {
-   
     color: green;
     float: left;
     padding: 20px;
 }
+
 
 #modal_bg {
     background-color: black;

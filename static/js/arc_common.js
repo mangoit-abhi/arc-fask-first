@@ -121,21 +121,38 @@ function setCellSymbol(cell, symbol) {
 }
 
 function errorMsg(msg) {
-    $('#error_display').stop(true, true);
     $('#info_display').stop(true, true);
+    $('#error_display').stop(true, true);
+    $('#correct_display').stop(true, true);
 
-    $('#error_display').hide();
     $('#info_display').hide();
+    $('#error_display').hide();
+    $('#correct_display').hide();
     $('#error_display').html(msg);
     $('#error_display').show();
 }
 
 function infoMsg(msg) {
-    $('#error_display').stop(true, true);
     $('#info_display').stop(true, true);
+    $('#error_display').stop(true, true);
+    $('#correct_display').stop(true, true);
 
     $('#info_display').hide();
     $('#error_display').hide();
+    $('#correct_display').hide();
     $('#info_display').html(msg);
     $('#info_display').show();
+}
+
+
+function correctMsg(msg) {
+    $('#info_display').stop(true, true);
+    $('#error_display').stop(true, true);
+    $('#correct_display').stop(true, true);
+
+    $('#info_display').hide();
+    $('#error_display').hide();
+    $('#correct_display').hide();
+    $('#correct_display').html(msg);
+    $('#correct_display').show();
 }

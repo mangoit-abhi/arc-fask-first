@@ -74,11 +74,11 @@
              
             </div>   
         </section>
-        {% if apidata.arc_2_Crowdsourcing_heeading or arc_2_crowdsourcing_description or apidata.arc_2_Crowdsourcing_Image %}
+        {% if apidata.arc_2_Crowdsourcing_heading or arc_2_crowdsourcing_description or apidata.arc_2_Crowdsourcing_Image %}
         <section class="container-fluid grey-bg">
             <div class="container text-center">
-                {% if apidata.arc_2_Crowdsourcing_heeading %}
-                {{ apidata.arc_2_Crowdsourcing_heeading | safe }}
+                {% if apidata.arc_2_Crowdsourcing_heading %}
+                {{ apidata.arc_2_Crowdsourcing_heading | safe }}
                 {% endif %}
                 {% if apidata.arc_2_crowdsourcing_description %}
                 {{ apidata.arc_2_crowdsourcing_description | safe }}
@@ -102,13 +102,16 @@
                         {{ apidata.arc_2_yearly_competition_description | safe }}
                         {% endif %}
                    </div>
-                   <div><img src="img/ARC-challenge-Imagem.png"/></div>
+                   {% if apidata.arc_2_yearly_competition_Image %}
+                   <div>
+                        <img src="{{ apidata.arc_2_yearly_competition_Image[0] }}">
+                   </div>
+                   {% endif %}
                 </div>
             </div>
         </section>
         {% endif %}
 
-        {% if apidata.limitations_of_arc_tittle or apidata.limitations_of_arc_image_1 or apidata.limitations_of_arc_image_2 or apidata.limitations_of_arc_image_3 %}
         <section class="limitation">
             <div class="container">
                 {% if apidata.limitations_of_arc_tittle %}
@@ -116,32 +119,49 @@
                 {% endif %}
                 <div class="row">
                     <ul>
-                        {% if apidata.limitations_of_arc_image_1 %}
+                        {% if apidata.limitations_of_arc_image_1 or apidata.limitations_of_arc_heading_1 or apidata.limitations_of_arc_description_1 %}
                         <li class="text-center">
+                            {% if apidata.limitations_of_arc_image_1 %}
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_1[0] }}"></div>
-                            <h3>ARC 2 Limitation</h3>
-                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_heading_1 %}
+                            {{ apidata.limitations_of_arc_heading_1 | safe }}
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_description_1 %}
+                            {{ apidata.limitations_of_arc_description_1 | safe }}
+                            {% endif %}
                         </li>
                         {% endif %}
-                        {% if apidata.limitations_of_arc_image_2 %}
+                        {% if apidata.limitations_of_arc_image_2 or apidata.limitations_of_arc_heading_2 or apidata.limitations_of_arc_description_2 %}
                         <li class="text-center">
+                            {% if apidata.limitations_of_arc_image_2 %}
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_2[0] }}"></div>
-                            <h3>ARC 2 Limitation</h3>
-                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_heading_2 %}
+                            {{ apidata.limitations_of_arc_heading_2 | safe }}
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_description_2 %}
+                            {{ apidata.limitations_of_arc_description_2 | safe }}
+                            {% endif %}
                         </li>
                         {% endif %}
-                        {% if apidata.limitations_of_arc_image_3 %}
+                        {% if apidata.limitations_of_arc_image_3 or apidata.limitations_of_arc_heading_3 or apidata.limitations_of_arc_description_3 %}
                         <li class="text-center">
+                            {% if apidata.limitations_of_arc_image_3 %}
                             <div class="image"><img src="{{ apidata.limitations_of_arc_image_3[0] }}"></div>
-                            <h3>ARC 2 Limitation</h3>
-                            <p class="p-large">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever.</p>
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_heading_3 %}
+                            {{ apidata.limitations_of_arc_heading_3 | safe }}
+                            {% endif %}
+                            {% if apidata.limitations_of_arc_description_3 %}
+                            {{ apidata.limitations_of_arc_description_3 | safe }}
+                            {% endif %}
                         </li>
                         {% endif %}
                     </ul>
                 </div>
             </div>
         </section>
-        {% endif %}
 
         {% if apidata.related_research_heading or apidata.related_research_title_1 or apidata.related_research_description_1 or related_research_title_2 or related_research_description_2 %}
         <section class="container-fluid grey-bg related-research">
@@ -179,7 +199,7 @@
             <div class="container text-center">
                 <span> © 2022 Arc. All rights reserved.</span>
             </div>
-        </section>    
+        </section>
         
 {% endblock content %}
 

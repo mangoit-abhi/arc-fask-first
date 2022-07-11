@@ -236,7 +236,7 @@ function submitSolution() {
         }
 
     }
-    infoMsg('Correct solution!');
+    correctMsg('Correct solution!');
 }
 
 function fillTestInput(inputGrid) {
