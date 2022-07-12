@@ -2,7 +2,7 @@ var PAIRS = new Array(); // All pairs in the task.
 var TEST_PAIR_INDICES = new Array(); // Indices of pairs that form the test set for the task.
 var CURRENT_INPUT_GRID = new Grid(16, 16);
 var CURRENT_OUTPUT_GRID = new Grid(16, 16);
-var CURRENT_PAIR_INDEX = 1;
+var CURRENT_PAIR_INDEX = 0;
 var TASK_NAME = null;
 
 var EDITION_GRID_HEIGHT = 470;
@@ -14,7 +14,7 @@ function resetTask() {
     TEST_PAIR_INDICES = new Array();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    CURRENT_PAIR_INDEX = 1;
+    CURRENT_PAIR_INDEX = 0;
     // Clear edition grids.
     resetCurrentPair();
     // Empty task preview div.
@@ -25,19 +25,28 @@ function resetTask() {
 function refreshEditionGrid(jqGrid, dataGrid) {
     fillJqGridWithData(jqGrid, dataGrid);
     setUpEditionGridListeners(jqGrid);
-    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_HEIGHT);
+    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_WIDTH);
     initializeSelectable();
 }
 
-function getSelectedSymbol() {
-    selected = $('#symbol_picker .selected-symbol-preview')[0];
-    return $(selected).attr('symbol');
-}
+// function getSelectedSymbol() {
+//     selected1 = $('#symbol_picker .selected-symbol-preview')[0];
+//     selected2 = $('#output_window .symbol_picker_cls .selected-symbol-preview')[0];
+//     return $(selected1).attr('symbol');
+// }
 
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
         cell = $(event.target);
-        symbol = getSelectedSymbol();
+        //  New updated | color change in grids | Fixation
+        selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
+        console.log(selected_cell_grid_id);
+        selected_symbol_cell = $('#'+selected_cell_grid_id+' .symbol_picker_cls .selected-symbol-preview')[0];
+        console.log(selected_symbol_cell);
+        symbol = $(selected_symbol_cell).attr('symbol');
+        console.log(symbol);
+        //  New updated | color change in grids | Fixation | Ends
+        // symbol = getSelectedSymbol(); // Previous Code
 
         mode = $('input[name=tool_switching]:checked').val();
         if (mode == 'floodfill') {
@@ -202,20 +211,20 @@ function resetOutputGrid() {
 }
 
 function fillPairPreview(pairId, inputGrid, outputGrid) {
-    var pairSlot = $('#pair_preview_' + pairId);
+    var pairSlot = $('#parent_pair_' + pairId);
     if (!pairSlot.length) {
         pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="pair_preview_' + pairId + '" class="pair_preview" index="' + pairId + '"></div><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete Pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button></div></div>');
         pairSlot.appendTo('#new_pairs');
-    }
-    var jqOutputGrid = pairSlot.find('.output_preview');
-    if (!jqOutputGrid.length) {
-        jqOutputGrid = $('<div class="output_preview"></div>');
-        jqOutputGrid.prependTo(pairSlot);
     }
     var jqInputGrid = pairSlot.find('.input_preview');
     if (!jqInputGrid.length) {
         jqInputGrid = $('<div class="input_preview"></div>');
         jqInputGrid.prependTo(pairSlot);
+    }
+    var jqOutputGrid = pairSlot.find('.output_preview');
+    if (!jqOutputGrid.length) {
+        jqOutputGrid = $('<div class="output_preview"></div>');
+        jqOutputGrid.prependTo(pairSlot);
     }
     // var jqEditBtn = pairSlot.find('.edit_pair_btn');
     // if (!jqEditBtn.length) {
@@ -494,9 +503,10 @@ function initializeSelectable() {
 // Initial event binding.
 
 $(document).ready(function () {
-    $('#symbol_picker').find('.symbol_preview').click(function(event) {
+    // $('#symbol_picker').find('.symbol_preview').click(function(event) {
+    $('.symbol_picker_cls').click(function(event) {
         symbol_preview = $(event.target);
-        $('#symbol_picker').find('.symbol_preview').each(function(i, preview) {
+        $(this).find('.symbol_preview').each(function(i, preview) {
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
