@@ -71,11 +71,12 @@ html body span.current-test-box {
   margin-left: 15px;
 }
 
-body #error_display {
+body #error_display, #errorMsgFile {
   background: rgba(255,0,0,0.1);
   border: 1px solid rgba(255,0,0,0.5);
   margin-top: 12px;
   text-align: left;
+  padding: 0 10px;
 }
 
 body #correct_display {
@@ -83,6 +84,7 @@ body #correct_display {
   border: 1px solid rgba(0, 255, 0, 0.5);
   margin-top: 12px;
   text-align: left;
+  padding: 0 10px;
 }
 
 html body span.current-test-box {
@@ -94,7 +96,7 @@ html body span.current-test-box {
 }
 
 #input-view button {
-  background: #fc6b2c;
+  background: #525252;
   border: none;
   font-size: 18px;
   height: 40px;
@@ -107,6 +109,37 @@ body span.current-test-box span {
   vertical-align: middle;
 }
 
+.toolbar-inner {
+  /* display: inline-block; */
+  margin-left: 5px;
+  margin-top: 9px;
+}
+
+.toolbar-inner input {
+  width: 55px;
+}
+
+.toolbar-inner {
+  margin-top: 11px;
+}
+
+#errorMsgButton {
+  font-size: 15px;
+  color: red;
+  margin-top: 3px;
+  background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(255,0,0,0.5);
+  margin-top: 4px;
+  text-align: left;
+  padding: 0 10px;
+}
+
+.symbol_toolbar-outer #symbol_toolbar {
+  padding-left: 0;
+  padding: 10px 0 0 0;
+  margin: 0px 1px;
+}
+
 .navbar a {
   float: left;
   color: #f2f2f2;
@@ -116,6 +149,12 @@ body span.current-test-box span {
   font-size: 17px;
   font-weight: 500;
   position: relative;
+}
+
+.symbol_toolbar-outer #symbol_toolbar {
+  padding-left: 0;
+  padding: 7px 0 0;
+  margin-bottom: 0;
 }
 
 section.container-fluid.grey-bg.related-research {

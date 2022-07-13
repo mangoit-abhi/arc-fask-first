@@ -15,6 +15,7 @@
     </div> -->
     <div id="workspace" >
         <div class="container">
+            <div id="errorMsgFile" style="display:none"></div>
             <div id="evaluation_output_editor" class="load-task">
                 <div id="load_task_control_btns">
                     <label id='task_name' for="random_task_btn"> Task Name:</label>
@@ -47,6 +48,7 @@
                     <span class="current-test-box">
                         <span id="current_test_input_id_display">0</span>/<span id="total_test_input_count_display">0</span>
                         <button onclick="nextTestInput()">Next test input</button>
+                        <span id="errorMsgButton" style="display:none;"></span>
                     </span>
                  
                 </div>

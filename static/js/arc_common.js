@@ -122,24 +122,40 @@ function setCellSymbol(cell, symbol) {
 
 function errorMsg(msg) {
     $('#info_display').stop(true, true);
-    $('#error_display').stop(true, true);
+    $('#info_display').hide();
     $('#correct_display').stop(true, true);
+    $('#correct_display').hide();
+    $('#error_display').stop(true, true);
+    $('#error_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
 
     $('#info_display').hide();
-    $('#error_display').hide();
     $('#correct_display').hide();
+    $('#errorMsgButton').hide();
+    $('#error_display').hide();
     $('#error_display').html(msg);
     $('#error_display').show();
 }
 
 function infoMsg(msg) {
     $('#info_display').stop(true, true);
-    $('#error_display').stop(true, true);
-    $('#correct_display').stop(true, true);
-
     $('#info_display').hide();
+    $('#correct_display').stop(true, true);
+    $('#correct_display').hide();
+    $('#error_display').stop(true, true);
+    $('#error_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
+
     $('#error_display').hide();
     $('#correct_display').hide();
+    $('#errorMsgButton').hide();
+    $('#info_display').hide();
     $('#info_display').html(msg);
     $('#info_display').show();
 }
@@ -147,12 +163,69 @@ function infoMsg(msg) {
 
 function correctMsg(msg) {
     $('#info_display').stop(true, true);
-    $('#error_display').stop(true, true);
+    $('#info_display').hide();
     $('#correct_display').stop(true, true);
+    $('#correct_display').hide();
+    $('#error_display').stop(true, true);
+    $('#error_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
+
+    $('#info_display').hide();
+    $('#error_display').hide();
+    $('#errorMsgButton').hide();
+    $('#correct_display').hide();
+    $('#correct_display').html(msg);
+    $('#correct_display').show();
+}
+
+function errorMsgFile(msg) {
+    $('#info_display').stop(true, true);
+    $('#info_display').hide();
+    $('#correct_display').stop(true, true);
+    $('#correct_display').hide();
+    $('#error_display').stop(true, true);
+    $('#error_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
 
     $('#info_display').hide();
     $('#error_display').hide();
     $('#correct_display').hide();
-    $('#correct_display').html(msg);
-    $('#correct_display').show();
+    $('#errorMsgButton').hide();
+    $('#errorMsgFile').hide();
+    $('#errorMsgFile').html(msg);
+    $('#errorMsgFile').show();
+}
+
+function errorMsgButton(msg) {
+    $('#info_display').stop(true, true);
+    $('#info_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
+    
+    $('#info_display').hide();
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').hide();
+    $('#errorMsgButton').html(msg);
+    $('#errorMsgButton').show();
+}
+
+function hideAllError() {
+    $('#info_display').stop(true, true);
+    $('#info_display').hide();
+    $('#correct_display').stop(true, true);
+    $('#correct_display').hide();
+    $('#error_display').stop(true, true);
+    $('#error_display').hide();
+    $('#errorMsgFile').stop(true, true);
+    $('#errorMsgFile').hide();
+    $('#errorMsgButton').stop(true, true);
+    $('#errorMsgButton').hide();
 }

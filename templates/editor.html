@@ -16,7 +16,7 @@
 {% block content %}
 <div id="editor">
     <div class="container">
-        <div id="error_display" style="display:none"></div>
+        <div id="errorMsgFile" style="display:none"></div>
         <div id="pair_editor">
             <div id="task_toolbar" class="toolbar">
                 <label for="task_name">Task name: </label>
@@ -47,41 +47,47 @@
                                 <button onclick="resizeInputGrid()">Resize</button>
                                 <button onclick="resetInputGrid()">Reset grid</button>
                                 <button onclick="copyToOutput()">Copy to output</button>
+                                <div class="symbol_toolbar-outer">
+                                    <div id="symbol_toolbar" >
+                                        <div id="symbol_picker" class="symbol_picker_cls">
+                                            <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
+                                            <div class="symbol_preview symbol_1" symbol="1"></div>
+                                            <div class="symbol_preview symbol_2" symbol="2"></div>
+                                            <div class="symbol_preview symbol_3" symbol="3"></div>
+                                            <div class="symbol_preview symbol_4" symbol="4"></div>
+                                            <div class="symbol_preview symbol_5" symbol="5"></div>
+                                            <div class="symbol_preview symbol_6" symbol="6"></div>
+                                            <div class="symbol_preview symbol_7" symbol="7"></div>
+                                            <div class="symbol_preview symbol_8" symbol="8"></div>
+                                            <div class="symbol_preview symbol_9" symbol="9"></div>
+                                        </div>
+                                        <div id="symbol_actions">
+                                            <input type="radio" id="tool_edit" name="tool_switching" value="edit" checked>
+                                            <label for="tool_edit">Edit</label>
+                                            <input type="radio" id="tool_select" name="tool_switching" value="select">
+                                            <label for="tool_select">Select</label>
+                                            <input type="radio" id="tool_floodfill" name="tool_switching" value="floodfill">
+                                            <label for="tool_floodfill">Flood fill</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            
 
                             <div class="toolbar">
                                 <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
                                 <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
-                            </div>
-
-                            <div class="toolbar">
-                                <label for="eval_expr_input">Expression of i, j: </label>
-                                <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
-                                <button onclick="evalExpressionOnInputGrid()">Eval</button>
-                            </div>
-
-                            <div id="symbol_toolbar" >
-                                <div id="symbol_picker" class="symbol_picker_cls">
-                                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                                    <div class="symbol_preview symbol_1" symbol="1"></div>
-                                    <div class="symbol_preview symbol_2" symbol="2"></div>
-                                    <div class="symbol_preview symbol_3" symbol="3"></div>
-                                    <div class="symbol_preview symbol_4" symbol="4"></div>
-                                    <div class="symbol_preview symbol_5" symbol="5"></div>
-                                    <div class="symbol_preview symbol_6" symbol="6"></div>
-                                    <div class="symbol_preview symbol_7" symbol="7"></div>
-                                    <div class="symbol_preview symbol_8" symbol="8"></div>
-                                    <div class="symbol_preview symbol_9" symbol="9"></div>
-                                </div>
-                                <div id="symbol_actions">
-                                    <input type="radio" id="tool_edit" name="tool_switching" value="edit" checked>
-                                    <label for="tool_edit">Edit</label>
-                                    <input type="radio" id="tool_select" name="tool_switching" value="select">
-                                    <label for="tool_select">Select</label>
-                                    <input type="radio" id="tool_floodfill" name="tool_switching" value="floodfill">
-                                    <label for="tool_floodfill">Flood fill</label>
+                                <div class="toolbar-inner">
+                                    <label for="eval_expr_input">Expression of i, j: </label>
+                                    <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
+                                    <button onclick="evalExpressionOnInputGrid()">Eval</button>
                                 </div>
                             </div>
+
+                           
+
+                            
                         </div>
 
                         <div id="output_window">
@@ -95,41 +101,47 @@
                                 <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
                                 <button onclick="resizeOutputGrid()">Resize</button>
                                 <button onclick="resetOutputGrid()">Reset grid</button>
+                                <div class="symbol_toolbar-outer">
+                                    <div id="symbol_toolbar" >
+                                        <div id="symbol_picker" class="symbol_picker_cls">
+                                            <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
+                                            <div class="symbol_preview symbol_1" symbol="1"></div>
+                                            <div class="symbol_preview symbol_2" symbol="2"></div>
+                                            <div class="symbol_preview symbol_3" symbol="3"></div>
+                                            <div class="symbol_preview symbol_4" symbol="4"></div>
+                                            <div class="symbol_preview symbol_5" symbol="5"></div>
+                                            <div class="symbol_preview symbol_6" symbol="6"></div>
+                                            <div class="symbol_preview symbol_7" symbol="7"></div>
+                                            <div class="symbol_preview symbol_8" symbol="8"></div>
+                                            <div class="symbol_preview symbol_9" symbol="9"></div>
+                                        </div>
+                                        <div id="symbol_actions">
+                                            <input type="radio" id="tool_edit" name="tool_switching" value="edit" checked>
+                                            <label for="tool_edit">Edit</label>
+                                            <input type="radio" id="tool_select" name="tool_switching" value="select">
+                                            <label for="tool_select">Select</label>
+                                            <input type="radio" id="tool_floodfill" name="tool_switching" value="floodfill">
+                                            <label for="tool_floodfill">Flood fill</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
+
 
                             <div class="toolbar">
                                 <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
                                 <button onclick="multicolorNoiseOnGrid('output')">Multicolor noise</button>
-                            </div>
-
-                            <div class="toolbar">
-                                <label for="eval_expr_output">Expression of i, j: </label>
-                                <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
-                                <button onclick="evalExpressionOnOutputGrid()">Eval</button>
-                            </div>
-
-                            <div id="symbol_toolbar" >
-                                <div id="symbol_picker" class="symbol_picker_cls">
-                                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                                    <div class="symbol_preview symbol_1" symbol="1"></div>
-                                    <div class="symbol_preview symbol_2" symbol="2"></div>
-                                    <div class="symbol_preview symbol_3" symbol="3"></div>
-                                    <div class="symbol_preview symbol_4" symbol="4"></div>
-                                    <div class="symbol_preview symbol_5" symbol="5"></div>
-                                    <div class="symbol_preview symbol_6" symbol="6"></div>
-                                    <div class="symbol_preview symbol_7" symbol="7"></div>
-                                    <div class="symbol_preview symbol_8" symbol="8"></div>
-                                    <div class="symbol_preview symbol_9" symbol="9"></div>
-                                </div>
-                                <div id="symbol_actions">
-                                    <input type="radio" id="tool_edit" name="tool_switching" value="edit" checked>
-                                    <label for="tool_edit">Edit</label>
-                                    <input type="radio" id="tool_select" name="tool_switching" value="select">
-                                    <label for="tool_select">Select</label>
-                                    <input type="radio" id="tool_floodfill" name="tool_switching" value="floodfill">
-                                    <label for="tool_floodfill">Flood fill</label>
+                                <div class="toolbar-inner">
+                                    <label for="eval_expr_output">Expression of i, j: </label>
+                                    <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
+                                    <button onclick="evalExpressionOnOutputGrid()">Eval</button>
                                 </div>
                             </div>
+
+                            
+
+                            
                         </div>
                     </div>
                     <div id="delete_mark_as_test_pairs" class="delete_mark_as_test_pairs">

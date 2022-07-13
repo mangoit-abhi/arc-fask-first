@@ -118,8 +118,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
 function loadJSONTask(train, test) {
     resetTask();
-    $('#error_display').hide();
-    $('#info_display').hide();
+    hideAllError();
 
     for (var i = 0; i < train.length; i++) {
         pair = train[i];
@@ -154,26 +153,38 @@ function display_task_name(task_name, task_index, number_of_tasks) {
 function loadTaskFromFile(e) {
     var file = e.target.files[0];
     if (!file) {
-        errorMsg('No file selected');
+        errorMsgFile('No file selected');
         return;
     }
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        var contents = e.target.result;
+    var validExtensions = ['json', 'JSON'];
+    var fileName = file.name;
+    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+    if ($.inArray(fileNameExt, validExtensions) == -1)
+    {
+        errorMsgFile('Invalid file type only json file allowed');
+        return false;
+    }
+    else
+    {
+        hideAllError();
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var contents = e.target.result;
 
-        try {
-            contents = JSON.parse(contents);
-            train = contents['train'];
-            test = contents['test'];
-        } catch (e) {
-            errorMsg('Bad file format');
-            return;
-        }
-        loadJSONTask(train, test);
+            try {
+                contents = JSON.parse(contents);
+                train = contents['train'];
+                test = contents['test'];
+            } catch (e) {
+                errorMsgFile('Bad file format');
+                return;
+            }
+            loadJSONTask(train, test);
 
-        $('#load_task_file_input')[0].value = "";
-        display_task_name(file.name, null, null);
-    };
+            $('#load_task_file_input')[0].value = "";
+            display_task_name(file.name, null, null);
+        };
+    }
     reader.readAsText(file);
 }
 
@@ -207,8 +218,12 @@ function randomTask() {
 
 function nextTestInput() {
     if (TEST_PAIRS.length <= CURRENT_TEST_PAIR_INDEX + 1) {
-        errorMsg('No next test input.')
+        errorMsgButton('No next test input.');
         return
+    }
+    else
+    {
+        hideAllError();
     }
     CURRENT_TEST_PAIR_INDEX += 1;
     values = TEST_PAIRS[CURRENT_TEST_PAIR_INDEX]['input'];
