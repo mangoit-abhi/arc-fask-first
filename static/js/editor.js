@@ -31,7 +31,6 @@ function refreshEditionGrid(jqGrid, dataGrid) {
 
 function getSelectedSymbol(divmode) {
     getClickValue = $('#' + divmode + '_window').children('#' + divmode + '_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
-    console.log(getClickValue);
     //  old Code | color change in grids 
         // getdiv = $(getClickValue).parents('.toolbar').parent().attr('id');
         // selected_cell_grid_id = getdiv;
@@ -43,35 +42,75 @@ function getSelectedSymbol(divmode) {
 
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
-        cell = $(event.target);
+        get_cell = $(event.target);
+        console.log('get_cell' + get_cell[0])
+        cell_window = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0];
+        console.log($(cell_window).attr('id'));
+        console.log($('#'+$(cell_window).attr('id')).find(cell));
+    
         //  New updated | color change in grids | Fixation
         // selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
         // selected_symbol_cell = $('#'+selected_cell_grid_id+' .symbol_picker_cls .selected-symbol-preview')[0];
         // symbol = $(selected_symbol_cell).attr('symbol');
         //  New updated | color change in grids | Fixation | Ends
         // symbol = getSelectedSymbol(); // Previous Code
+        
         selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
-        divmode_array = selected_cell_grid_id.split('_')
-        divmode = divmode_array[0];
+        if(selected_cell_grid_id == 'input_window'){
+            divmode = 'input';
+        } else if(selected_cell_grid_id == 'output_window'){
+            divmode = 'output';
+        }
         symbol = getSelectedSymbol(divmode);
 
-        mode = $('input[name=tool_switching]:checked').val();
-        if (mode == 'floodfill') {
-            // If floodfill: fill all connected cells.
-            syncFromEditionGridsToNumGrids();
-            htmlGrid = cell.parent().parent().parent()[0];
-            if (htmlGrid.id == 'input_grid') {
+        if ($('input[name=tool_switching_input]:checked').length > 0){
+            mode = $('input[name=tool_switching_input]:checked').val();
+            if (mode == 'floodfill') {
+                if(selected_cell_grid_id == 'input_window'){
+                    divmode = 'input';
+                } else if(selected_cell_grid_id == 'output_window'){
+                    divmode = 'output';
+                }
+                symbol = getSelectedSymbol(divmode);
+
+                // If floodfill: fill all connected cells.
+                syncFromEditionGridsToNumGridsInput();
+
                 grid = CURRENT_INPUT_GRID.grid;
+
+                floodfillFromLocation(grid, cell.attr('x'), cell.attr('y'), symbol);
+
+                syncFromNumGridsToEditionGridsInput();
             }
-            else {
-                grid = CURRENT_OUTPUT_GRID.grid;   
+            else if (mode == 'edit') {
+                // Else: fill just this cell.
+                setCellSymbol(cell, symbol);
             }
-            floodfillFromLocation(grid, cell.attr('x'), cell.attr('y'), symbol);
-            syncFromNumGridsToEditionGrids();
         }
-        else if (mode == 'edit') {
-            // Else: fill just this cell.
-            setCellSymbol(cell, symbol);
+        if ($('input[name=tool_switching_output]:checked').length > 0){
+            mode = $('input[name=tool_switching_output]:checked').val();
+            
+            if (mode == 'floodfill') {
+                selected_cell_grid_id = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0]
+                if(selected_cell_grid_id == 'input_window'){
+                    divmode = 'input';
+                } else if(selected_cell_grid_id == 'output_window'){
+                    divmode = 'output';
+                }
+                symbol = getSelectedSymbol(divmode);
+
+                // If floodfill: fill all connected cells.
+                syncFromEditionGridsToNumGridsOutput();
+                grid = CURRENT_OUTPUT_GRID.grid;
+
+                floodfillFromLocation(grid, cell.attr('x'), cell.attr('y'), symbol);
+
+                syncFromNumGridsToEditionGridsOutput();
+            }
+            else if (mode == 'edit') {
+                // Else: fill just this cell.
+                setCellSymbol(cell, symbol);
+            }
         }
     });
 }
@@ -88,23 +127,20 @@ function syncFromNumGridsToEditionGrids() {
 
 
 function syncFromEditionGridsToNumGridsInput() {
-    copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    // copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+    copyJqGridToDataGrid($('#input_grid > .edition_grid'), CURRENT_INPUT_GRID);
+
 }
 
 function syncFromEditionGridsToNumGridsOutput() {
-    // copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+    copyJqGridToDataGrid($('#output_grid > .edition_grid'), CURRENT_OUTPUT_GRID);
 }
 
 function syncFromNumGridsToEditionGridsInput() {
-    refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    // refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+    refreshEditionGrid($('#input_grid > .edition_grid'), CURRENT_INPUT_GRID);
 }
 
 function syncFromNumGridsToEditionGridsOutput() {
-    // refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+    refreshEditionGrid($('#output_grid > .edition_grid'), CURRENT_OUTPUT_GRID);
 }
 
 function singleColorNoiseOnGrid(mode) {
@@ -521,29 +557,6 @@ function copyToOutput() {
     $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
 }
 
-function initializeSelectable() {
-    try {
-        $('.edition_grid').selectable('destroy');
-    }
-    catch (e) {
-    }
-    toolMode = $('input[name=tool_switching]:checked').val();
-    if (toolMode == 'select') {
-        $('.edition_grid').selectable(
-            {
-                autoRefresh: false,
-                filter: '> .row > .cell',
-                start: function(event, ui) {
-                    $('.ui-selected').each(function(i, e) {
-                        $(e).removeClass('ui-selected');
-                    });
-                }
-            }
-        );
-        infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
-    }
-}
-
 // Initial event binding.
 
 $(document).ready(function () {
@@ -555,15 +568,31 @@ $(document).ready(function () {
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        toolMode = $('input[name=tool_switching]:checked').val();
-        if (toolMode == 'select') {
-            $('.ui-selected').each(function(i, cell) {
-                selected_cell_grid_id = $(cell).parents('.edition_grid').parents().parents().attr('id');
-                divmode_array = selected_cell_grid_id.split('_')
-                divmode = divmode_array[0];
-                symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol);
-            });
+        if ($('input[name=tool_switching_input]:checked').length > 0){
+            toolMode = $('input[name=tool_switching_input]:checked').val();
+            selected_cell_grid_id = $('input[name=tool_switching_input]:checked').parents('.toolbar').parent().attr('id');
+            divmode_array = selected_cell_grid_id.split('_')
+            divmode = divmode_array[0];
+            divModeWindow = divmode + '_window';
+            if (toolMode == 'select') {
+                $('#' + divModeWindow).find('.ui-selected').each(function(i, cell) {
+                    symbol = getSelectedSymbol(divmode);
+                    setCellSymbol($(cell), symbol);
+                });
+            }
+        }
+        if ($('input[name=tool_switching_output]:checked').length > 0){
+            toolMode = $('input[name=tool_switching_output]:checked').val();
+            selected_cell_grid_id = $('input[name=tool_switching_output]:checked').parents('.toolbar').parent().attr('id');
+            divmode_array = selected_cell_grid_id.split('_')
+            divmode = divmode_array[0];
+            divModeWindow = divmode + '_window';
+            if (toolMode == 'select') {
+                $('#' + divModeWindow).find('.ui-selected').each(function(i, cell) {
+                    symbol = getSelectedSymbol(divmode);
+                    setCellSymbol($(cell), symbol);
+                });
+            }
         }
     });
 
@@ -578,7 +607,11 @@ $(document).ready(function () {
         loadTask(event);
     });
 
-    $('input[type=radio][name=tool_switching]').change(function() {
+    $('input[type=radio][name=tool_switching_input]').change(function() {
+        initializeSelectable();
+    });
+    
+    $('input[type=radio][name=tool_switching_output]').change(function() {
         initializeSelectable();
     });
 
@@ -652,4 +685,48 @@ function sendJSON(data, url, cbk) {
 
 function display_task_name(task_name) {
     $('#task_name').val(task_name)
+}
+
+function initializeSelectable() {
+    try {
+        $('.edition_grid').selectable('destroy');
+    }
+    catch (e) {
+    }
+    if ($('input[name=tool_switching_input]:checked').length > 0){
+        toolMode = $('input[name=tool_switching_input]:checked').val();
+        divModeWindow = $('input[name=tool_switching_input]:checked').parents('.toolbar').parent().attr('id');
+        if (toolMode == 'select') {
+            $('#' + divModeWindow).find('.edition_grid').selectable(
+                {
+                    autoRefresh: false,
+                    filter: '> .row > .cell',
+                    start: function(event, ui) {
+                        $('.ui-selected').each(function(i, e) {
+                            $(e).removeClass('ui-selected');
+                        });
+                    }
+                }
+            );
+            infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
+        }
+    } 
+    if ($('input[name=tool_switching_output]:checked').length > 0){
+        toolMode = $('input[name=tool_switching_output]:checked').val();
+        divModeWindow = $('input[name=tool_switching_output]:checked').parents('.toolbar').parent().attr('id');
+        if (toolMode == 'select') {
+            $('#' + divModeWindow).find('.edition_grid').selectable(
+                {
+                    autoRefresh: false,
+                    filter: '> .row > .cell',
+                    start: function(event, ui) {
+                        $('.ui-selected').each(function(i, e) {
+                            $(e).removeClass('ui-selected');
+                        });
+                    }
+                }
+            );
+            infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
+        }
+    }
 }
