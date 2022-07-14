@@ -42,11 +42,11 @@ function getSelectedSymbol(divmode) {
 
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
-        get_cell = $(event.target);
-        console.log('get_cell' + get_cell[0])
-        cell_window = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0];
-        console.log($(cell_window).attr('id'));
-        console.log($('#'+$(cell_window).attr('id')).find(cell));
+        cell = $(event.target);
+        console.log(cell[0])
+        // cell_window = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0];
+        // console.log($(cell_window).attr('id'));
+        // console.log($('#'+$(cell_window).attr('id')).find(cell));
     
         //  New updated | color change in grids | Fixation
         // selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
