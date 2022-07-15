@@ -18,42 +18,25 @@ function resetTask() {
     // Clear edition grids.
     resetCurrentPair();
     // Empty task preview div.
-    $('#new_pairs').html('');
+    $('#task_preview').html('');
     $('#task_name').val('');
 }
 
-function refreshEditionGrid(jqGrid, dataGrid) {
+function refreshEditionGrid(jqGrid, dataGrid, mode='input') {
     fillJqGridWithData(jqGrid, dataGrid);
     setUpEditionGridListeners(jqGrid);
-    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_WIDTH);
-    initializeSelectable();
+    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_HEIGHT);
+    initializeSelectable(mode);
 }
 
 function getSelectedSymbol(divmode) {
     getClickValue = $('#' + divmode + '_window').children('#' + divmode + '_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
-    //  old Code | color change in grids 
-        // getdiv = $(getClickValue).parents('.toolbar').parent().attr('id');
-        // selected_cell_grid_id = getdiv;
-        // selected_symbol_cell = $('#'+selected_cell_grid_id+' .symbol_picker_cls .selected-symbol-preview')[0];
-        // symbol = $(selected_symbol_cell).attr('symbol');
-    //  old Code | color change in grids | END
     return getClickValue;
 }
 
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
-        cell = $(event.target);
-        console.log(cell[0])
-        // cell_window = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0];
-        // console.log($(cell_window).attr('id'));
-        // console.log($('#'+$(cell_window).attr('id')).find(cell));
-    
-        //  New updated | color change in grids | Fixation
-        // selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
-        // selected_symbol_cell = $('#'+selected_cell_grid_id+' .symbol_picker_cls .selected-symbol-preview')[0];
-        // symbol = $(selected_symbol_cell).attr('symbol');
-        //  New updated | color change in grids | Fixation | Ends
-        // symbol = getSelectedSymbol(); // Previous Code
+        get_cell = $(event.target);
         
         selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
         if(selected_cell_grid_id == 'input_window'){
@@ -61,95 +44,47 @@ function setUpEditionGridListeners(jqGrid) {
         } else if(selected_cell_grid_id == 'output_window'){
             divmode = 'output';
         }
-        symbol = getSelectedSymbol(divmode);
 
-        if ($('input[name=tool_switching_input]:checked').length > 0){
-            mode = $('input[name=tool_switching_input]:checked').val();
+        if(selected_cell_grid_id != undefined){
+            symbol = getSelectedSymbol(divmode);
+
+            mode = $('input[name=tool_switching_' + divmode +']:checked').val();
             if (mode == 'floodfill') {
-                if(selected_cell_grid_id == 'input_window'){
-                    divmode = 'input';
-                } else if(selected_cell_grid_id == 'output_window'){
-                    divmode = 'output';
-                }
-                symbol = getSelectedSymbol(divmode);
-
                 // If floodfill: fill all connected cells.
-                syncFromEditionGridsToNumGridsInput();
-
-                grid = CURRENT_INPUT_GRID.grid;
-
-                floodfillFromLocation(grid, cell.attr('x'), cell.attr('y'), symbol);
-
-                syncFromNumGridsToEditionGridsInput();
+                syncFromEditionGridsToNumGrids(divmode);
+                htmlGrid = get_cell.parent().parent().parent()[0];
+                if (htmlGrid != undefined) {
+                    if (htmlGrid.id == 'input_grid') {
+                        grid = CURRENT_INPUT_GRID.grid;
+                    }
+                    else {
+                        grid = CURRENT_OUTPUT_GRID.grid;   
+                    }
+                    floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
+                    syncFromNumGridsToEditionGrids(divmode);
+                }
             }
             else if (mode == 'edit') {
                 // Else: fill just this cell.
-                setCellSymbol(cell, symbol);
-            }
-        }
-        if ($('input[name=tool_switching_output]:checked').length > 0){
-            mode = $('input[name=tool_switching_output]:checked').val();
-            
-            if (mode == 'floodfill') {
-                selected_cell_grid_id = $('input[name=tool_switching_input]:checked').parents('.symbol_toolbar-outer').parent().parent()[0]
-                if(selected_cell_grid_id == 'input_window'){
-                    divmode = 'input';
-                } else if(selected_cell_grid_id == 'output_window'){
-                    divmode = 'output';
-                }
-                symbol = getSelectedSymbol(divmode);
-
-                // If floodfill: fill all connected cells.
-                syncFromEditionGridsToNumGridsOutput();
-                grid = CURRENT_OUTPUT_GRID.grid;
-
-                floodfillFromLocation(grid, cell.attr('x'), cell.attr('y'), symbol);
-
-                syncFromNumGridsToEditionGridsOutput();
-            }
-            else if (mode == 'edit') {
-                // Else: fill just this cell.
-                setCellSymbol(cell, symbol);
+                setCellSymbol(get_cell, symbol);
             }
         }
     });
 }
 
-function syncFromEditionGridsToNumGrids() {
+function syncFromEditionGridsToNumGrids(mode='input') {
     copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
     copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
 }
 
-function syncFromNumGridsToEditionGrids() {
-    refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
-}
-
-
-function syncFromEditionGridsToNumGridsInput() {
-    copyJqGridToDataGrid($('#input_grid > .edition_grid'), CURRENT_INPUT_GRID);
-
-}
-
-function syncFromEditionGridsToNumGridsOutput() {
-    copyJqGridToDataGrid($('#output_grid > .edition_grid'), CURRENT_OUTPUT_GRID);
-}
-
-function syncFromNumGridsToEditionGridsInput() {
-    refreshEditionGrid($('#input_grid > .edition_grid'), CURRENT_INPUT_GRID);
-}
-
-function syncFromNumGridsToEditionGridsOutput() {
-    refreshEditionGrid($('#output_grid > .edition_grid'), CURRENT_OUTPUT_GRID);
+function syncFromNumGridsToEditionGrids(mode='input') {
+    refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID, mode);
+    refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID, mode);
 }
 
 function singleColorNoiseOnGrid(mode) {
     symbol = getSelectedSymbol(mode);
-    if (mode == 'input'){
-        syncFromEditionGridsToNumGridsInput();
-    } else if(mode == 'output'){
-        syncFromEditionGridsToNumGridsOutput();
-    }
+    syncFromEditionGridsToNumGrids();
     intensity = 0.05;
     if (mode == 'input') {
         grid = CURRENT_INPUT_GRID;
@@ -164,19 +99,11 @@ function singleColorNoiseOnGrid(mode) {
             }
         }
     }
-    if (mode == 'input'){
-        syncFromNumGridsToEditionGridsInput();
-    } else if(mode == 'output'){
-        syncFromNumGridsToEditionGridsOutput();
-    }
+    syncFromNumGridsToEditionGrids();
 }
 
 function multicolorNoiseOnGrid(mode) {
-    if (mode == 'input'){
-        syncFromEditionGridsToNumGridsInput();
-    } else if(mode == 'output'){
-        syncFromEditionGridsToNumGridsOutput();
-    }
+    syncFromEditionGridsToNumGrids();
     intensity = 0.05;
     if (mode == 'input') {
         grid = CURRENT_INPUT_GRID;
@@ -192,11 +119,7 @@ function multicolorNoiseOnGrid(mode) {
             }
         }
     }
-    if (mode == 'input'){
-        syncFromNumGridsToEditionGridsInput();
-    } else if(mode == 'output'){
-        syncFromNumGridsToEditionGridsOutput();
-    }
+    syncFromNumGridsToEditionGrids();
 }
 
 function drawGridlinesOnGrid(mode, height, width) {
@@ -249,7 +172,7 @@ function evalExpressionOnOutputGrid() {
 }
 
 
-function resizeInputGrid() {
+function resizeInputGrid(mode='input') {
     size = $('#input_grid_size').val();
     size = parseSizeTuple(size);
     if (size == undefined) return;
@@ -257,54 +180,166 @@ function resizeInputGrid() {
     width = size[1];
 
     jqGrid = $('#input_grid .edition_grid');
-    syncFromEditionGridsToNumGrids();
+    syncFromEditionGridsToNumGrids(mode);
     dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
     CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
     refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
 }
 
-function resizeOutputGrid() {
+function resizeOutputGrid(mode='output') {
     size = $('#output_grid_size').val();
     size = parseSizeTuple(size);
     height = size[0];
     width = size[1];
 
     jqGrid = $('#output_grid .edition_grid');
-    syncFromEditionGridsToNumGrids();
+    syncFromEditionGridsToNumGrids(mode);
     dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
     CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
     refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
 }
 
-function resetInputGrid() {
-    syncFromEditionGridsToNumGrids();
+function resetInputGrid(mode='input') {
+    syncFromEditionGridsToNumGrids(mode);
     CURRENT_INPUT_GRID = new Grid(3, 3);
-    syncFromNumGridsToEditionGrids();
-    resizeInputGrid();
+    syncFromNumGridsToEditionGrids(mode);
+    resizeInputGrid(mode);
 }
 
-function resetOutputGrid() {
-    syncFromEditionGridsToNumGrids();
+function resetOutputGrid(mode='output') {
+    syncFromEditionGridsToNumGrids(mode);
     CURRENT_OUTPUT_GRID = new Grid(3, 3);
-    syncFromNumGridsToEditionGrids();
-    resizeOutputGrid();
+    syncFromNumGridsToEditionGrids(mode);
+    resizeOutputGrid(mode);
 }
 
 function fillPairPreview(pairId, inputGrid, outputGrid) {
+    newPairId = pairId+1;
     var pairSlot = $('#parent_pair_' + pairId);
     if (!pairSlot.length) {
-        pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="pair_preview_' + pairId + '" class="pair_preview" index="' + pairId + '"></div><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete Pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button></div></div>');
+        pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete Pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button></div></div>');
         pairSlot.appendTo('#new_pairs');
     }
-    var jqOutputGrid = pairSlot.find('.output_preview');
-    if (!jqOutputGrid.length) {
-        jqOutputGrid = $('<div class="output_preview"></div>');
-        jqOutputGrid.prependTo(pairSlot);
+
+    var grids_space_slot = $('#grids_space_' + pairId);
+    if (!grids_space_slot.length) {
+        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
+        grids_space_slot.prependTo('#parent_pair_' + pairId);
     }
-    var jqInputGrid = pairSlot.find('.input_preview');
+
+    var output_window_slot = $('#output_window_' + pairId);
+    if (!output_window_slot.length) {
+        output_window_slot = $('<div id="output_window_' + pairId + '" class="output_window" index="' + pairId + '"></div>');
+        output_window_slot.prependTo('#grids_space_' + pairId);
+    }
+
+    var input_window_slot = $('#input_window_' + pairId);
+    if (!input_window_slot.length) {
+        input_window_slot = $('<div id="input_window_' + pairId + '" class="input_window" index="' + pairId + '"></div>');
+        input_window_slot.prependTo('#grids_space_' + pairId);
+    }
+
+
+    var jqOutputGrid = output_window_slot.find('#output_preview_' + pairId);
+    if (!jqOutputGrid.length) {
+        jqOutputGrid = $('<div id="output_preview_' + pairId + '" class="output_preview"></div>');
+        jqOutputGrid.prependTo(output_window_slot);
+    }
+
+    var jqEditBtn = output_window_slot.find('.edit_pair_btn');
+    if (!jqEditBtn.length) {
+        jqEditBtn = $(`<div class="toolbar">
+        <label for="output_grid_size">Output grid size: </label>
+        <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
+        <button onclick="resizeOutputGrid('output')">Resize</button>
+        <button onclick="resetOutputGrid('output')">Reset grid</button>
+        <div class="symbol_toolbar-outer">
+            <div id="symbol_toolbar" >
+                <div id="symbol_picker" class="symbol_picker_cls">
+                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
+                    <div class="symbol_preview symbol_1" symbol="1"></div>
+                    <div class="symbol_preview symbol_2" symbol="2"></div>
+                    <div class="symbol_preview symbol_3" symbol="3"></div>
+                    <div class="symbol_preview symbol_4" symbol="4"></div>
+                    <div class="symbol_preview symbol_5" symbol="5"></div>
+                    <div class="symbol_preview symbol_6" symbol="6"></div>
+                    <div class="symbol_preview symbol_7" symbol="7"></div>
+                    <div class="symbol_preview symbol_8" symbol="8"></div>
+                    <div class="symbol_preview symbol_9" symbol="9"></div>
+                </div>
+                <div id="symbol_actions">
+                    <input type="radio" id="tool_edit" name="tool_switching_output" class="toolbar_button" value="edit" checked>
+                    <label for="tool_edit">Edit</label>
+                    <input type="radio" id="tool_select" name="tool_switching_output" class="toolbar_button" value="select">
+                    <label for="tool_select">Select</label>
+                    <input type="radio" id="tool_floodfill" name="tool_switching_output" class="toolbar_button" value="floodfill">
+                    <label for="tool_floodfill">Flood fill</label>
+                </div>
+            </div>
+        </div>                                
+    </div>
+    <div class="toolbar">
+        <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
+        <button onclick="multicolorNoiseOnGrid('output')">Multicolor noise</button>
+        <div class="toolbar-inner">
+            <label for="eval_expr_output">Expression of i, j: </label>
+            <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
+            <button onclick="evalExpressionOnOutputGrid()">Eval</button>
+        </div>
+    </div>`);
+        $('#output_preview_' + pairId).after(jqEditBtn);
+    }
+
+    
+
+    var jqInputGrid = input_window_slot.find('#input_preview_' + pairId);
     if (!jqInputGrid.length) {
-        jqInputGrid = $('<div class="input_preview"></div>');
-        jqInputGrid.prependTo(pairSlot);
+        jqInputGrid = $('<div id="input_preview_' + pairId + '" class="input_preview"></div>');
+        jqInputGrid.prependTo(input_window_slot);
+    }
+
+    var jqEditBtn1 = input_window_slot.find('.edit_pair_btn');
+    if (!jqEditBtn1.length) {
+        jqEditBtn1 = $(`<div class="toolbar" id="toolbar_color_input">
+        <label for="input_grid_size">Input grid size: </label>
+        <input type="text" id="input_grid_size" class="grid_size_field" name="size" value="16x16">
+        <button onclick="resizeInputGrid('input')">Resize</button>
+        <button onclick="resetInputGrid('input')">Reset grid</button>
+        <button onclick="copyToOutput('input')">Copy to output</button>
+        <div class="symbol_toolbar-outer">
+            <div id="symbol_toolbar" >
+                <div id="symbol_picker" class="symbol_picker_cls">
+                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
+                    <div class="symbol_preview symbol_1" symbol="1"></div>
+                    <div class="symbol_preview symbol_2" symbol="2"></div>
+                    <div class="symbol_preview symbol_3" symbol="3"></div>
+                    <div class="symbol_preview symbol_4" symbol="4"></div>
+                    <div class="symbol_preview symbol_5" symbol="5"></div>
+                    <div class="symbol_preview symbol_6" symbol="6"></div>
+                    <div class="symbol_preview symbol_7" symbol="7"></div>
+                    <div class="symbol_preview symbol_8" symbol="8"></div>
+                    <div class="symbol_preview symbol_9" symbol="9"></div>
+                </div>
+                <div id="symbol_actions">
+                    <input type="radio" id="tool_edit" name="tool_switching_input" class="toolbar_button" value="edit" checked>
+                    <label for="tool_edit">Edit</label>
+                    <input type="radio" id="tool_select" name="tool_switching_input" class="toolbar_button" value="select">
+                    <label for="tool_select">Select</label>
+                    <input type="radio" id="tool_floodfill" name="tool_switching_input" class="toolbar_button" value="floodfill">
+                    <label for="tool_floodfill">Flood fill</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="toolbar" id="toolbar_expression_input">
+        <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
+        <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
+        <div class="toolbar-inner">
+            <label for="eval_expr_input">Expression of i, j: </label>
+            <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
+            <button onclick="evalExpressionOnInputGrid()">Eval</button>
+        </div></div>`);
+        $('#input_preview_' + pairId).after(jqEditBtn1);
     }
     // var jqEditBtn = pairSlot.find('.edit_pair_btn');
     // if (!jqEditBtn.length) {
@@ -323,9 +358,9 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     // }
 
     fillJqGridWithData(jqInputGrid, inputGrid);
-    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 200, 200);
+    fitCellsToContainer(jqInputGrid, 16, 16, 470, 470);
     fillJqGridWithData(jqOutputGrid, outputGrid);
-    fitCellsToContainer(jqOutputGrid, outputGrid.height, outputGrid.width, 200, 200);
+    fitCellsToContainer(jqOutputGrid, 16, 16, 470, 470);
 }
 
 function stashCurrentPair() {
@@ -398,7 +433,7 @@ function selectPairForTesting(pairId) {
         }
         // Modify text on button
         preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Unmark as Test Pair');
+            $(btn).html('Remove from test set');
         })
         // Highlight pair preview
         preview_div.addClass('selected_for_testing');
@@ -413,7 +448,7 @@ function selectPairForTesting(pairId) {
         }
         // Modify text on button
         preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Mark as Test Pair');
+            $(btn).html('Add to test set');
         })
         // Un-highlight pair preview
         preview_div.removeClass('selected_for_testing');
@@ -485,34 +520,25 @@ function saveTask() {
         sendJSON(taskDict, '/create_task', function(data) {
             if (data != 'OK') {
                 alert('Unable to save task.');
-                errorMsgFile('Unable to save task.')
+                errorMsg('Unable to save task.')
             } else {
                 infoMsg('Task saved! Now make a new one.');
                 resetTask();
             }
         });
     } else {
-        errorMsgFile('Finish your task before saving it.');
+        errorMsg('Finish your task before saving it.');
     }
 }
 
 
 function loadTask(e) {
-    var file = e.target.files[0];
-    if (!file) {
-        return false;
-    }
-    var validExtensions = ['json', 'JSON'];
-    var fileName = file.name;
-    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-    if ($.inArray(fileNameExt, validExtensions) == -1)
-    {
-        errorMsgFile('Invalid file type only json file allowed');
-        return false;
-    }
-    hideAllError();
-    var reader = new FileReader();
-    reader.onload = function(e) {
+  var file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
     var contents = e.target.result;
 
     contents = JSON.parse(contents);
@@ -537,9 +563,7 @@ function loadTask(e) {
         selectPairForTesting(train.length + i);
     }
     editPair(0);
-    $('#load_task_file_input')[0].value = "";
-    display_task_name(file.name);
-    };
+  };
   reader.readAsText(file);
 }
 
@@ -550,17 +574,39 @@ function resetCurrentPair() {
     syncFromNumGridsToEditionGrids();
 }
 
-function copyToOutput() {
-    syncFromEditionGridsToNumGrids();
+function copyToOutput(mode='input') {
+    syncFromEditionGridsToNumGrids(mode);
     CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-    syncFromNumGridsToEditionGrids();
+    syncFromNumGridsToEditionGrids(mode);
     $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+}
+
+function initializeSelectable(mode = 'input') {
+    try {
+        $('.edition_grid').selectable('destroy');
+    }
+    catch (e) {
+    }
+    toolMode = $('input[name=tool_switching_'+ mode +']:checked').val();
+    if (toolMode == 'select') {
+        $('.edition_grid').selectable(
+            {
+                autoRefresh: false,
+                filter: '> .row > .cell',
+                start: function(event, ui) {
+                    $('.ui-selected').each(function(i, e) {
+                        $(e).removeClass('ui-selected');
+                    });
+                }
+            }
+        );
+        infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
+    }
 }
 
 // Initial event binding.
 
 $(document).ready(function () {
-    // $('#symbol_picker').find('.symbol_preview').click(function(event) {
     $('.symbol_picker_cls').click(function(event) {
         symbol_preview = $(event.target);
         $(this).find('.symbol_preview').each(function(i, preview) {
@@ -568,31 +614,20 @@ $(document).ready(function () {
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        if ($('input[name=tool_switching_input]:checked').length > 0){
-            toolMode = $('input[name=tool_switching_input]:checked').val();
-            selected_cell_grid_id = $('input[name=tool_switching_input]:checked').parents('.toolbar').parent().attr('id');
-            divmode_array = selected_cell_grid_id.split('_')
-            divmode = divmode_array[0];
-            divModeWindow = divmode + '_window';
-            if (toolMode == 'select') {
-                $('#' + divModeWindow).find('.ui-selected').each(function(i, cell) {
-                    symbol = getSelectedSymbol(divmode);
-                    setCellSymbol($(cell), symbol);
-                });
-            }
+        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
+
+        if(selected_cell_grid_id == 'input_window'){
+            divmode = 'input';
+        } else if(selected_cell_grid_id == 'output_window'){
+            divmode = 'output';
         }
-        if ($('input[name=tool_switching_output]:checked').length > 0){
-            toolMode = $('input[name=tool_switching_output]:checked').val();
-            selected_cell_grid_id = $('input[name=tool_switching_output]:checked').parents('.toolbar').parent().attr('id');
-            divmode_array = selected_cell_grid_id.split('_')
-            divmode = divmode_array[0];
-            divModeWindow = divmode + '_window';
-            if (toolMode == 'select') {
-                $('#' + divModeWindow).find('.ui-selected').each(function(i, cell) {
-                    symbol = getSelectedSymbol(divmode);
-                    setCellSymbol($(cell), symbol);
-                });
-            }
+
+        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
+        if (toolMode == 'select') {
+            $('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol(divmode);
+                setCellSymbol($(cell), symbol);
+            });
         }
     });
 
@@ -608,11 +643,10 @@ $(document).ready(function () {
     });
 
     $('input[type=radio][name=tool_switching_input]').change(function() {
-        initializeSelectable();
+        initializeSelectable('input');
     });
-    
     $('input[type=radio][name=tool_switching_output]').change(function() {
-        initializeSelectable();
+        initializeSelectable('output');
     });
 
     $('body').keydown(function(event) {
@@ -681,52 +715,4 @@ function sendJSON(data, url, cbk) {
     $.ajax(url, {data : JSON.stringify(data),
                  contentType : 'application/json',
                  type : 'POST'}).done(cbk);
-}
-
-function display_task_name(task_name) {
-    $('#task_name').val(task_name)
-}
-
-function initializeSelectable() {
-    try {
-        $('.edition_grid').selectable('destroy');
-    }
-    catch (e) {
-    }
-    if ($('input[name=tool_switching_input]:checked').length > 0){
-        toolMode = $('input[name=tool_switching_input]:checked').val();
-        divModeWindow = $('input[name=tool_switching_input]:checked').parents('.toolbar').parent().attr('id');
-        if (toolMode == 'select') {
-            $('#' + divModeWindow).find('.edition_grid').selectable(
-                {
-                    autoRefresh: false,
-                    filter: '> .row > .cell',
-                    start: function(event, ui) {
-                        $('.ui-selected').each(function(i, e) {
-                            $(e).removeClass('ui-selected');
-                        });
-                    }
-                }
-            );
-            infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
-        }
-    } 
-    if ($('input[name=tool_switching_output]:checked').length > 0){
-        toolMode = $('input[name=tool_switching_output]:checked').val();
-        divModeWindow = $('input[name=tool_switching_output]:checked').parents('.toolbar').parent().attr('id');
-        if (toolMode == 'select') {
-            $('#' + divModeWindow).find('.edition_grid').selectable(
-                {
-                    autoRefresh: false,
-                    filter: '> .row > .cell',
-                    start: function(event, ui) {
-                        $('.ui-selected').each(function(i, e) {
-                            $(e).removeClass('ui-selected');
-                        });
-                    }
-                }
-            );
-            infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
-        }
-    }
 }

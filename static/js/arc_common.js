@@ -19,28 +19,30 @@ class Grid {
 }
 
 function floodfillFromLocation(grid, i, j, symbol) {
-    i = parseInt(i);
-    j = parseInt(j);
-    symbol = parseInt(symbol);
+    xi = parseInt(i);
+    yj = parseInt(j);
 
-    target = grid[i][j];
+    symbol = parseInt(symbol);
+   
+    target = new Array();
+    target = grid[xi][yj];
     
     if (target == symbol) {
         return;
     }
 
-    function flow(i, j, symbol, target) {
-        if (i >= 0 && i < grid.length && j >= 0 && j < grid[i].length) {
-            if (grid[i][j] == target) {
-                grid[i][j] = symbol;
-                flow(i - 1, j, symbol, target);
-                flow(i + 1, j, symbol, target);
-                flow(i, j - 1, symbol, target);
-                flow(i, j + 1, symbol, target);
+    function flow(xi, yj, symbol, target) {
+        if (xi >= 0 && xi < grid.length && yj >= 0 && yj < grid[xi].length) {
+            if (grid[xi][yj] == target) {
+                grid[xi][yj] = symbol;
+                flow(xi - 1, yj, symbol, target);
+                flow(xi + 1, yj, symbol, target);
+                flow(xi, yj - 1, symbol, target);
+                flow(xi, yj + 1, symbol, target);
             }
         }
     }
-    flow(i, j, symbol, target);
+    flow(xi, yj, symbol, target);
 }
 
 function parseSizeTuple(size) {

@@ -38,12 +38,12 @@
                                 <div class="edition_grid"></div>
                             </div>
 
-                            <div class="toolbar">
+                            <div class="toolbar" id="toolbar_color_input">
                                 <label for="input_grid_size">Input grid size: </label>
                                 <input type="text" id="input_grid_size" class="grid_size_field" name="size" value="16x16">
-                                <button onclick="resizeInputGrid()">Resize</button>
-                                <button onclick="resetInputGrid()">Reset grid</button>
-                                <button onclick="copyToOutput()">Copy to output</button>
+                                <button onclick="resizeInputGrid('input')">Resize</button>
+                                <button onclick="resetInputGrid('input')">Reset grid</button>
+                                <button onclick="copyToOutput('input')">Copy to output</button>
                                 <div class="symbol_toolbar-outer">
                                     <div id="symbol_toolbar" >
                                         <div id="symbol_picker" class="symbol_picker_cls">
@@ -59,18 +59,18 @@
                                             <div class="symbol_preview symbol_9" symbol="9"></div>
                                         </div>
                                         <div id="symbol_actions">
-                                            <input type="radio" id="tool_edit" name="tool_switching_input" value="edit" checked>
+                                            <input type="radio" id="tool_edit" name="tool_switching_input" class="toolbar_button" value="edit" checked>
                                             <label for="tool_edit">Edit</label>
-                                            <input type="radio" id="tool_select" name="tool_switching_input" value="select">
+                                            <input type="radio" id="tool_select" name="tool_switching_input" class="toolbar_button" value="select">
                                             <label for="tool_select">Select</label>
-                                            <input type="radio" id="tool_floodfill" name="tool_switching_input" value="floodfill">
+                                            <input type="radio" id="tool_floodfill" name="tool_switching_input" class="toolbar_button" value="floodfill">
                                             <label for="tool_floodfill">Flood fill</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="toolbar">
+                            <div class="toolbar" id="toolbar_expression_input">
                                 <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
                                 <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
                                 <div class="toolbar-inner">
@@ -91,8 +91,8 @@
                             <div class="toolbar">
                                 <label for="output_grid_size">Output grid size: </label>
                                 <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
-                                <button onclick="resizeOutputGrid()">Resize</button>
-                                <button onclick="resetOutputGrid()">Reset grid</button>
+                                <button onclick="resizeOutputGrid('output')">Resize</button>
+                                <button onclick="resetOutputGrid('output')">Reset grid</button>
                                 <div class="symbol_toolbar-outer">
                                     <div id="symbol_toolbar" >
                                         <div id="symbol_picker" class="symbol_picker_cls">
@@ -109,11 +109,11 @@
                                         </div>
                                         
                                         <div id="symbol_actions">
-                                            <input type="radio" id="tool_edit" name="tool_switching_output" value="edit" checked>
+                                            <input type="radio" id="tool_edit" name="tool_switching_output" class="toolbar_button" value="edit" checked>
                                             <label for="tool_edit">Edit</label>
-                                            <input type="radio" id="tool_select" name="tool_switching_output" value="select">
+                                            <input type="radio" id="tool_select" name="tool_switching_output" class="toolbar_button" value="select">
                                             <label for="tool_select">Select</label>
-                                            <input type="radio" id="tool_floodfill" name="tool_switching_output" value="floodfill">
+                                            <input type="radio" id="tool_floodfill" name="tool_switching_output" class="toolbar_button" value="floodfill">
                                             <label for="tool_floodfill">Flood fill</label>
                                         </div>
                                     </div>
