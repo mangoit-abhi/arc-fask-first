@@ -1308,3 +1308,29 @@ img { max-width: 100%;}
 
 }
 
+/* 18-7-22 */
+#task_toolbar{
+  justify-content: space-between;
+}
+.toolbar .tutorial_icon{
+  margin-top: -6px;
+}
+.introjs-tooltip-header h1, .introjs-tooltiptext{
+  text-align: left !important;
+}
+@media(max-width:767px){
+  #task_toolbar{
+    align-items: flex-start;
+  }
+  #task_toolbar button, .browse-button {
+    margin: 0 0 15px !important;
+    width: 100%;
+  }
+  #task_toolbar input[type = "text"]{
+    margin-left: 0;
+  }
+  #task_toolbar input[type = "text"]{
+    margin-bottom: 15px;
+    width: 100%;
+  }
+}

@@ -3,6 +3,8 @@ var TEST_PAIR_INDICES = new Array(); // Indices of pairs that form the test set 
 var CURRENT_INPUT_GRID = new Grid(16, 16);
 var CURRENT_OUTPUT_GRID = new Grid(16, 16);
 var CURRENT_PAIR_INDEX = 0;
+var MY_CURRENT_PAIR_INDEX = 0;
+
 var TASK_NAME = null;
 
 var EDITION_GRID_HEIGHT = 470;
@@ -37,7 +39,6 @@ function getSelectedSymbol(divmode) {
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
         get_cell = $(event.target);
-        
         selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
         if(selected_cell_grid_id == 'input_window'){
             divmode = 'input';
@@ -72,14 +73,25 @@ function setUpEditionGridListeners(jqGrid) {
     });
 }
 
-function syncFromEditionGridsToNumGrids(mode='input') {
-    copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-    copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+function syncFromEditionGridsToNumGrids(mode='input', pairId='no') {
+    if(pairId != 'no'){
+        copyJqGridToDataGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID);
+        copyJqGridToDataGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID);
+    } else {
+        copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
+        copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+    }
 }
 
-function syncFromNumGridsToEditionGrids(mode='input') {
-    refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID, mode);
-    refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID, mode);
+function syncFromNumGridsToEditionGrids(mode='input', pairId='no') {
+    if(pairId != 'no'){
+        refreshEditionGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID, mode);
+        refreshEditionGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID, mode);
+    } else {
+        refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID, mode);
+        refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID, mode);
+    }
+    
 }
 
 function singleColorNoiseOnGrid(mode) {
@@ -172,45 +184,87 @@ function evalExpressionOnOutputGrid() {
 }
 
 
-function resizeInputGrid(mode='input') {
-    size = $('#input_grid_size').val();
-    size = parseSizeTuple(size);
-    if (size == undefined) return;
-    height = size[0];
-    width = size[1];
+function resizeInputGrid(mode='input', pairId='no') {
+    if(pairId != 'no'){
+        size = $('#input_grid_size_'+pairId).val();
+        size = parseSizeTuple(size);
+        if (size == undefined) return;
+        height = size[0];
+        width = size[1];
+    
+        jqGrid = $('#input_grid_'+pairId+' .edition_grid');
+        syncFromEditionGridsToNumGrids(mode,pairId);
+        dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
+        CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
+        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
+    } else {
 
-    jqGrid = $('#input_grid .edition_grid');
-    syncFromEditionGridsToNumGrids(mode);
-    dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
-    CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
-    refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
+        size = $('#input_grid_size').val();
+        size = parseSizeTuple(size);
+        if (size == undefined) return;
+        height = size[0];
+        width = size[1];
+    
+        jqGrid = $('#input_grid .edition_grid');
+        syncFromEditionGridsToNumGrids(mode);
+        dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
+        CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
+        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
+    }
 }
 
-function resizeOutputGrid(mode='output') {
-    size = $('#output_grid_size').val();
-    size = parseSizeTuple(size);
-    height = size[0];
-    width = size[1];
+function resizeOutputGrid(mode='output', pairId='no') {
+    if(pairId != 'no'){
+        size = $('#output_grid_size_'+pairId).val();
+        size = parseSizeTuple(size);
+        height = size[0];
+        width = size[1];
 
-    jqGrid = $('#output_grid .edition_grid');
-    syncFromEditionGridsToNumGrids(mode);
-    dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
-    CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
-    refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
+        jqGrid = $('#output_grid_'+pairId+' .edition_grid');
+        syncFromEditionGridsToNumGrids(mode);
+        dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
+        CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
+        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
+    } else {
+        size = $('#output_grid_size').val();
+        size = parseSizeTuple(size);
+        height = size[0];
+        width = size[1];
+
+        jqGrid = $('#output_grid .edition_grid');
+        syncFromEditionGridsToNumGrids(mode);
+        dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
+        CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
+        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
+    }
 }
 
-function resetInputGrid(mode='input') {
-    syncFromEditionGridsToNumGrids(mode);
-    CURRENT_INPUT_GRID = new Grid(3, 3);
-    syncFromNumGridsToEditionGrids(mode);
-    resizeInputGrid(mode);
+function resetInputGrid(mode='input' , pairId='no') {
+    if(pairId != 'no'){
+        syncFromEditionGridsToNumGrids(mode, pairId);
+        CURRENT_INPUT_GRID = new Grid(3, 3);
+        syncFromNumGridsToEditionGrids(mode, pairId);
+        resizeInputGrid(mode, pairId);
+    } else {
+        syncFromEditionGridsToNumGrids(mode);
+        CURRENT_INPUT_GRID = new Grid(3, 3);
+        syncFromNumGridsToEditionGrids(mode);
+        resizeInputGrid(mode);
+    }    
 }
 
-function resetOutputGrid(mode='output') {
-    syncFromEditionGridsToNumGrids(mode);
-    CURRENT_OUTPUT_GRID = new Grid(3, 3);
-    syncFromNumGridsToEditionGrids(mode);
-    resizeOutputGrid(mode);
+function resetOutputGrid(mode='output' , pairId='no') {
+    if(pairId != 'no'){
+        syncFromEditionGridsToNumGrids(mode, pairId);
+        CURRENT_OUTPUT_GRID = new Grid(3, 3);
+        syncFromNumGridsToEditionGrids(mode, pairId);
+        resizeOutputGrid(mode, pairId);
+    } else {
+        syncFromEditionGridsToNumGrids(mode);
+        CURRENT_OUTPUT_GRID = new Grid(3, 3);
+        syncFromNumGridsToEditionGrids(mode);
+        resizeOutputGrid(mode);
+    }
 }
 
 function fillPairPreview(pairId, inputGrid, outputGrid) {
@@ -233,29 +287,41 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         output_window_slot.prependTo('#grids_space_' + pairId);
     }
 
+    var output_grid_slot = $('#output_grid_' + pairId);
+    if (!output_grid_slot.length) {
+        output_grid_slot = $('<div id="output_grid_' + pairId + '" class="output_grid" index="' + pairId + '"></div>');
+        output_grid_slot.prependTo(output_window_slot);
+    }
+
     var input_window_slot = $('#input_window_' + pairId);
     if (!input_window_slot.length) {
         input_window_slot = $('<div id="input_window_' + pairId + '" class="input_window" index="' + pairId + '"></div>');
         input_window_slot.prependTo('#grids_space_' + pairId);
     }
 
-
-    var jqOutputGrid = output_window_slot.find('#output_preview_' + pairId);
-    if (!jqOutputGrid.length) {
-        jqOutputGrid = $('<div id="output_preview_' + pairId + '" class="output_preview"></div>');
-        jqOutputGrid.prependTo(output_window_slot);
+    var input_grid_slot = $('#input_grid_' + pairId);
+    if (!input_grid_slot.length) {
+        input_grid_slot = $('<div id="input_grid_' + pairId + '" class="input_grid" index="' + pairId + '"></div>');
+        input_grid_slot.prependTo(input_window_slot);
     }
 
-    var jqEditBtn = output_window_slot.find('.edit_pair_btn');
+
+    var jqOutputGrid = output_grid_slot.find('#edition_grid_' + pairId);
+    if (!jqOutputGrid.length) {
+        jqOutputGrid = $('<div id="edition_grid_' + pairId + '" class="edition_grid"></div>');
+        jqOutputGrid.prependTo(output_grid_slot);
+    }
+
+    var jqEditBtn = output_grid_slot.find('.edit_pair_btn');
     if (!jqEditBtn.length) {
         jqEditBtn = $(`<div class="toolbar">
-        <label for="output_grid_size">Output grid size: </label>
-        <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
-        <button onclick="resizeOutputGrid('output')">Resize</button>
-        <button onclick="resetOutputGrid('output')">Reset grid</button>
+        <label for="output_grid_size_`+pairId+`">Output grid size: </label>
+        <input type="text" id="output_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
+        <button onclick="resizeOutputGrid('output', `+pairId+`)">Resize</button>
+        <button onclick="resetOutputGrid('output', `+pairId+`)">Reset grid</button>
         <div class="symbol_toolbar-outer">
-            <div id="symbol_toolbar" >
-                <div id="symbol_picker" class="symbol_picker_cls">
+            <div id="symbol_toolbar, `+pairId+`" >
+                <div id="symbol_picker" class="symbol_picker_cls_0">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -280,35 +346,35 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     </div>
     <div class="toolbar">
         <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
-        <button onclick="multicolorNoiseOnGrid('output')">Multicolor noise</button>
+        <button onclick="multicolorNoiseOnGrid('output')">Noise (multi-color)</button>
         <div class="toolbar-inner">
             <label for="eval_expr_output">Expression of i, j: </label>
             <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
             <button onclick="evalExpressionOnOutputGrid()">Eval</button>
         </div>
     </div>`);
-        $('#output_preview_' + pairId).after(jqEditBtn);
+        $('#edition_grid_' + pairId).after(jqEditBtn);
     }
 
     
 
-    var jqInputGrid = input_window_slot.find('#input_preview_' + pairId);
+    var jqInputGrid = input_grid_slot.find('#edition_grid_' + pairId);
     if (!jqInputGrid.length) {
-        jqInputGrid = $('<div id="input_preview_' + pairId + '" class="input_preview"></div>');
-        jqInputGrid.prependTo(input_window_slot);
+        jqInputGrid = $('<div id="edition_grid_' + pairId + '" class="edition_grid"></div>');
+        jqInputGrid.prependTo(input_grid_slot);
     }
 
-    var jqEditBtn1 = input_window_slot.find('.edit_pair_btn');
+    var jqEditBtn1 = input_grid_slot.find('.edit_pair_btn');
     if (!jqEditBtn1.length) {
         jqEditBtn1 = $(`<div class="toolbar" id="toolbar_color_input">
-        <label for="input_grid_size">Input grid size: </label>
-        <input type="text" id="input_grid_size" class="grid_size_field" name="size" value="16x16">
-        <button onclick="resizeInputGrid('input')">Resize</button>
-        <button onclick="resetInputGrid('input')">Reset grid</button>
-        <button onclick="copyToOutput('input')">Copy to output</button>
+        <label for="input_grid_size_`+pairId+`">Input grid size: </label>
+        <input type="text" id="input_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
+        <button onclick="resizeInputGrid('input', `+pairId+`)">Resize</button>
+        <button onclick="resetInputGrid('input', `+pairId+`)">Reset grid</button>
+        <button onclick="copyToOutput('input', `+pairId+`)">Copy to output</button>
         <div class="symbol_toolbar-outer">
-            <div id="symbol_toolbar" >
-                <div id="symbol_picker" class="symbol_picker_cls">
+            <div id="symbol_toolbar_`+pairId+`" >
+                <div id="symbol_picker" class="symbol_picker_cls_0">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -333,34 +399,45 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     </div>
     <div class="toolbar" id="toolbar_expression_input">
         <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
-        <button onclick="multicolorNoiseOnGrid('input')">Multicolor noise</button>
+        <button onclick="multicolorNoiseOnGrid('input')">Noise (multi-color)</button>
         <div class="toolbar-inner">
             <label for="eval_expr_input">Expression of i, j: </label>
             <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
             <button onclick="evalExpressionOnInputGrid()">Eval</button>
         </div></div>`);
-        $('#input_preview_' + pairId).after(jqEditBtn1);
+        $('#edition_grid_' + pairId).after(jqEditBtn1);
     }
-    // var jqEditBtn = pairSlot.find('.edit_pair_btn');
-    // if (!jqEditBtn.length) {
-    //     jqEditBtn = $('<button class="edit_pair_btn" onclick="editPair(' + pairId + ')">Edit pair</button>');
-    //     jqEditBtn.appendTo(pairSlot);
-    // }
-    // var jqDelBtn = pairSlot.find('.delete_pair_btn');
-    // if (!jqDelBtn.length) {
-    //     jqDelBtn = $('<button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete pair</button>');
-    //     jqDelBtn.appendTo(pairSlot);
-    // }
-    // var jqSelectForTestingBtn = pairSlot.find('.select_for_testing_button');
-    // if (!jqSelectForTestingBtn.length) {
-    //     jqSelectForTestingBtn = $('<button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button>');
-    //     jqSelectForTestingBtn.appendTo(pairSlot);
-    // }
 
     fillJqGridWithData(jqInputGrid, inputGrid);
     fitCellsToContainer(jqInputGrid, 16, 16, 470, 470);
     fillJqGridWithData(jqOutputGrid, outputGrid);
     fitCellsToContainer(jqOutputGrid, 16, 16, 470, 470);
+
+    $('.symbol_picker_cls_'+ pairId).click(function(event) {
+        symbol_preview = $(event.target);
+        $(this).find('.symbol_preview').each(function(i, preview) {
+            $(preview).removeClass('selected-symbol-preview');
+        })
+        symbol_preview.addClass('selected-symbol-preview');
+
+        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
+
+        if(selected_cell_grid_id == 'input_window'){
+            divmode = 'input';
+        } else if(selected_cell_grid_id == 'output_window'){
+            divmode = 'output';
+        }
+
+        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
+        if (toolMode == 'select') {
+            $('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol(divmode);
+                setCellSymbol($(cell), symbol);
+            });
+        }
+    });
+    jqGrid = $('#edition_grid_' + pairId);
+    setUpEditionGridListeners(jqGrid);
 }
 
 function stashCurrentPair() {
@@ -574,11 +651,20 @@ function resetCurrentPair() {
     syncFromNumGridsToEditionGrids();
 }
 
-function copyToOutput(mode='input') {
-    syncFromEditionGridsToNumGrids(mode);
-    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-    syncFromNumGridsToEditionGrids(mode);
-    $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+function copyToOutput(mode='input', pairId='no') {
+    if(pairId != 'no'){
+        syncFromEditionGridsToNumGrids(mode, pairId);
+
+        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+
+        syncFromNumGridsToEditionGrids(mode, pairId);
+        $('#output_grid_size_'+pairId).val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+    } else {
+        syncFromEditionGridsToNumGrids(mode);
+        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+        syncFromNumGridsToEditionGrids(mode);
+        $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+    }
 }
 
 function initializeSelectable(mode = 'input') {
@@ -617,6 +703,31 @@ $(document).ready(function () {
         selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
 
         if(selected_cell_grid_id == 'input_window'){
+            divmode = 'input';
+        } else if(selected_cell_grid_id == 'output_window'){
+            divmode = 'output';
+        }
+
+        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
+        if (toolMode == 'select') {
+            $('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol(divmode);
+                setCellSymbol($(cell), symbol);
+            });
+        }
+    });
+
+    $('.symbol_picker_cls_0').click(function(event) {
+        new_symbol_preview = $(event.target);
+
+        $(this).find('.symbol_preview').each(function(i, preview) {
+            $(preview).removeClass('selected-symbol-preview');
+        })
+        symbol_preview.addClass('selected-symbol-preview');
+
+        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
+
+        if(selected_cell_grid_id == 'input_waindow'){
             divmode = 'input';
         } else if(selected_cell_grid_id == 'output_window'){
             divmode = 'output';

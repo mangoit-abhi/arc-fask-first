@@ -96,7 +96,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     }
     var jqInputGrid = pairSlot.find('.preview_header');
     if (pairId>=0) {
-        jqOutputGrid = $('<div class="preview_header" ><span>Test ' + (pairId+1) + '</span><span>Result ' + (pairId+1) + '</span></div>');
+        jqOutputGrid = $('<div class="preview_header" ><span>Input ' + (pairId+1) + '</span><span>Output ' + (pairId+1) + '</span></div>');
         jqOutputGrid.appendTo(pairSlot);
     }
     var jqInputGrid = pairSlot.find('.input_preview');
