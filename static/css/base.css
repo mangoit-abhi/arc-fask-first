@@ -880,14 +880,14 @@ padding-left: 20px;
   margin: 5px 5px;
 }
 
-#new_pairs .parent_pair .input_preview {
+#new_pairs .parent_pair .edition_grid {
   height: auto;
   /* width: 48%; */
   margin: 4px;
   float: none;
 }
 
-#new_pairs .parent_pair .output_preview {
+#new_pairs .parent_pair .edition_grid {
   height: auto;
   /* width: 48%; */
   margin: 4px;
@@ -1333,4 +1333,36 @@ img { max-width: 100%;}
     margin-bottom: 15px;
     width: 100%;
   }
+}
+
+/* 19-7-22 */
+.symbol_toolbar-outer #symbol_toolbar, .symbol_picker_cls_0{
+  padding-top: 13px;
+}
+.delete_pair_btn {
+  margin-right: 15px;
+}
+.preview_header {
+  width: 100%;
+}
+.preview_header span {
+  width: 457px;
+  display: inline-block;
+  padding: 0 10px;
+  text-align: center;
+  font-size: 18px;
+  color: #000;
+}
+.preview_header span + span {
+  width: 60%;
+}
+#new_pairs .parent_pair .toolbar{
+  margin: 0 0 15px;
+  width: 447px;
+}
+#symbol_actions .toolbar_button {
+  margin-left: 7px;
+}
+.edition_grid{
+  padding: 10px 15px !important;
 }

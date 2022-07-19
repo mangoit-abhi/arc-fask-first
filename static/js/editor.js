@@ -28,6 +28,7 @@ function refreshEditionGrid(jqGrid, dataGrid, mode='input') {
     fillJqGridWithData(jqGrid, dataGrid);
     setUpEditionGridListeners(jqGrid);
     fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_HEIGHT);
+    
     initializeSelectable(mode);
 }
 
@@ -48,7 +49,7 @@ function setUpEditionGridListeners(jqGrid) {
 
         if(selected_cell_grid_id != undefined){
             symbol = getSelectedSymbol(divmode);
-
+            
             mode = $('input[name=tool_switching_' + divmode +']:checked').val();
             if (mode == 'floodfill') {
                 // If floodfill: fill all connected cells.
@@ -85,18 +86,20 @@ function syncFromEditionGridsToNumGrids(mode='input', pairId='no') {
 
 function syncFromNumGridsToEditionGrids(mode='input', pairId='no') {
     if(pairId != 'no'){
+        
         refreshEditionGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID, mode);
         refreshEditionGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID, mode);
     } else {
+        
         refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID, mode);
         refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID, mode);
     }
     
 }
 
-function singleColorNoiseOnGrid(mode) {
+function singleColorNoiseOnGrid(mode, pairId='no') {
     symbol = getSelectedSymbol(mode);
-    syncFromEditionGridsToNumGrids();
+    syncFromEditionGridsToNumGrids(mode, pairId);
     intensity = 0.05;
     if (mode == 'input') {
         grid = CURRENT_INPUT_GRID;
@@ -111,12 +114,13 @@ function singleColorNoiseOnGrid(mode) {
             }
         }
     }
-    syncFromNumGridsToEditionGrids();
+    syncFromNumGridsToEditionGrids(mode, pairId);
 }
 
-function multicolorNoiseOnGrid(mode) {
-    syncFromEditionGridsToNumGrids();
+function multicolorNoiseOnGrid(mode, pairId='no') {
+    syncFromEditionGridsToNumGrids(mode,pairId);
     intensity = 0.05;
+    
     if (mode == 'input') {
         grid = CURRENT_INPUT_GRID;
     }
@@ -131,7 +135,7 @@ function multicolorNoiseOnGrid(mode) {
             }
         }
     }
-    syncFromNumGridsToEditionGrids();
+    syncFromNumGridsToEditionGrids(mode, pairId);
 }
 
 function drawGridlinesOnGrid(mode, height, width) {
@@ -156,9 +160,9 @@ function drawGridlinesOnGrid(mode, height, width) {
     syncFromNumGridsToEditionGrids();
 }
 
-function evalExpressionOnGrid(mode, expr) {
+function evalExpressionOnGrid(mode, expr, pairId) {
     // expr must be of the form "i ** 2 + j"
-    syncFromEditionGridsToNumGrids();
+    syncFromEditionGridsToNumGrids(mode, pairId);
     if (mode == 'input') {
         grid = CURRENT_INPUT_GRID;
     }
@@ -170,22 +174,34 @@ function evalExpressionOnGrid(mode, expr) {
             grid.grid[i][j] = eval(expr) % 10;
         }
     }
-    syncFromNumGridsToEditionGrids();
+    syncFromNumGridsToEditionGrids(mode, pairId);
 }
 
-function evalExpressionOnInputGrid() {
-    expr = $('#eval_expr_input').val();
-    evalExpressionOnGrid("input", expr);
+function evalExpressionOnInputGrid(pairId='no') {
+    if(pairId != 'no'){
+        expr = $('#eval_expr_input_'+pairId).val();
+        evalExpressionOnGrid("input", expr,pairId);
+    } else {
+        expr = $('#eval_expr_input').val();
+        evalExpressionOnGrid("input", expr);
+    }
+    
 }
 
-function evalExpressionOnOutputGrid() {
-    expr = $('#eval_expr_output').val();
-    evalExpressionOnGrid("output", expr);
+function evalExpressionOnOutputGrid(pairId='no') {
+    if(pairId != 'no'){
+        expr = $('#eval_expr_output_'+pairId).val();
+        evalExpressionOnGrid("output", expr, pairId);
+    } else {
+        expr = $('#eval_expr_output').val();
+        evalExpressionOnGrid("output", expr);
+    }
 }
 
 
 function resizeInputGrid(mode='input', pairId='no') {
     if(pairId != 'no'){
+        
         size = $('#input_grid_size_'+pairId).val();
         size = parseSizeTuple(size);
         if (size == undefined) return;
@@ -196,9 +212,9 @@ function resizeInputGrid(mode='input', pairId='no') {
         syncFromEditionGridsToNumGrids(mode,pairId);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
         CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
-        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
+        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID, mode);
     } else {
-
+        
         size = $('#input_grid_size').val();
         size = parseSizeTuple(size);
         if (size == undefined) return;
@@ -209,12 +225,13 @@ function resizeInputGrid(mode='input', pairId='no') {
         syncFromEditionGridsToNumGrids(mode);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_INPUT_GRID.grid));
         CURRENT_INPUT_GRID = new Grid(height, width, dataGrid);
-        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID);
+        refreshEditionGrid(jqGrid, CURRENT_INPUT_GRID, mode);
     }
 }
 
 function resizeOutputGrid(mode='output', pairId='no') {
     if(pairId != 'no'){
+        
         size = $('#output_grid_size_'+pairId).val();
         size = parseSizeTuple(size);
         height = size[0];
@@ -224,8 +241,9 @@ function resizeOutputGrid(mode='output', pairId='no') {
         syncFromEditionGridsToNumGrids(mode);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
         CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
-        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
+        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID, mode);
     } else {
+        
         size = $('#output_grid_size').val();
         size = parseSizeTuple(size);
         height = size[0];
@@ -235,7 +253,7 @@ function resizeOutputGrid(mode='output', pairId='no') {
         syncFromEditionGridsToNumGrids(mode);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
         CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
-        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID);
+        refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID, mode);
     }
 }
 
@@ -277,7 +295,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     var grids_space_slot = $('#grids_space_' + pairId);
     if (!grids_space_slot.length) {
-        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
+        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div class="preview_header"><span>Input ' + newPairId + ' </span><span>Output ' + newPairId + ' </span></div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
         grids_space_slot.prependTo('#parent_pair_' + pairId);
     }
 
@@ -345,15 +363,15 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         </div>                                
     </div>
     <div class="toolbar">
-        <button onclick="singleColorNoiseOnGrid('output')">Noise (single-color)</button>
-        <button onclick="multicolorNoiseOnGrid('output')">Noise (multi-color)</button>
+        <button onclick="singleColorNoiseOnGrid('output',`+pairId+`)">Noise (single-color)</button>
+        <button onclick="multicolorNoiseOnGrid('output',`+pairId+`)">Noise (multi-color)</button>
         <div class="toolbar-inner">
             <label for="eval_expr_output">Expression of i, j: </label>
-            <input type="text" id="eval_expr_output" name="expr" value="i**2 + j">
-            <button onclick="evalExpressionOnOutputGrid()">Eval</button>
+            <input type="text" id="eval_expr_output_`+pairId+`" name="expr" value="i**2 + j">
+            <button onclick="evalExpressionOnOutputGrid(`+pairId+`)">Eval</button>
         </div>
     </div>`);
-        $('#edition_grid_' + pairId).after(jqEditBtn);
+        $('#output_grid_' + pairId).after(jqEditBtn);
     }
 
     
@@ -398,14 +416,14 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         </div>
     </div>
     <div class="toolbar" id="toolbar_expression_input">
-        <button onclick="singleColorNoiseOnGrid('input')">Noise (single-color)</button>
-        <button onclick="multicolorNoiseOnGrid('input')">Noise (multi-color)</button>
+        <button onclick="singleColorNoiseOnGrid('input',`+pairId+`)">Noise (single-color)</button>
+        <button onclick="multicolorNoiseOnGrid('input',`+pairId+`)">Noise (multi-color)</button>
         <div class="toolbar-inner">
             <label for="eval_expr_input">Expression of i, j: </label>
-            <input type="text" id="eval_expr_input" name="expr" value="i**2 + j">
-            <button onclick="evalExpressionOnInputGrid()">Eval</button>
+            <input type="text" id="eval_expr_input_`+pairId+`" name="expr" value="i**2 + j">
+            <button onclick="evalExpressionOnInputGrid(`+pairId+`)">Eval</button>
         </div></div>`);
-        $('#edition_grid_' + pairId).after(jqEditBtn1);
+        $('#input_grid_' + pairId).after(jqEditBtn1);
     }
 
     fillJqGridWithData(jqInputGrid, inputGrid);
@@ -427,7 +445,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         } else if(selected_cell_grid_id == 'output_window'){
             divmode = 'output';
         }
-
+        
         toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
         if (toolMode == 'select') {
             $('.ui-selected').each(function(i, cell) {
@@ -673,6 +691,7 @@ function initializeSelectable(mode = 'input') {
     }
     catch (e) {
     }
+    
     toolMode = $('input[name=tool_switching_'+ mode +']:checked').val();
     if (toolMode == 'select') {
         $('.edition_grid').selectable(
@@ -707,7 +726,7 @@ $(document).ready(function () {
         } else if(selected_cell_grid_id == 'output_window'){
             divmode = 'output';
         }
-
+        
         toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
         if (toolMode == 'select') {
             $('.ui-selected').each(function(i, cell) {
@@ -732,7 +751,7 @@ $(document).ready(function () {
         } else if(selected_cell_grid_id == 'output_window'){
             divmode = 'output';
         }
-
+        
         toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
         if (toolMode == 'select') {
             $('.ui-selected').each(function(i, cell) {
