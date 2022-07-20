@@ -421,7 +421,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         <button onclick="resetOutputGrid('output', `+pairId+`)">Reset grid</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
-                <div id="symbol_picker" class="symbol_picker_cls_`+pairId+`">
+                <div id="symbol_picker" class="symbol_picker_cls_output_`+pairId+`">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -474,7 +474,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         <button onclick="copyToOutput('input', `+pairId+`)">Copy to output</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
-                <div id="symbol_picker" class="symbol_picker_cls_`+pairId+`">
+                <div id="symbol_picker" class="symbol_picker_cls_input_`+pairId+`">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -513,7 +513,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     fillJqGridWithData(jqOutputGrid, outputGrid);
     fitCellsToContainer(jqOutputGrid, 16, 16, 470, 470);
 
-    $('.symbol_picker_cls_'+ pairId).click(function(event) {
+    $('.symbol_picker_cls_input_'+ pairId).click(function(event) {
         symbol_preview = $(event.target);
 
         symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
@@ -533,10 +533,41 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         toolMode = $('input[name=tool_switching_' + divmode +'_' + pairId+']:checked').val();
         if (toolMode == 'select') {
             $('#'+divmode+'_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
-                symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol, divmode);
+                symbol = getSelectedSymbol(divmode,pairId);
+                setCellSymbol($(cell), symbol, divmode,pairId);
             });
         }
+    });
+    $('.symbol_picker_cls_output_'+ pairId).click(function(event) {
+        symbol_preview = $(event.target);
+
+        symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
+        symbol_preview_id = symbol_preview_toolbar.attr('id');
+        symbol_preview_array =symbol_preview_id.split('_');
+        divmode = symbol_preview_array[2];
+
+        $('#'+divmode+'_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
+            
+            $(preview).removeClass('selected-symbol-preview');
+        })
+        symbol_preview.addClass('selected-symbol-preview');
+
+        jqGrid = $('#'+divmode+'_grid_'+pairId).children('#edition_grid_' + pairId);
+        setUpEditionGridListeners(jqGrid, pairId);
+
+        toolMode = $('input[name=tool_switching_' + divmode +'_' + pairId+']:checked').val();
+        if (toolMode == 'select') {
+            $('#'+divmode+'_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol(divmode,pairId);
+                setCellSymbol($(cell), symbol, divmode,pairId);
+            });
+        }
+    });
+    $('input[type=radio][name=tool_switching_input_'+pairId+']').change(function() {
+        initializeSelectableCustom('input',pairId);
+    });
+    $('input[type=radio][name=tool_switching_output_'+pairId+']').change(function() {
+        initializeSelectableCustom('output',pairId);
     });
 }
 
@@ -547,7 +578,6 @@ function stashCurrentPair() {
     fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID);
     var pair = {'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
-    console.log(pair);
     
     if (PAIRS.length < CURRENT_PAIR_INDEX) {
         PAIRS.push(JSON.parse(JSON.stringify(pair)));
@@ -575,6 +605,9 @@ function newPair() {
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
     // syncFromNumGridsToEditionGrids(); 
+    $('input[type=radio][name=tool_switching_input_'+PAIRS.length+']').change(function() {
+        initializeSelectable('input');
+    });
 }
 
 function editPair(pairId) {
@@ -768,7 +801,29 @@ function copyToOutput(mode='input', pairId='no') {
         $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
     }
 }
-
+function initializeSelectableCustom(mode = 'no',pairId='no') {
+    try {
+        $('#'+mode+'_grid_'+pairId).children('.edition_grid').selectable('destroy');
+    }
+    catch (e) {
+    }
+    
+    toolMode = $('input[name=tool_switching_'+ mode +'_'+pairId+']:checked').val();
+    if (toolMode == 'select') {
+        $('#'+mode+'_grid_'+pairId).children('.edition_grid').selectable(
+            {
+                autoRefresh: false,
+                filter: '> .row > .cell',
+                start: function(event, ui) {
+                    $('#'+mode+'_grid_'+pairId).children('.ui-selected').each(function(i, e) {
+                        $(e).removeClass('ui-selected');
+                    });
+                }
+            }
+        );
+        infoMsg('After selecting an area, you can press C to copy it, or you can pick a color to fill the area.');
+    }
+}
 function initializeSelectable(mode = 'no') {
     try {
         $('#'+mode+'_grid').children('.edition_grid').selectable('destroy');
