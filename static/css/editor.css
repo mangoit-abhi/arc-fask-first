@@ -176,3 +176,11 @@ border-radius: 10px;
   .edition_grid{
     padding: 10px 24px !important;
   }
+
+.pair_heading{
+    display: flex;
+    justify-content: space-between;
+}
+.tutorial_icon{
+    margin-right:15px ;
+}

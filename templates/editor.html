@@ -36,7 +36,7 @@
             </div>
             <div id="new_pairs">
                 <div id="parent_pair">
-                    <div class="pair_heading">Pair 1</div>
+                    <div class="pair_heading"><div class="pair_name">Pair 1</div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div>
                     <div class="preview_header"><span class="header-left">Input 1 </span><span class="header-right">Output 1 </span></div>
                     <div id="grids_space">
                         <div id="input_window">
@@ -138,7 +138,7 @@
 
                         </div>
                     </div>
-                    <div id="delete_mark_as_test_pairs" data-intro="Intro.js can highlight on elements" class="delete_mark_as_test_pairs">
+                    <div id="delete_mark_as_test_pairs" class="delete_mark_as_test_pairs">
                         <button class="delete_pair_btn" onclick="$('#parent_pair').remove()">Delete Pair</button>
                         <button class="select_for_testing_button" onclick="selectPairForTesting()">Mark as Test Pair</button>
                     </div>

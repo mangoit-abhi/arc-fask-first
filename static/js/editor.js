@@ -46,16 +46,11 @@ function getSelectedSymbol(divmode, pairId='no') {
 function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
         get_cell = $(event.target);
-        console.log(get_cell[0]);
         id_cell = $(get_cell).parent().parent();
-        console.log(id_cell[0]);
         prentId = id_cell.attr('id');
         if(prentId != undefined){
-            console.log(prentId);
             pairId_array = prentId.split('_');
-            console.log(pairId_array);
             pairId = pairId_array[2];
-            console.log(pairId);
             if(pairId != ''){
                 selected_cell_grid_id = $(get_cell).parents('.edition_grid').parents().parents().attr('id');        
                 if(selected_cell_grid_id != undefined){
@@ -393,7 +388,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     var grids_space_slot = $('#grids_space_' + pairId);
     if (!grids_space_slot.length) {
-        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div class="preview_header"><span class="header-left">Input ' + newPairId + ' </span><span class="header-right">Output ' + newPairId + ' </span></div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
+        grids_space_slot = $(`<div class="pair_heading"><div class="pair_name">Pair ` + newPairId + `</div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="img/bi_question-circle-black.png" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div><div class="preview_header"><span class="header-left">Input ` + newPairId + ` </span><span class="header-right">Output ` + newPairId + ` </span></div><div id="grids_space_` + pairId + `" class="grids_space" index="` + pairId + `"></div>`);
         grids_space_slot.prependTo('#parent_pair_' + pairId);
     }
 
@@ -652,38 +647,68 @@ function deletePair(pairId) {
     }
 }
 
-function selectPairForTesting(pairId) {
-    preview_div = $('#parent_pair_' + pairId)
-    // Case 1: pair isn't yet in test set. Add it.
-    if ($.inArray(pairId, TEST_PAIR_INDICES) == -1) {
-        if (PAIRS.length > pairId) {
-            TEST_PAIR_INDICES.push(pairId);
-        }
-        // Modify text on button
-        preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Remove from test set');
-        })
-        // Highlight pair preview
-        preview_div.addClass('selected_for_testing');
-    }
-    // Case 2: pair in test set. Remove it.
-    else {
-        for (var i = 0; i < TEST_PAIR_INDICES.length; i++) {
-            if (TEST_PAIR_INDICES[i] == pairId) {
-                TEST_PAIR_INDICES.splice(i, 1);
-                break;
+function selectPairForTesting(pairId='no') {
+    if(pairId != 'no'){
+        preview_div = $('#parent_pair_' + pairId)
+        // Case 1: pair isn't yet in test set. Add it.
+        if ($.inArray(pairId, TEST_PAIR_INDICES) == -1) {
+            if (PAIRS.length > pairId) {
+                TEST_PAIR_INDICES.push(pairId);
             }
+            // Modify text on button
+            preview_div.find('.select_for_testing_button').each(function(i, btn) {
+                $(btn).html('Remove from test set');
+            })
+            // Highlight pair preview
+            preview_div.addClass('selected_for_testing');
         }
-        // Modify text on button
-        preview_div.find('.select_for_testing_button').each(function(i, btn) {
-            $(btn).html('Add to test set');
-        })
-        // Un-highlight pair preview
-        preview_div.removeClass('selected_for_testing');
-    }
+        // Case 2: pair in test set. Remove it.
+        else {
+            for (var i = 0; i < TEST_PAIR_INDICES.length; i++) {
+                if (TEST_PAIR_INDICES[i] == pairId) {
+                    TEST_PAIR_INDICES.splice(i, 1);
+                    break;
+                }
+            }
+            // Modify text on button
+            preview_div.find('.select_for_testing_button').each(function(i, btn) {
+                $(btn).html('Mark as Test Pair');
+            })
+            // Un-highlight pair preview
+            preview_div.removeClass('selected_for_testing');
+        }
+    
+        if ((PAIRS.length > 2) & (TEST_PAIR_INDICES.length > 0)) {
+            infoMsg('Once your task is ready, click "SAVE" to save it to the ARC server.')
+        }
+    } else {
+        preview_div = $('#parent_pair')
+        // Case 1: pair isn't yet in test set. Add it.
+        if (!preview_div.hasClass('selected_for_testing')) {
+            if (PAIRS.length > pairId) {
+                TEST_PAIR_INDICES.push(pairId);
+            }
+            // Modify text on button
+            preview_div.find('.select_for_testing_button').each(function(i, btn) {
+                $(btn).html('Remove from test set');
+            })
+            // Highlight pair preview
+            preview_div.addClass('selected_for_testing');
+        }
+        // Case 2: pair in test set. Remove it.
+        else {
+            // Modify text on button
+            preview_div.find('.select_for_testing_button').each(function(i, btn) {
+                $(btn).html('Mark as Test Pair');
+            })
+            // Un-highlight pair preview
+            preview_div.removeClass('selected_for_testing');
+        }
+    
+        if ((PAIRS.length > 2) & (TEST_PAIR_INDICES.length > 0)) {
+            infoMsg('Once your task is ready, click "SAVE" to save it to the ARC server.')
+        }
 
-    if ((PAIRS.length > 2) & (TEST_PAIR_INDICES.length > 0)) {
-        infoMsg('Once your task is ready, click "SAVE" to save it to the ARC server.')
     }
 }
 
