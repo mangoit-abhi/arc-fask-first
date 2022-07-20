@@ -43,71 +43,86 @@ function getSelectedSymbol(divmode, pairId='no') {
     }
 }
 
-function setUpEditionGridListeners(jqGrid,pairId='no') {
+function setUpEditionGridListeners(jqGrid) {
     jqGrid.find('.cell').click(function(event) {
         get_cell = $(event.target);
-        if(pairId != 'no'){
-            selected_cell_grid_id = $(get_cell).parents('.edition_grid').parents().parents().attr('id');        
-            if(selected_cell_grid_id != undefined){
-                if(selected_cell_grid_id == 'input_window_'+pairId){
+        console.log(get_cell[0]);
+        id_cell = $(get_cell).parent().parent();
+        console.log(id_cell[0]);
+        prentId = id_cell.attr('id');
+        if(prentId != undefined){
+            console.log(prentId);
+            pairId_array = prentId.split('_');
+            console.log(pairId_array);
+            pairId = pairId_array[2];
+            console.log(pairId);
+            if(pairId != ''){
+                selected_cell_grid_id = $(get_cell).parents('.edition_grid').parents().parents().attr('id');        
+                if(selected_cell_grid_id != undefined){
+                    if(selected_cell_grid_id == 'input_window_'+pairId){
+                        divmode = 'input';
+                    } else if(selected_cell_grid_id == 'output_window_'+pairId){
+                        divmode = 'output';
+                    }
+                    symbol = getSelectedSymbol(divmode, pairId);
+                    mode = $('input[name=tool_switching_' + divmode + '_'+pairId + ']:checked').val();
+                    if (mode == 'floodfill') {
+                        
+                        // If floodfill: fill all connected cells.
+                        syncFromEditionGridsToNumGrids(divmode, pairId);
+                        htmlGrid = get_cell.parent().parent().parent()[0];
+                       
+                        if (htmlGrid != undefined) {
+                            if (htmlGrid.id == 'input_grid_'+pairId) {
+                                grid = CURRENT_INPUT_GRID.grid;
+                            }
+                            else {
+                                grid = CURRENT_OUTPUT_GRID.grid;   
+                            }
+                            floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
+                            syncFromNumGridsToEditionGrids(divmode, pairId);
+                        }
+                    }
+                    else if (mode == 'edit') {
+                        
+                        // Else: fill just this cell.
+                        setCellSymbol(get_cell, symbol, divmode , pairId);
+                    }
+                }
+            } else {
+                
+                selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
+                
+                if(selected_cell_grid_id == 'input_window'){
                     divmode = 'input';
-                } else if(selected_cell_grid_id == 'output_window_'+pairId){
+                } else if(selected_cell_grid_id == 'output_window'){
                     divmode = 'output';
                 }
-                symbol = getSelectedSymbol(divmode, pairId);
-                mode = $('input[name=tool_switching_' + divmode + '_'+pairId + ']:checked').val();
-                if (mode == 'floodfill') {
-                   
-                    // If floodfill: fill all connected cells.
-                    syncFromEditionGridsToNumGrids(divmode, pairId);
-                    htmlGrid = get_cell.parent().parent().parent()[0];
-                   
-                    if (htmlGrid != undefined) {
-                        if (htmlGrid.id == 'input_grid_'+pairId) {
-                            grid = CURRENT_INPUT_GRID.grid;
+    
+                if(selected_cell_grid_id != undefined){
+                    symbol = getSelectedSymbol(divmode);
+                    mode = $('input[name=tool_switching_' + divmode +']:checked').val();
+                    if (mode == 'floodfill') {
+                        
+                        // If floodfill: fill all connected cells.
+                        syncFromEditionGridsToNumGrids(divmode);
+                        htmlGrid = get_cell.parent().parent().parent()[0];
+                        if (htmlGrid != undefined) {
+                            if (htmlGrid.id == 'input_grid') {
+                                grid = CURRENT_INPUT_GRID.grid;
+                            }
+                            else {
+                                grid = CURRENT_OUTPUT_GRID.grid;   
+                            }
+                            floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
+                            syncFromNumGridsToEditionGrids(divmode);
                         }
-                        else {
-                            grid = CURRENT_OUTPUT_GRID.grid;   
-                        }
-                        floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
-                        syncFromNumGridsToEditionGrids(divmode, pairId);
                     }
-                }
-                else if (mode == 'edit') {
-                    // Else: fill just this cell.
-                    setCellSymbol(get_cell, symbol, divmode , pairId);
-                }
-            }
-        } else {
-            selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
-            
-            if(selected_cell_grid_id == 'input_window'){
-                divmode = 'input';
-            } else if(selected_cell_grid_id == 'output_window'){
-                divmode = 'output';
-            }
-
-            if(selected_cell_grid_id != undefined){
-                symbol = getSelectedSymbol(divmode);
-                mode = $('input[name=tool_switching_' + divmode +']:checked').val();
-                if (mode == 'floodfill') {
-                    // If floodfill: fill all connected cells.
-                    syncFromEditionGridsToNumGrids(divmode);
-                    htmlGrid = get_cell.parent().parent().parent()[0];
-                    if (htmlGrid != undefined) {
-                        if (htmlGrid.id == 'input_grid') {
-                            grid = CURRENT_INPUT_GRID.grid;
-                        }
-                        else {
-                            grid = CURRENT_OUTPUT_GRID.grid;   
-                        }
-                        floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
-                        syncFromNumGridsToEditionGrids(divmode);
+                    else if (mode == 'edit') {
+                        
+                        // Else: fill just this cell.
+                        setCellSymbol(get_cell, symbol);
                     }
-                }
-                else if (mode == 'edit') {
-                    // Else: fill just this cell.
-                    setCellSymbol(get_cell, symbol);
                 }
             }
         }
@@ -115,6 +130,7 @@ function setUpEditionGridListeners(jqGrid,pairId='no') {
 }
 
 function syncFromEditionGridsToNumGrids(mode='input', pairId='no') {
+    
     if(pairId != 'no'){
         copyJqGridToDataGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID);
         copyJqGridToDataGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID);
@@ -880,7 +896,7 @@ $(document).ready(function () {
     resizeOutputGrid();
 
     $('.edition_grid').each(function(i, jqGrid) {
-        
+       
         setUpEditionGridListeners($(jqGrid));
     });
 
