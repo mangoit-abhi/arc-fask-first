@@ -26,49 +26,89 @@ function resetTask() {
 
 function refreshEditionGrid(jqGrid, dataGrid, mode='input') {
     fillJqGridWithData(jqGrid, dataGrid);
+    
     setUpEditionGridListeners(jqGrid);
     fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_HEIGHT);
-    
+
     initializeSelectable(mode);
 }
 
-function getSelectedSymbol(divmode) {
-    getClickValue = $('#' + divmode + '_window').children('#' + divmode + '_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
-    return getClickValue;
+function getSelectedSymbol(divmode, pairId='no') {
+    if(pairId != 'no') {
+        getClickValue = $('#' + divmode + '_window_'+pairId).children('#' + divmode + '_grid_'+pairId).siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar_'+pairId).children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
+        return getClickValue;
+    } else {
+        getClickValue = $('#' + divmode + '_window').children('#' + divmode + '_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
+        return getClickValue;
+    }
 }
 
-function setUpEditionGridListeners(jqGrid) {
+function setUpEditionGridListeners(jqGrid,pairId='no') {
     jqGrid.find('.cell').click(function(event) {
         get_cell = $(event.target);
-        selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
-        if(selected_cell_grid_id == 'input_window'){
-            divmode = 'input';
-        } else if(selected_cell_grid_id == 'output_window'){
-            divmode = 'output';
-        }
-
-        if(selected_cell_grid_id != undefined){
-            symbol = getSelectedSymbol(divmode);
-            
-            mode = $('input[name=tool_switching_' + divmode +']:checked').val();
-            if (mode == 'floodfill') {
-                // If floodfill: fill all connected cells.
-                syncFromEditionGridsToNumGrids(divmode);
-                htmlGrid = get_cell.parent().parent().parent()[0];
-                if (htmlGrid != undefined) {
-                    if (htmlGrid.id == 'input_grid') {
-                        grid = CURRENT_INPUT_GRID.grid;
+        if(pairId != 'no'){
+            selected_cell_grid_id = $(get_cell).parents('.edition_grid').parents().parents().attr('id');        
+            if(selected_cell_grid_id != undefined){
+                if(selected_cell_grid_id == 'input_window_'+pairId){
+                    divmode = 'input';
+                } else if(selected_cell_grid_id == 'output_window_'+pairId){
+                    divmode = 'output';
+                }
+                symbol = getSelectedSymbol(divmode, pairId);
+                mode = $('input[name=tool_switching_' + divmode + '_'+pairId + ']:checked').val();
+                if (mode == 'floodfill') {
+                   
+                    // If floodfill: fill all connected cells.
+                    syncFromEditionGridsToNumGrids(divmode, pairId);
+                    htmlGrid = get_cell.parent().parent().parent()[0];
+                   
+                    if (htmlGrid != undefined) {
+                        if (htmlGrid.id == 'input_grid_'+pairId) {
+                            grid = CURRENT_INPUT_GRID.grid;
+                        }
+                        else {
+                            grid = CURRENT_OUTPUT_GRID.grid;   
+                        }
+                        floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
+                        syncFromNumGridsToEditionGrids(divmode, pairId);
                     }
-                    else {
-                        grid = CURRENT_OUTPUT_GRID.grid;   
-                    }
-                    floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
-                    syncFromNumGridsToEditionGrids(divmode);
+                }
+                else if (mode == 'edit') {
+                    // Else: fill just this cell.
+                    setCellSymbol(get_cell, symbol, divmode , pairId);
                 }
             }
-            else if (mode == 'edit') {
-                // Else: fill just this cell.
-                setCellSymbol(get_cell, symbol);
+        } else {
+            selected_cell_grid_id = $(this).parents('.edition_grid').parents().parents().attr('id');
+            
+            if(selected_cell_grid_id == 'input_window'){
+                divmode = 'input';
+            } else if(selected_cell_grid_id == 'output_window'){
+                divmode = 'output';
+            }
+
+            if(selected_cell_grid_id != undefined){
+                symbol = getSelectedSymbol(divmode);
+                mode = $('input[name=tool_switching_' + divmode +']:checked').val();
+                if (mode == 'floodfill') {
+                    // If floodfill: fill all connected cells.
+                    syncFromEditionGridsToNumGrids(divmode);
+                    htmlGrid = get_cell.parent().parent().parent()[0];
+                    if (htmlGrid != undefined) {
+                        if (htmlGrid.id == 'input_grid') {
+                            grid = CURRENT_INPUT_GRID.grid;
+                        }
+                        else {
+                            grid = CURRENT_OUTPUT_GRID.grid;   
+                        }
+                        floodfillFromLocation(grid, get_cell.attr('x'), get_cell.attr('y'), symbol);
+                        syncFromNumGridsToEditionGrids(divmode);
+                    }
+                }
+                else if (mode == 'edit') {
+                    // Else: fill just this cell.
+                    setCellSymbol(get_cell, symbol);
+                }
             }
         }
     });
@@ -98,44 +138,85 @@ function syncFromNumGridsToEditionGrids(mode='input', pairId='no') {
 }
 
 function singleColorNoiseOnGrid(mode, pairId='no') {
-    symbol = getSelectedSymbol(mode);
-    syncFromEditionGridsToNumGrids(mode, pairId);
-    intensity = 0.05;
-    if (mode == 'input') {
-        grid = CURRENT_INPUT_GRID;
-    }
-    else {
-        grid = CURRENT_OUTPUT_GRID;
-    }
-    for (var i = 0; i < grid.height; i ++) {
-        for (var j = 0; j < grid.width; j ++) {
-            if (Math.random() < intensity) {
-                grid.grid[i][j] = symbol;
+    if(pairId != 'no'){
+        symbol = getSelectedSymbol(mode, pairId);
+        syncFromEditionGridsToNumGrids(mode, pairId);
+        intensity = 0.05;
+        if (mode == 'input') {
+            grid = CURRENT_INPUT_GRID;
+        }
+        else {
+            grid = CURRENT_OUTPUT_GRID;
+        }
+        for (var i = 0; i < grid.height; i ++) {
+            for (var j = 0; j < grid.width; j ++) {
+                if (Math.random() < intensity) {
+                    grid.grid[i][j] = symbol;
+                }
             }
         }
+        syncFromNumGridsToEditionGrids(mode, pairId);
+    } else {
+        symbol = getSelectedSymbol(mode);
+        syncFromEditionGridsToNumGrids(mode, pairId);
+        intensity = 0.05;
+        if (mode == 'input') {
+            grid = CURRENT_INPUT_GRID;
+        }
+        else {
+            grid = CURRENT_OUTPUT_GRID;
+        }
+        for (var i = 0; i < grid.height; i ++) {
+            for (var j = 0; j < grid.width; j ++) {
+                if (Math.random() < intensity) {
+                    grid.grid[i][j] = symbol;
+                }
+            }
+        }
+        syncFromNumGridsToEditionGrids(mode, pairId);
     }
-    syncFromNumGridsToEditionGrids(mode, pairId);
 }
 
 function multicolorNoiseOnGrid(mode, pairId='no') {
-    syncFromEditionGridsToNumGrids(mode,pairId);
-    intensity = 0.05;
-    
-    if (mode == 'input') {
-        grid = CURRENT_INPUT_GRID;
-    }
-    else {
-        grid = CURRENT_OUTPUT_GRID;
-    }
-    for (var i = 0; i < grid.height; i ++) {
-        for (var j = 0; j < grid.width; j ++) {
-            if (Math.random() < intensity) {
-                symbol = Math.floor(Math.random() * 9 + 1);
-                grid.grid[i][j] = symbol;
+    if(pairId != 'no'){
+        syncFromEditionGridsToNumGrids(mode,pairId);
+        intensity = 0.05;
+        
+        if (mode == 'input') {
+            grid = CURRENT_INPUT_GRID;
+        }
+        else {
+            grid = CURRENT_OUTPUT_GRID;
+        }
+        for (var i = 0; i < grid.height; i ++) {
+            for (var j = 0; j < grid.width; j ++) {
+                if (Math.random() < intensity) {
+                    symbol = Math.floor(Math.random() * 9 + 1);
+                    grid.grid[i][j] = symbol;
+                }
             }
         }
+        syncFromNumGridsToEditionGrids(mode, pairId);
+    } else {
+        syncFromEditionGridsToNumGrids(mode,pairId);
+        intensity = 0.05;
+        
+        if (mode == 'input') {
+            grid = CURRENT_INPUT_GRID;
+        }
+        else {
+            grid = CURRENT_OUTPUT_GRID;
+        }
+        for (var i = 0; i < grid.height; i ++) {
+            for (var j = 0; j < grid.width; j ++) {
+                if (Math.random() < intensity) {
+                    symbol = Math.floor(Math.random() * 9 + 1);
+                    grid.grid[i][j] = symbol;
+                }
+            }
+        }
+        syncFromNumGridsToEditionGrids(mode, pairId);
     }
-    syncFromNumGridsToEditionGrids(mode, pairId);
 }
 
 function drawGridlinesOnGrid(mode, height, width) {
@@ -286,7 +367,8 @@ function resetOutputGrid(mode='output' , pairId='no') {
 }
 
 function fillPairPreview(pairId, inputGrid, outputGrid) {
-    newPairId = pairId+1;
+    
+    var newPairId = pairId+2;
     var pairSlot = $('#parent_pair_' + pairId);
     if (!pairSlot.length) {
         pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete Pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button></div></div>');
@@ -295,7 +377,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     var grids_space_slot = $('#grids_space_' + pairId);
     if (!grids_space_slot.length) {
-        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div class="preview_header"><span>Input ' + newPairId + ' </span><span>Output ' + newPairId + ' </span></div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
+        grids_space_slot = $('<div class="pair_heading">Pair ' + newPairId + '</div><div class="preview_header"><span class="header-left">Input ' + newPairId + ' </span><span class="header-right">Output ' + newPairId + ' </span></div><div id="grids_space_' + pairId + '" class="grids_space" index="' + pairId + '"></div>');
         grids_space_slot.prependTo('#parent_pair_' + pairId);
     }
 
@@ -332,14 +414,14 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     var jqEditBtn = output_grid_slot.find('.edit_pair_btn');
     if (!jqEditBtn.length) {
-        jqEditBtn = $(`<div class="toolbar">
+        jqEditBtn = $(`<div class="toolbar" id="toolbar_color_output">
         <label for="output_grid_size_`+pairId+`">Output grid size: </label>
         <input type="text" id="output_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
         <button onclick="resizeOutputGrid('output', `+pairId+`)">Resize</button>
         <button onclick="resetOutputGrid('output', `+pairId+`)">Reset grid</button>
         <div class="symbol_toolbar-outer">
-            <div id="symbol_toolbar, `+pairId+`" >
-                <div id="symbol_picker" class="symbol_picker_cls_0">
+            <div id="symbol_toolbar_`+pairId+`" >
+                <div id="symbol_picker" class="symbol_picker_cls_`+pairId+`">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -352,17 +434,17 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
                     <div class="symbol_preview symbol_9" symbol="9"></div>
                 </div>
                 <div id="symbol_actions">
-                    <input type="radio" id="tool_edit" name="tool_switching_output" class="toolbar_button" value="edit" checked>
-                    <label for="tool_edit">Edit</label>
-                    <input type="radio" id="tool_select" name="tool_switching_output" class="toolbar_button" value="select">
-                    <label for="tool_select">Select</label>
-                    <input type="radio" id="tool_floodfill" name="tool_switching_output" class="toolbar_button" value="floodfill">
-                    <label for="tool_floodfill">Flood fill</label>
+                    <input type="radio" id="tool_edit_`+pairId+`" name="tool_switching_output_`+pairId+`" class="toolbar_button" value="edit" checked>
+                    <label for="tool_edit_`+pairId+`">Edit</label>
+                    <input type="radio" id="tool_select_`+pairId+`" name="tool_switching_output_`+pairId+`" class="toolbar_button" value="select">
+                    <label for="tool_select_`+pairId+`">Select</label>
+                    <input type="radio" id="tool_floodfill_`+pairId+`" name="tool_switching_output_`+pairId+`" class="toolbar_button" value="floodfill">
+                    <label for="tool_floodfill_`+pairId+`">Flood fill</label>
                 </div>
             </div>
         </div>                                
     </div>
-    <div class="toolbar">
+    <div class="toolbar" id="toolbar_expression_output">
         <button onclick="singleColorNoiseOnGrid('output',`+pairId+`)">Noise (single-color)</button>
         <button onclick="multicolorNoiseOnGrid('output',`+pairId+`)">Noise (multi-color)</button>
         <div class="toolbar-inner">
@@ -392,7 +474,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         <button onclick="copyToOutput('input', `+pairId+`)">Copy to output</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
-                <div id="symbol_picker" class="symbol_picker_cls_0">
+                <div id="symbol_picker" class="symbol_picker_cls_`+pairId+`">
                     <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
                     <div class="symbol_preview symbol_1" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
@@ -405,12 +487,12 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
                     <div class="symbol_preview symbol_9" symbol="9"></div>
                 </div>
                 <div id="symbol_actions">
-                    <input type="radio" id="tool_edit" name="tool_switching_input" class="toolbar_button" value="edit" checked>
-                    <label for="tool_edit">Edit</label>
-                    <input type="radio" id="tool_select" name="tool_switching_input" class="toolbar_button" value="select">
-                    <label for="tool_select">Select</label>
-                    <input type="radio" id="tool_floodfill" name="tool_switching_input" class="toolbar_button" value="floodfill">
-                    <label for="tool_floodfill">Flood fill</label>
+                    <input type="radio" id="tool_edit_`+pairId+`" name="tool_switching_input_`+pairId+`" class="toolbar_button" value="edit" checked>
+                    <label for="tool_edit_`+pairId+`">Edit</label>
+                    <input type="radio" id="tool_select_`+pairId+`" name="tool_switching_input_`+pairId+`" class="toolbar_button" value="select">
+                    <label for="tool_select_`+pairId+`">Select</label>
+                    <input type="radio" id="tool_floodfill_`+pairId+`" name="tool_switching_input_`+pairId+`" class="toolbar_button" value="floodfill">
+                    <label for="tool_floodfill_`+pairId+`">Flood fill</label>
                 </div>
             </div>
         </div>
@@ -433,44 +515,46 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     $('.symbol_picker_cls_'+ pairId).click(function(event) {
         symbol_preview = $(event.target);
-        $(this).find('.symbol_preview').each(function(i, preview) {
+
+        symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
+        symbol_preview_id = symbol_preview_toolbar.attr('id');
+        symbol_preview_array =symbol_preview_id.split('_');
+        divmode = symbol_preview_array[2];
+
+        $('#'+divmode+'_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
+            
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
+        jqGrid = $('#'+divmode+'_grid_'+pairId).children('#edition_grid_' + pairId);
+        setUpEditionGridListeners(jqGrid, pairId);
 
-        if(selected_cell_grid_id == 'input_window'){
-            divmode = 'input';
-        } else if(selected_cell_grid_id == 'output_window'){
-            divmode = 'output';
-        }
-        
-        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
+        toolMode = $('input[name=tool_switching_' + divmode +'_' + pairId+']:checked').val();
         if (toolMode == 'select') {
-            $('.ui-selected').each(function(i, cell) {
+            $('#'+divmode+'_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
                 symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol);
+                setCellSymbol($(cell), symbol, divmode);
             });
         }
     });
-    jqGrid = $('#edition_grid_' + pairId);
-    setUpEditionGridListeners(jqGrid);
 }
 
 function stashCurrentPair() {
-    syncFromEditionGridsToNumGrids();
+    // syncFromEditionGridsToNumGrids();
+    CURRENT_INPUT_GRID = new Grid(16, 16);
+    CURRENT_OUTPUT_GRID = new Grid(16, 16);
     fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID);
-
-    pair = {'input': CURRENT_INPUT_GRID.grid,
-            'output': CURRENT_OUTPUT_GRID.grid};
+    var pair = {'input': CURRENT_INPUT_GRID.grid,
+    'output': CURRENT_OUTPUT_GRID.grid};
+    console.log(pair);
+    
     if (PAIRS.length < CURRENT_PAIR_INDEX) {
         PAIRS.push(JSON.parse(JSON.stringify(pair)));
     }
     else {
         PAIRS[CURRENT_PAIR_INDEX] = pair;
     }
-
     if (PAIRS.length == 1) {
         infoMsg('Now create a second pair and save it.')
     }
@@ -490,7 +574,7 @@ function newPair() {
     CURRENT_PAIR_INDEX = PAIRS.length;
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    syncFromNumGridsToEditionGrids(); 
+    // syncFromNumGridsToEditionGrids(); 
 }
 
 function editPair(pairId) {
@@ -685,21 +769,21 @@ function copyToOutput(mode='input', pairId='no') {
     }
 }
 
-function initializeSelectable(mode = 'input') {
+function initializeSelectable(mode = 'no') {
     try {
-        $('.edition_grid').selectable('destroy');
+        $('#'+mode+'_grid').children('.edition_grid').selectable('destroy');
     }
     catch (e) {
     }
     
     toolMode = $('input[name=tool_switching_'+ mode +']:checked').val();
     if (toolMode == 'select') {
-        $('.edition_grid').selectable(
+        $('#'+mode+'_grid').children('.edition_grid').selectable(
             {
                 autoRefresh: false,
                 filter: '> .row > .cell',
                 start: function(event, ui) {
-                    $('.ui-selected').each(function(i, e) {
+                    $('#'+mode+'_grid').children('.ui-selected').each(function(i, e) {
                         $(e).removeClass('ui-selected');
                     });
                 }
@@ -713,50 +797,26 @@ function initializeSelectable(mode = 'input') {
 
 $(document).ready(function () {
     $('.symbol_picker_cls').click(function(event) {
+        
         symbol_preview = $(event.target);
-        $(this).find('.symbol_preview').each(function(i, preview) {
+
+        symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
+        symbol_preview_id = symbol_preview_toolbar.attr('id');
+        symbol_preview_array =symbol_preview_id.split('_');
+        
+        divmode = symbol_preview_array[2];
+
+        $('#'+divmode+'_window').find('.symbol_preview').each(function(i, preview) {
+            
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
-
-        if(selected_cell_grid_id == 'input_window'){
-            divmode = 'input';
-        } else if(selected_cell_grid_id == 'output_window'){
-            divmode = 'output';
-        }
-        
         toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
         if (toolMode == 'select') {
-            $('.ui-selected').each(function(i, cell) {
+            $('#'+divmode+'_grid').find('.ui-selected').each(function(i, cell) {
                 symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol);
-            });
-        }
-    });
-
-    $('.symbol_picker_cls_0').click(function(event) {
-        new_symbol_preview = $(event.target);
-
-        $(this).find('.symbol_preview').each(function(i, preview) {
-            $(preview).removeClass('selected-symbol-preview');
-        })
-        symbol_preview.addClass('selected-symbol-preview');
-
-        selected_cell_grid_id = symbol_preview.parent().parent().parent().parent().parent().attr('id');
-
-        if(selected_cell_grid_id == 'input_waindow'){
-            divmode = 'input';
-        } else if(selected_cell_grid_id == 'output_window'){
-            divmode = 'output';
-        }
-        
-        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
-        if (toolMode == 'select') {
-            $('.ui-selected').each(function(i, cell) {
-                symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol);
+                setCellSymbol($(cell), symbol, divmode);
             });
         }
     });
@@ -765,6 +825,7 @@ $(document).ready(function () {
     resizeOutputGrid();
 
     $('.edition_grid').each(function(i, jqGrid) {
+        
         setUpEditionGridListeners($(jqGrid));
     });
 

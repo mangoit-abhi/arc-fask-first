@@ -19,14 +19,15 @@ class Grid {
 }
 
 function floodfillFromLocation(grid, i, j, symbol) {
+
     xi = parseInt(i);
     yj = parseInt(j);
 
     symbol = parseInt(symbol);
-   
+
     target = new Array();
     target = grid[xi][yj];
-    
+
     if (target == symbol) {
         return;
     }
@@ -112,14 +113,25 @@ function copyJqGridToDataGrid(jqGrid, dataGrid) {
     });
 }
 
-function setCellSymbol(cell, symbol) {
-    cell.attr('symbol', symbol);
-    classesToRemove = ''
-    for (i = 0; i < 10; i++) {
-        classesToRemove += 'symbol_' + i + ' ';
+function setCellSymbol(cell, symbol,divmode='no' ,pairId='no') {
+    if(pairId != 'no'){
+        new_cell = $('#'+divmode+'_grid_'+pairId).find(cell);
+        new_cell.attr('symbol', symbol);
+        classesToRemove = ''
+        for (i = 0; i < 10; i++) {
+            classesToRemove += 'symbol_' + i + ' ';
+        }
+        new_cell.removeClass(classesToRemove);
+        new_cell.addClass('symbol_' + symbol);
+    } else {
+        cell.attr('symbol', symbol);
+        classesToRemove = ''
+        for (i = 0; i < 10; i++) {
+            classesToRemove += 'symbol_' + i + ' ';
+        }
+        cell.removeClass(classesToRemove);
+        cell.addClass('symbol_' + symbol);
     }
-    cell.removeClass(classesToRemove);
-    cell.addClass('symbol_' + symbol);
 }
 
 function errorMsg(msg) {

@@ -135,3 +135,44 @@ border-radius: 10px;
     padding: 20px 0px 20px 40px;
     text-align: center;
 }
+
+/* 19-7-22 */
+.grids_space > div {
+    width: 49%;
+    float: left;
+    display: flex;
+    margin: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.preview_header {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+  .preview_header .header-left {
+    width: 470px;
+    display: inline-block;
+    padding: 0 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #000;
+  }
+  .preview_header .header-right {
+    width: 470px;
+    display: inline-block;
+    padding: 0 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #000;
+  }
+  #new_pairs .parent_pair .toolbar{
+    margin: 0 0 15px;
+    width: 447px;
+  }
+  #symbol_actions .toolbar_button {
+    margin-left: 7px;
+  }
+  .edition_grid{
+    padding: 10px 24px !important;
+  }
