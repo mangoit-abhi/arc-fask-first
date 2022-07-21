@@ -180,7 +180,8 @@ border-radius: 10px;
 .pair_heading{
     display: flex;
     justify-content: space-between;
+    font-size: x-large;
 }
 .tutorial_icon{
-    margin-right:15px ;
+    margin:-5px 10px ;
 }

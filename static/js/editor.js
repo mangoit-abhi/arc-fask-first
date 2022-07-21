@@ -377,7 +377,8 @@ function resetOutputGrid(mode='output' , pairId='no') {
     }
 }
 
-function fillPairPreview(pairId, inputGrid, outputGrid) {
+function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
+    console.log('381- '+pairId);
     
     var newPairId = pairId+2;
     var pairSlot = $('#parent_pair_' + pairId);
@@ -388,7 +389,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
 
     var grids_space_slot = $('#grids_space_' + pairId);
     if (!grids_space_slot.length) {
-        grids_space_slot = $(`<div class="pair_heading"><div class="pair_name">Pair ` + newPairId + `</div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="img/bi_question-circle-black.png" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div><div class="preview_header"><span class="header-left">Input ` + newPairId + ` </span><span class="header-right">Output ` + newPairId + ` </span></div><div id="grids_space_` + pairId + `" class="grids_space" index="` + pairId + `"></div>`);
+        grids_space_slot = $(`<div class="pair_heading"><div class="pair_name"><b>Pair ` + newPairId + `</b></div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="img/bi_question-circle-black.png" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div><div class="preview_header"><span class="header-left">Input ` + newPairId + ` </span><span class="header-right">Output ` + newPairId + ` </span></div><div id="grids_space_` + pairId + `" class="grids_space" index="` + pairId + `"></div>`);
         grids_space_slot.prependTo('#parent_pair_' + pairId);
     }
 
@@ -519,11 +520,23 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
         $('#input_grid_' + pairId).after(jqEditBtn1);
     }
 
-    fillJqGridWithData(jqInputGrid, inputGrid);
-    fitCellsToContainer(jqInputGrid, 16, 16, 470, 470);
-    fillJqGridWithData(jqOutputGrid, outputGrid);
-    fitCellsToContainer(jqOutputGrid, 16, 16, 470, 470);
+    if(newPairClick == 'no'){
+        console.log('522- '+newPairClick);
+        fillJqGridWithData(jqInputGrid, inputGrid);
+        fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 470, 470);
+        fillJqGridWithData(jqOutputGrid, outputGrid);
+        fitCellsToContainer(jqOutputGrid, inputGrid.height, inputGrid.width, 470, 470);
+    } else {
+        console.log('528- '+newPairClick);
+        var grid_height = 16;
+        var grid_width  = 16;
+    
+        fillJqGridWithData(jqInputGrid, inputGrid);
+        fitCellsToContainer(jqInputGrid, grid_height, grid_width, 470, 470);
+        fillJqGridWithData(jqOutputGrid, outputGrid);
+        fitCellsToContainer(jqOutputGrid, grid_height, grid_width, 470, 470);
 
+    }
     $('.symbol_picker_cls_input_'+ pairId).click(function(event) {
         symbol_preview = $(event.target);
 
@@ -582,11 +595,17 @@ function fillPairPreview(pairId, inputGrid, outputGrid) {
     });
 }
 
-function stashCurrentPair() {
+function stashCurrentPair(newPairClick=0) {
     // syncFromEditionGridsToNumGrids();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID);
+    if(newPairClick == 0){
+        console.log('603');
+        fillPairPreview((CURRENT_PAIR_INDEX+1), CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
+    } else {
+        console.log('606');
+        fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
+    }
     var pair = {'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
     
@@ -611,7 +630,7 @@ function stashCurrentPair() {
 }
 
 function newPair() {
-    stashCurrentPair();
+    stashCurrentPair(1);
     CURRENT_PAIR_INDEX = PAIRS.length;
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
@@ -630,7 +649,10 @@ function editPair(pairId) {
         CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(values);
         CURRENT_PAIR_INDEX = pairId;
         syncFromNumGridsToEditionGrids();
-
+        if (pairId >= 0){
+            $('#input_grid_size_'+pairId).val(CURRENT_INPUT_GRID.height + 'x' + CURRENT_INPUT_GRID.width);
+            $('#output_grid_size_'+pairId).val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
+        }
         $('#input_grid_size').val(CURRENT_INPUT_GRID.height + 'x' + CURRENT_INPUT_GRID.width);
         $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
     }
@@ -714,6 +736,11 @@ function selectPairForTesting(pairId='no') {
 
 function checkTaskComplete() {
     // Check that there are at least 3 pairs.
+    task_name = $('#task_name').val();
+    if (task_name == '') {
+        alert('To save a task, Please Provide Task Name');
+        return false;
+    }
     if (PAIRS.length < 3) {
         alert('To save a task, you need at least 3 pairs.');
         return false;
@@ -786,37 +813,49 @@ function saveTask() {
 
 
 function loadTask(e) {
-  var file = e.target.files[0];
-  if (!file) {
+    console.log('794');
+    var file = e.target.files[0];
+    if (!file) {
+    errorMsgFile('No file selected');
     return;
-  }
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var contents = e.target.result;
-
-    contents = JSON.parse(contents);
-    // Actually load taks from JSON.
-    resetTask();
-
-    name = contents['name'];
-    $('#task_name').val(name);
-    train = contents['train'];
-    test = contents['test'];
-    pairs = train.concat(test);
-    for (var i = 0; i < pairs.length; i++) {
-        pair = pairs[i];
-        values = pair['input'];
-        input_grid = convertSerializedGridToGridObject(values)
-        values = pair['output'];
-        output_grid = convertSerializedGridToGridObject(values)
-        fillPairPreview(i, input_grid, output_grid);
-        PAIRS.push(pair);
     }
-    for (var i = 0; i < test.length; i++) {
-        selectPairForTesting(train.length + i);
+    var validExtensions = ['json', 'JSON'];
+    var fileName = file.name;
+    var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+    if ($.inArray(fileNameExt, validExtensions) == -1)
+    {
+        errorMsgFile('Invalid file type only json file allowed');
+        return false;
     }
-    editPair(0);
-  };
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var contents = e.target.result;
+
+        contents = JSON.parse(contents);
+        // Actually load taks from JSON.
+        resetTask();
+
+        var tsk_name = contents['name'];
+        $('#task_name').val(tsk_name);
+        train = contents['train'];
+        test = contents['test'];
+        var pairs = train.concat(test);
+        console.log(pairs);
+        for (var i = 0; i < pairs.length; i++) {
+            pair = pairs[i];
+            values = pair['input'];
+            input_grid = convertSerializedGridToGridObject(values)
+            values = pair['output'];
+            output_grid = convertSerializedGridToGridObject(values)
+            fillPairPreview(i, input_grid, output_grid);
+            PAIRS.push(pair);
+            editPair(i);
+        }
+        for (var i = 0; i < test.length; i++) {
+            selectPairForTesting(train.length + i);
+        }
+        
+    };
   reader.readAsText(file);
 }
 

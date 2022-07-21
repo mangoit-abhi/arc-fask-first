@@ -27,16 +27,10 @@
                     <input type="button" class="browse-button" value="Browse for another task" onclick="document.getElementById('load_task_file_input').click();" />
                     <button id="save_task" onclick="saveTask()">Submit to ARC 2</button>
                 </div>
-                <span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()">
-                    <div class="tooltip ">
-                        <img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" />
-                        <span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span>
-                    </div>
-                </span>
             </div>
             <div id="new_pairs">
                 <div id="parent_pair">
-                    <div class="pair_heading"><div class="pair_name">Pair 1</div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div>
+                    <div class="pair_heading"><div class="pair_name"><b>Pair 1</b></div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div>
                     <div class="preview_header"><span class="header-left">Input 1 </span><span class="header-right">Output 1 </span></div>
                     <div id="grids_space">
                         <div id="input_window">
