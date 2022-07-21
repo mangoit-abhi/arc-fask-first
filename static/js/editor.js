@@ -330,7 +330,7 @@ function resizeOutputGrid(mode='output', pairId='no') {
         width = size[1];
 
         jqGrid = $('#output_grid_'+pairId+' .edition_grid');
-        syncFromEditionGridsToNumGrids(mode);
+        // syncFromEditionGridsToNumGrids(mode);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
         CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
         refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID, mode);
@@ -342,7 +342,7 @@ function resizeOutputGrid(mode='output', pairId='no') {
         width = size[1];
 
         jqGrid = $('#output_grid .edition_grid');
-        syncFromEditionGridsToNumGrids(mode);
+        // syncFromEditionGridsToNumGrids(mode);
         dataGrid = JSON.parse(JSON.stringify(CURRENT_OUTPUT_GRID.grid));
         CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
         refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID, mode);
