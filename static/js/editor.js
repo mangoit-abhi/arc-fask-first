@@ -378,8 +378,7 @@ function resetOutputGrid(mode='output' , pairId='no') {
 }
 
 function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
-    console.log('381- '+pairId);
-    
+
     var newPairId = pairId+2;
     var pairSlot = $('#parent_pair_' + pairId);
     if (!pairSlot.length) {
@@ -521,13 +520,11 @@ function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
     }
 
     if(newPairClick == 'no'){
-        console.log('522- '+newPairClick);
         fillJqGridWithData(jqInputGrid, inputGrid);
         fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 470, 470);
         fillJqGridWithData(jqOutputGrid, outputGrid);
         fitCellsToContainer(jqOutputGrid, inputGrid.height, inputGrid.width, 470, 470);
     } else {
-        console.log('528- '+newPairClick);
         var grid_height = 16;
         var grid_width  = 16;
     
@@ -593,19 +590,16 @@ function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
     $('input[type=radio][name=tool_switching_output_'+pairId+']').change(function() {
         initializeSelectableCustom('output',pairId);
     });
+    syncFromEditionGridsToNumGrids(pairId);
 }
 
 function stashCurrentPair(newPairClick=0) {
     // syncFromEditionGridsToNumGrids();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    if(newPairClick == 0){
-        console.log('603');
-        fillPairPreview((CURRENT_PAIR_INDEX+1), CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
-    } else {
-        console.log('606');
-        fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
-    }
+    
+    fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
+
     var pair = {'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
     
@@ -635,9 +629,6 @@ function newPair() {
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
     // syncFromNumGridsToEditionGrids(); 
-    $('input[type=radio][name=tool_switching_input_'+PAIRS.length+']').change(function() {
-        initializeSelectable('input');
-    });
 }
 
 function editPair(pairId) {
@@ -775,7 +766,7 @@ function getTaskData() {
 
     // Get task name.
     if (TASK_NAME == null) {
-        task_name = $('#task_name').val();
+        var task_name = $('#task_name').val();
     }
     else {
         task_name = TASK_NAME;
@@ -784,11 +775,15 @@ function getTaskData() {
         task_name = (Math.random() + 1).toString(36).substring(7);
     }
     taskDict['name'] = task_name;
+    if (task_name == '') {
+        errorMsgFile('Please Enter a File Name');
+    }
     return taskDict;
 }
 
 function downloadTask() {
     taskDict = getTaskData();
+    console.log(taskDict);
     data = JSON.stringify(taskDict);
     filename = taskDict['name'] + '.json';
     saveFile(data, filename);
@@ -800,20 +795,19 @@ function saveTask() {
         sendJSON(taskDict, '/create_task', function(data) {
             if (data != 'OK') {
                 alert('Unable to save task.');
-                errorMsg('Unable to save task.')
+                errorMsgFile('Unable to save task.')
             } else {
                 infoMsg('Task saved! Now make a new one.');
                 resetTask();
             }
         });
     } else {
-        errorMsg('Finish your task before saving it.');
+        errorMsgFile('Finish your task before saving it.');
     }
 }
 
 
 function loadTask(e) {
-    console.log('794');
     var file = e.target.files[0];
     if (!file) {
     errorMsgFile('No file selected');
@@ -840,14 +834,18 @@ function loadTask(e) {
         train = contents['train'];
         test = contents['test'];
         var pairs = train.concat(test);
-        console.log(pairs);
+
         for (var i = 0; i < pairs.length; i++) {
             pair = pairs[i];
             values = pair['input'];
             input_grid = convertSerializedGridToGridObject(values)
             values = pair['output'];
             output_grid = convertSerializedGridToGridObject(values)
-            fillPairPreview(i, input_grid, output_grid);
+            if (i == 0){
+                fillPairPreview(i, input_grid, output_grid);
+            } else {
+                fillPairPreview((i-1), input_grid, output_grid);
+            }
             PAIRS.push(pair);
             editPair(i);
         }
