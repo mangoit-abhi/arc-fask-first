@@ -98,7 +98,7 @@ def register_post():
         return jsonify(register_error)
 
 def landing():
-    data = requests.get('http://94.237.64.209/arc_wordpress/arc_wp/wp-json/arc-api/home')
+    data = requests.get('https://lab42.global/wp-json/arc-api/home')
     latest_data = json.loads(data.text)
     return flask.render_template('home.html',apidata=latest_data)
 
