@@ -3,7 +3,7 @@ var TEST_PAIR_INDICES = new Array(); // Indices of pairs that form the test set 
 var CURRENT_INPUT_GRID = new Grid(16, 16);
 var CURRENT_OUTPUT_GRID = new Grid(16, 16);
 var CURRENT_PAIR_INDEX = 0;
-var MY_CURRENT_PAIR_INDEX = 0;
+var NEW_PAIRS = new Array();
 
 var TASK_NAME = null;
 
@@ -125,7 +125,6 @@ function setUpEditionGridListeners(jqGrid) {
 }
 
 function syncFromEditionGridsToNumGrids(mode='input', pairId='no') {
-    
     if(pairId != 'no'){
         copyJqGridToDataGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID);
         copyJqGridToDataGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID);
@@ -377,9 +376,8 @@ function resetOutputGrid(mode='output' , pairId='no') {
     }
 }
 
-function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
-
-    var newPairId = pairId+2;
+function fillPairPreview(pairId, inputGrid, outputGrid) {
+    var newPairId = pairId+1;
     var pairSlot = $('#parent_pair_' + pairId);
     if (!pairSlot.length) {
         pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete Pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as Test Pair</button></div></div>');
@@ -467,6 +465,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
         $('#output_grid_' + pairId).after(jqEditBtn);
     }
 
+
     
 
     var jqInputGrid = input_grid_slot.find('#edition_grid_' + pairId);
@@ -519,21 +518,12 @@ function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
         $('#input_grid_' + pairId).after(jqEditBtn1);
     }
 
-    if(newPairClick == 'no'){
-        fillJqGridWithData(jqInputGrid, inputGrid);
-        fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 470, 470);
-        fillJqGridWithData(jqOutputGrid, outputGrid);
-        fitCellsToContainer(jqOutputGrid, inputGrid.height, inputGrid.width, 470, 470);
-    } else {
-        var grid_height = 16;
-        var grid_width  = 16;
-    
-        fillJqGridWithData(jqInputGrid, inputGrid);
-        fitCellsToContainer(jqInputGrid, grid_height, grid_width, 470, 470);
-        fillJqGridWithData(jqOutputGrid, outputGrid);
-        fitCellsToContainer(jqOutputGrid, grid_height, grid_width, 470, 470);
+    fillJqGridWithData(jqInputGrid, inputGrid);
+    fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 470, 470);
+    fillJqGridWithData(jqOutputGrid, outputGrid);
+    fitCellsToContainer(jqOutputGrid, inputGrid.height, inputGrid.width, 470, 470);
 
-    }
+
     $('.symbol_picker_cls_input_'+ pairId).click(function(event) {
         symbol_preview = $(event.target);
 
@@ -593,12 +583,18 @@ function fillPairPreview(pairId, inputGrid, outputGrid, newPairClick='no') {
     syncFromEditionGridsToNumGrids(pairId);
 }
 
-function stashCurrentPair(newPairClick=0) {
+function stashCurrentPair() {
     // syncFromEditionGridsToNumGrids();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    
-    fillPairPreview(CURRENT_PAIR_INDEX, CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID, newPairClick);
+    if (PAIRS.length > 0){
+        
+        fillPairPreview((CURRENT_PAIR_INDEX+1), CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID);
+    }
+    else {
+        
+        fillPairPreview((CURRENT_PAIR_INDEX), CURRENT_INPUT_GRID, CURRENT_OUTPUT_GRID);
+    }
 
     var pair = {'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
@@ -628,7 +624,7 @@ function newPair() {
     CURRENT_PAIR_INDEX = PAIRS.length;
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
-    // syncFromNumGridsToEditionGrids(); 
+    // syncFromNumGridsToEditionGrids();
 }
 
 function editPair(pairId) {
@@ -662,7 +658,21 @@ function deletePair(pairId) {
 
 function selectPairForTesting(pairId='no') {
     if(pairId != 'no'){
+        copyJqGridToDataGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID);
+        copyJqGridToDataGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID);
+        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+        var pair = {'input': CURRENT_INPUT_GRID.grid,
+        'output': CURRENT_OUTPUT_GRID.grid};
+        
         preview_div = $('#parent_pair_' + pairId)
+        if (!preview_div.hasClass('selected_for_testing')) {
+            NEW_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+            
+        } else {
+            NEW_PAIRS.splice(pairId, 1);
+            
+        }
         // Case 1: pair isn't yet in test set. Add it.
         if ($.inArray(pairId, TEST_PAIR_INDICES) == -1) {
             if (PAIRS.length > pairId) {
@@ -695,9 +705,20 @@ function selectPairForTesting(pairId='no') {
             infoMsg('Once your task is ready, click "SAVE" to save it to the ARC server.')
         }
     } else {
-        preview_div = $('#parent_pair')
-        // Case 1: pair isn't yet in test set. Add it.
-        if (!preview_div.hasClass('selected_for_testing')) {
+    syncFromEditionGridsToNumGrids();
+    // syncFromNumGridsToEditionGrids();
+    CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+    var pair = {'input': CURRENT_INPUT_GRID.grid,
+    'output': CURRENT_OUTPUT_GRID.grid};
+    preview_div = $('#parent_pair')
+    // Case 1: pair isn't yet in test set. Add it.
+    if (!preview_div.hasClass('selected_for_testing')) {
+        
+        NEW_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+        
+            
+            
             if (PAIRS.length > pairId) {
                 TEST_PAIR_INDICES.push(pairId);
             }
@@ -710,6 +731,8 @@ function selectPairForTesting(pairId='no') {
         }
         // Case 2: pair in test set. Remove it.
         else {
+            NEW_PAIRS.splice(0, 1);
+            
             // Modify text on button
             preview_div.find('.select_for_testing_button').each(function(i, btn) {
                 $(btn).html('Mark as Test Pair');
@@ -752,9 +775,9 @@ function getTaskData() {
     var taskDict = {};
     taskDict['train'] = new Array();
     taskDict['test'] = new Array();
-    for (var i = 0; i < PAIRS.length; i++) {
-        if (PAIRS[i] != null) {
-            pair = PAIRS[i];
+    for (var i = 0; i < NEW_PAIRS.length; i++) {
+        if (NEW_PAIRS[i] != null) {
+            pair = NEW_PAIRS[i];
             if ($.inArray(i, TEST_PAIR_INDICES) >= 0) {
                 taskDict['test'].push(pair);
             }
@@ -783,7 +806,6 @@ function getTaskData() {
 
 function downloadTask() {
     taskDict = getTaskData();
-    console.log(taskDict);
     data = JSON.stringify(taskDict);
     filename = taskDict['name'] + '.json';
     saveFile(data, filename);
@@ -841,10 +863,9 @@ function loadTask(e) {
             input_grid = convertSerializedGridToGridObject(values)
             values = pair['output'];
             output_grid = convertSerializedGridToGridObject(values)
-            if (i == 0){
-                fillPairPreview(i, input_grid, output_grid);
-            } else {
-                fillPairPreview((i-1), input_grid, output_grid);
+            if (i <= pairs.length){
+                
+                fillPairPreview((i+1), input_grid, output_grid);
             }
             PAIRS.push(pair);
             editPair(i);
