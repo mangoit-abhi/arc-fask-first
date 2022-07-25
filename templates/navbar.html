@@ -14,7 +14,7 @@
                 <li><a {% if location == "home" %}class="active"{% endif %} href="{{ url_for('landing') }}">ARC Home</a></li>
                 <li><a {% if location == "playground" %}class="active"{% endif %} href="{{ url_for('playground') }}">Playground</a></li>
                 {% if current_user.is_authenticated %}
-                <li><a {% if location == "editor" %}class="active"{% endif %} href="{{ url_for('editor') }}">Task editor</a></li>
+                <li><a {% if location == "editor" %}class="active"{% endif %} href="{{ url_for('editor') }}">Task Editor</a></li>
                 <li><a {% if location == "logout" %}class="active"{% endif %} href="{{ url_for('logout') }}">Logout</a></li>
                 {% else %}
                 <li><a id="editor" {% if location == "editor" %} class="active"{% endif %} href="#" data-bs-toggle="modal" data-bs-target="#RegisterLogin">Task editor</a></li>
