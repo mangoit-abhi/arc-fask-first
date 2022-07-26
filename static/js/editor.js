@@ -803,7 +803,6 @@ function checkTaskComplete() {
         alert('To save a task, Please Provide Task Name');
         return false;
     }
-    console.log(FULL_PAIRS);
     if (FULL_PAIRS.length < 3) {
         alert('To save a task, you need at least 3 pairs.');
         return false;
@@ -827,7 +826,6 @@ function getTaskData() {
         'input': CURRENT_INPUT_GRID.grid,
         'output': CURRENT_OUTPUT_GRID.grid};
         for (var i = 0; i < CURRENT_PAIR_INDEX-1; i++) {
-            console.log(FULL_PAIRS[i]);
         }
         FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
 
