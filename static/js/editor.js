@@ -292,7 +292,6 @@ function evalExpressionOnOutputGrid(pairId='no') {
 
 
 function resizeInputGrid(mode='input', pairId='no') {
-    console.log(pairId);
     copyJqGridToDataGrid($('#input_grid_'+(pairId)+' .edition_grid'), CURRENT_INPUT_GRID);
     CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
 
@@ -324,8 +323,9 @@ function resizeInputGrid(mode='input', pairId='no') {
 }
 
 function resizeOutputGrid(mode='output', pairId='no') {
+    copyJqGridToDataGrid($('#output_grid_'+(pairId)+' .edition_grid'), CURRENT_OUTPUT_GRID);
+    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
     if(pairId != 'no'){
-        
         size = $('#output_grid_size_'+pairId).val();
         size = parseSizeTuple(size);
         height = size[0];
@@ -598,24 +598,21 @@ function stashCurrentPair() {
         var pair = {'id': CURRENT_PAIR_INDEX-1,
         'input': CURRENT_INPUT_GRID.grid,
         'output': CURRENT_OUTPUT_GRID.grid};
-    
-        preview_div = $('#parent_pair');
-    
+
         FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
     } else {
-        copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
-        copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
-        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
-        var pair = {'id': CURRENT_PAIR_INDEX-1,
-        'input': CURRENT_INPUT_GRID.grid,
-        'output': CURRENT_OUTPUT_GRID.grid};
+        if($('#parent_pair_' + (CURRENT_PAIR_INDEX-1)).length != 0) {
+            copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
+            copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
+            CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+            CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+            var pair = {'id': CURRENT_PAIR_INDEX-1,
+            'input': CURRENT_INPUT_GRID.grid,
+            'output': CURRENT_OUTPUT_GRID.grid};
     
-        preview_div = $('#parent_pair_' + CURRENT_PAIR_INDEX-1);
-    
-        FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+            FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+        }
     }
-
     // syncFromEditionGridsToNumGrids();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
@@ -687,12 +684,26 @@ function deletePair(pairId='no') {
         // indices are expected to be immutable IDs.
         if (PAIRS.length > (pairId)) {
             PAIRS[pairId] = null;
+            for (var i = 0; i < FULL_PAIRS.length; i++) {
+                if (FULL_PAIRS[i]['id'] == pairId){
+                    FULL_PAIRS.splice($.inArray(FULL_PAIRS[i], FULL_PAIRS), 1);
+                }
+                for (var j = 0; j < NEW_PAIRS.length; j++) {
+                    if (NEW_PAIRS[j]['id'] == pairId){
+                        NEW_PAIRS.splice($.inArray(NEW_PAIRS[j], NEW_PAIRS), 1);
+                    }
+                }
+            }
             // Delete preview of pair.
             pairSlot = $('#parent_pair_' + (pairId));
             pairSlot.remove();
         }
     } else {
         PAIRS[0] = null;
+        FULL_PAIRS[0] = null;
+        FULL_PAIRS.splice($.inArray(FULL_PAIRS[0], FULL_PAIRS), 1);
+
+        NEW_PAIRS.splice(0, 1);
         $('#parent_pair').remove();
     }
 }
@@ -792,7 +803,8 @@ function checkTaskComplete() {
         alert('To save a task, Please Provide Task Name');
         return false;
     }
-    if (PAIRS.length < 3) {
+    console.log(FULL_PAIRS);
+    if (FULL_PAIRS.length < 3) {
         alert('To save a task, you need at least 3 pairs.');
         return false;
     }
@@ -806,17 +818,20 @@ function checkTaskComplete() {
 }
 
 function getTaskData() {
-    copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
-    copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
-    CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-    CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
-    var pair = {'id': CURRENT_PAIR_INDEX-1,
-    'input': CURRENT_INPUT_GRID.grid,
-    'output': CURRENT_OUTPUT_GRID.grid};
+    if($('#parent_pair_' + (CURRENT_PAIR_INDEX-1)).length != 0) {
+        copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
+        copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
+        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
+        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+        var pair = {'id': CURRENT_PAIR_INDEX-1,
+        'input': CURRENT_INPUT_GRID.grid,
+        'output': CURRENT_OUTPUT_GRID.grid};
+        for (var i = 0; i < CURRENT_PAIR_INDEX-1; i++) {
+            console.log(FULL_PAIRS[i]);
+        }
+        FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
 
-    preview_div = $('#parent_pair_' + CURRENT_PAIR_INDEX-1);
-
-    FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+    }
 
     if (!checkTaskComplete()) {return;}
 
@@ -827,11 +842,19 @@ function getTaskData() {
     for (var i = 0; i < FULL_PAIRS.length; i++) {
         if (FULL_PAIRS[i] != null) {
             var pair = FULL_PAIRS[i];
-            if ($.inArray(i, TEST_PAIR_INDICES) >= 0) {
-                taskDict['test'].push(pair);
-            } else {
-                taskDict['train'].push(pair);
+            for (var j = 0; j < NEW_PAIRS.length; j++) {
+                if (FULL_PAIRS[i]['id'] == NEW_PAIRS[j]['id']){
+                    taskDict['test'].push(pair);
+                } else {
+                    taskDict['train'].push(pair);
+                }
             }
+
+            // if ($.inArray(i, TEST_PAIR_INDICES) >= 0) {
+            //     taskDict['test'].push(pair);
+            // } else {
+            //     taskDict['train'].push(pair);
+            // }
         }
     }
 
@@ -930,7 +953,6 @@ function loadTask(e) {
             var pair = pairs[i];
             PAIRS.push(pair);
             FULL_PAIRS.push(pair);
-            CURRENT_PAIR_INDEX = PAIRS.length;
             if (i > 0){
                 editPair(i);
             }
@@ -940,6 +962,7 @@ function loadTask(e) {
             selectPairForTesting(train.length + i);
             TEST_PAIR_INDICES.push(train.length + i);
         }
+        CURRENT_PAIR_INDEX = (PAIRS.length);
     };
   reader.readAsText(file);
 }
@@ -1016,7 +1039,8 @@ function initializeSelectable(mode = 'no') {
 // Initial event binding.
 
 $(document).ready(function () {
-    var pair = {'input': CURRENT_INPUT_GRID.grid,
+    var pair = {'id':0,
+    'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
     
     if (PAIRS.length < CURRENT_PAIR_INDEX) {

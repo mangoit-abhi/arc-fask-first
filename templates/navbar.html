@@ -11,13 +11,13 @@
           <div id="navbar" class="nav col-md-6 col-6 collapse navbar-collapse f-right">
             <div  class="">
               <ul class="nav navbar-nav">
-                <li><a {% if location == "home" %}class="active"{% endif %} href="{{ url_for('landing') }}">ARC Home</a></li>
-                <li><a {% if location == "playground" %}class="active"{% endif %} href="{{ url_for('playground') }}">Playground</a></li>
+                <li><a {% if location == "home" %}class="active"{% endif %} href="{{ url_for('landing') }}"><img src="{{ url_for('static', filename='img/home.svg') }}" alt="Home" width="20px">ARC Home</a></li>
+                <li><a {% if location == "playground" %}class="active"{% endif %} href="{{ url_for('playground') }}"><img src="{{ url_for('static', filename='img/play.svg') }}" alt="Home" width="20px">Playground</a></li>
                 {% if current_user.is_authenticated %}
-                <li><a {% if location == "editor" %}class="active"{% endif %} href="{{ url_for('editor') }}">Task Editor</a></li>
-                <li><a {% if location == "logout" %}class="active"{% endif %} href="{{ url_for('logout') }}">Logout</a></li>
+                <li><a {% if location == "editor" %}class="active"{% endif %} href="{{ url_for('editor') }}"><img src="{{ url_for('static', filename='img/editior.svg') }}" alt="Home" width="20px">Task Editor</a></li>
+                <li><a {% if location == "logout" %}class="active"{% endif %} href="{{ url_for('logout') }}"><img src="{{ url_for('static', filename='img/login.svg') }}" alt="Home" width="15px">Logout</a></li>
                 {% else %}
-                <li><a id="editor" {% if location == "editor" %} class="active"{% endif %} href="#" data-bs-toggle="modal" data-bs-target="#RegisterLogin">Task editor</a></li>
+                <li><a id="editor" {% if location == "editor" %} class="active"{% endif %} href="#" data-bs-toggle="modal" data-bs-target="#RegisterLogin"><img src="{{ url_for('static', filename='img/editior.svg') }}" alt="Home" width="20px">Task editor</a></li>
                 {% endif %}
               </ul>
 

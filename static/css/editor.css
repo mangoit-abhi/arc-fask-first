@@ -32,8 +32,6 @@ border-radius: 10px;
 }
 
 .edition_grid {
-    width: 470px;
-    height: 470px;
     padding: 10px;
 }
 
@@ -51,6 +49,9 @@ border-radius: 10px;
 
 
 
+
+
+
 #grids_space .row {
     margin: 0px;
 }
@@ -61,8 +62,13 @@ border-radius: 10px;
     height: 25px;
 } */
 
-#symbol_actions {
-    margin-right: 15px;
+#grids_space .row {
+  
+  justify-content: center;
+}
+
+.symbol_toolbar-outer {
+     margin-top: 15px;
 }
 
 .pair_button button {
@@ -168,7 +174,7 @@ border-radius: 10px;
   }
   #new_pairs .parent_pair .toolbar{
     margin: 0 0 15px;
-    width: 447px;
+    width: 98%;
   }
   #symbol_actions .toolbar_button {
     margin-left: 7px;
@@ -185,3 +191,8 @@ border-radius: 10px;
 .tutorial_icon{
     margin:-5px 10px ;
 }
+
+#grids_space > div {
+    width: 48%;
+}
+

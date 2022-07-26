@@ -28,6 +28,12 @@
   opacity: 1;
 }
 
+.nav > li > a > img {
+
+  margin-top: -5px;
+  margin-right: 4px;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -1337,7 +1343,7 @@ img { max-width: 100%;}
 
 /* 19-7-22 */
 .symbol_toolbar-outer #symbol_toolbar, .symbol_picker_cls_0{
-  padding-top: 13px;
+  padding-top: 0px;
 }
 .delete_pair_btn {
   margin-right: 15px;
