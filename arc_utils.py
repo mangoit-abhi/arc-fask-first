@@ -19,7 +19,7 @@ def validate_task_format(data):
 def validate_pair_format(data):
     if type(data) != dict:
         return False
-    if len(data.keys()) != 3:
+    if len(data.keys()) != 3 and len(data.keys()) != 2:
         return False
     if 'input' not in data or 'output' not in data:
         return False
