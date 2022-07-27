@@ -19,7 +19,7 @@ def validate_task_format(data):
 def validate_pair_format(data):
     if type(data) != dict:
         return False
-    if len(data.keys()) != 2:
+    if len(data.keys()) != 3:
         return False
     if 'input' not in data or 'output' not in data:
         return False
@@ -43,7 +43,7 @@ def validate_grid_format(data):
     return True
 
 
-def compute_min_max_grid_size(task):
+def compute_min_max_grid_size(data):
     pairs = data['train'] + data['test']
     heights = []
     widths = []

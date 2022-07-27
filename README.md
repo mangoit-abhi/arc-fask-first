@@ -1,3 +1,19 @@
+Welcome Arc Lab 42
+
+#### Instructions ###
+
+1. Update main.py file 
+   i. Change Host 
+   ii. Change debug = false
+
+2. Update config.py file
+   i. Change debug = false
+
+3. Update WP data feed url (live site url) in View.py >> landing()
+
+4. Update "app.config['MAIL_USERNAME']" with your mail id and app.config['MAIL_PASSWORD'] with your password.
+
+
 # ARC Launchpad codebase
 
 This webapp includes:

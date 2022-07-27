@@ -434,6 +434,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <input type="text" id="output_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
         <button onclick="resizeOutputGrid('output', `+pairId+`)">Resize</button>
         <button onclick="resetOutputGrid('output', `+pairId+`)">Reset grid</button>
+        <button onclick="copyToInput('output', `+pairId+`)">Copy to Input</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
                 <div id="symbol_picker" class="symbol_picker_cls_output_`+pairId+`">
@@ -848,11 +849,6 @@ function getTaskData() {
                 }
             }
 
-            // if ($.inArray(i, TEST_PAIR_INDICES) >= 0) {
-            //     taskDict['test'].push(pair);
-            // } else {
-            //     taskDict['train'].push(pair);
-            // }
         }
     }
 
@@ -883,15 +879,23 @@ function downloadTask() {
 function saveTask() {
     if (confirm('Are you sure your task is ready to be saved? A saved task cannot be further edited.')) {
         taskDict = getTaskData();
-        sendJSON(taskDict, '/create_task', function(data) {
-            if (data != 'OK') {
-                alert('Unable to save task.');
-                errorMsgFile('Unable to save task.')
-            } else {
-                infoMsg('Task saved! Now make a new one.');
-                resetTask();
-            }
-        });
+        $.ajax({
+            url: "/create_task",
+            type: "POST",
+            data: JSON.stringify(taskDict),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) 
+            {
+                if (!data) {
+                    alert('Unable to save task.');
+                    errorMsgFile('Unable to save task.')
+                } else {
+                    correctMsg('Task saved! Now make a new one.');
+                    resetTask();
+                }
+            }            
+          });
     } else {
         errorMsgFile('Finish your task before saving it.');
     }
@@ -987,6 +991,24 @@ function copyToOutput(mode='input', pairId='no') {
         $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
     }
 }
+
+function copyToInput(mode='output', pairId='no') {
+    if(pairId != 'no'){
+        syncFromEditionGridsToNumGrids(mode, pairId);
+
+        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+
+        syncFromNumGridsToEditionGrids(mode, pairId);
+        $('#input_grid_size_'+pairId).val(CURRENT_INPUT_GRID.height + 'x' + CURRENT_INPUT_GRID.width);
+    } else {
+        syncFromEditionGridsToNumGrids(mode);
+        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+        syncFromNumGridsToEditionGrids(mode);
+        $('#input_grid_size').val(CURRENT_INPUT_GRID.height + 'x' + CURRENT_INPUT_GRID.width);
+    }
+}
+
+
 function initializeSelectableCustom(mode = 'no',pairId='no') {
     try {
         $('#'+mode+'_grid_'+pairId).children('.edition_grid').selectable('destroy');
@@ -1040,16 +1062,14 @@ $(document).ready(function () {
     var pair = {'id':0,
     'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
-    
+
     if (PAIRS.length < CURRENT_PAIR_INDEX) {
         PAIRS.push(JSON.parse(JSON.stringify(pair)));
-    }
-    else {
+    } else {
         PAIRS[CURRENT_PAIR_INDEX] = pair;
     }
     CURRENT_PAIR_INDEX = PAIRS.length;
     $('.symbol_picker_cls').click(function(event) {
-        
         symbol_preview = $(event.target);
 
         symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
@@ -1077,7 +1097,6 @@ $(document).ready(function () {
     resizeOutputGrid();
 
     $('.edition_grid').each(function(i, jqGrid) {
-       
         setUpEditionGridListeners($(jqGrid));
     });
 
@@ -1158,4 +1177,5 @@ function sendJSON(data, url, cbk) {
     $.ajax(url, {data : JSON.stringify(data),
                  contentType : 'application/json',
                  type : 'POST'}).done(cbk);
+        
 }

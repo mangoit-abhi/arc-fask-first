@@ -31,7 +31,6 @@ def logout():
 def login_post():
     if request.method == "POST":
         email = flask.request.form.get('login_email')
-        print(email)
         error = user_utils.validate_email_string(email)
         if error:
             login_err_data = error
@@ -111,24 +110,28 @@ def playground():
 
 @flask_login.login_required
 def create_task():
-    data = flask.request.json
-    valid = arc_utils.validate_task_format(data)
-    if not valid:
-        return 'BAD_FORMAT'
-    
-    min_size, max_size = arc_utils.compute_min_max_grid_size(data)
-    task = Task(
-        data=data,
-        author=flask_login.current_user.id,
-        num_train_examples=len(data['train']),
-        num_test_examples=len(data['test']),
-        min_grid_size=min_size,
-        max_grid_size=max_size,
-        debug=config.DEBUG)
-    db.session.add(task)
-    db.session.commit()
-    # key = task.put()
-    return 'OK'
+    if request.method == "POST":
+        data = flask.request.json
+        valid = arc_utils.validate_task_format(data)
+        if not valid:
+            return 'BAD_FORMAT'
+
+        min_size, max_size = arc_utils.compute_min_max_grid_size(data)
+
+        newdata = json.dumps(data)
+
+        task = Task(
+            author=flask_login.current_user.id,
+            data=newdata,
+            num_train_examples=len(data['train']),
+            num_test_examples=len(data['test']),
+            max_grid_size=max_size,
+            min_grid_size=min_size,
+            debug=config.DEBUG)
+        db.session.add(task)
+        db.session.commit()
+        # key = task.put()
+        return jsonify(True)
 
 def reset_request():
     if current_user.is_authenticated:
