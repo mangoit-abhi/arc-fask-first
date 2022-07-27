@@ -887,12 +887,13 @@ function saveTask() {
             dataType: "json",
             success: function(data) 
             {
+                console.log(data);
                 if (!data) {
                     alert('Unable to save task.');
                     errorMsgFile('Unable to save task.')
                 } else {
                     correctMsg('Task saved! Now make a new one.');
-                    resetTask();
+                    location.reload();
                 }
             }            
           });
