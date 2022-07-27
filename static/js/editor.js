@@ -18,6 +18,8 @@ function resetTask() {
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
     CURRENT_PAIR_INDEX = 0;
+    var NEW_PAIRS = new Array();
+    var FULL_PAIRS = new Array();
     // Clear edition grids.
     resetCurrentPair();
     // Empty task preview div.
@@ -904,6 +906,12 @@ function saveTask() {
 
 
 function loadTask(e) {
+    for (var i = 0; i < FULL_PAIRS.length; i++) {
+        $('#parent_pair_' + i).html('');
+    }
+
+
+
     var file = e.target.files[0];
     if (!file) {
     errorMsgFile('No file selected');
