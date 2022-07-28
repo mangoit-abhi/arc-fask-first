@@ -193,7 +193,7 @@ border-radius: 10px;
     width: 48%;
 }
 
-.grids_space div{
+.grids_space .input_window{
     position: relative;
 }
 .grids_space .input_window::after {

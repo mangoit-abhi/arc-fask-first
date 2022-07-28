@@ -70,10 +70,10 @@ function convertSerializedGridToGridObject(values) {
 }
 
 function fitCellsToContainer(jqGrid, height, width, containerHeight, containerWidth) {
-    candidate_height = Math.floor((containerHeight - height) / height);
-    candidate_width = Math.floor((containerWidth - width) / width);
+    candidate_height = Math.fround((containerHeight) / height);
+    candidate_width = Math.fround((containerWidth) / width);
     size = Math.min(candidate_height, candidate_width);
-    size = Math.min(MAX_CELL_SIZE, size);
+    // size = Math.min(MAX_CELL_SIZE, size);
     jqGrid.find('.cell').css('height', size + 'px');
     jqGrid.find('.cell').css('width', size + 'px');
 }
