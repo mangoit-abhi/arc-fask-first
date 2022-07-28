@@ -439,12 +439,12 @@ input, button {
 }
 
 .evalution_outer_box .evalution_input-outer::after {
- background: url(../img/arrow.svg) no-repeat 101% top;
- content: "";
- width: 60px;
- height: 60px;
- display: inline-block;
- position: absolute;
- right: -30px;
- top: 120px;
+  background: url(../img/arrow.svg) no-repeat 101% top;
+  content: "";
+  width: 30px;
+  height: 20px;
+  display: inline-block;
+  position: absolute;
+  right: -30px;
+  top: 220px;
 }
