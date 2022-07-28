@@ -77,7 +77,7 @@ function resetOutputGrid() {
     syncFromEditionGridToDataGrid();
     CURRENT_OUTPUT_GRID = new Grid(3, 3);
     syncFromDataGridToEditionGrid();
-    resizeOutputGrid();
+    // resizeOutputGrid();
 }
 
 function copyFromInput() {
