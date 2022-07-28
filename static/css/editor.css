@@ -62,8 +62,7 @@ border-radius: 10px;
     height: 25px;
 } */
 
-#grids_space .row {
-  
+.grids_space .row {
   justify-content: center;
 }
 
@@ -145,7 +144,6 @@ border-radius: 10px;
 .grids_space > div {
     width: 49%;
     float: left;
-    display: flex;
     margin: 5px;
     flex-wrap: wrap;
     justify-content: center;
@@ -195,3 +193,16 @@ border-radius: 10px;
     width: 48%;
 }
 
+.grids_space div{
+    position: relative;
+}
+.grids_space .input_window::after {
+    background: url(../img/arrow.svg) no-repeat 101% top;
+    content: "";
+    width: 30px;
+    height: 20px;
+    display: inline-block;
+    position: absolute;
+    right: -10px;
+    top: 100px;
+}

@@ -140,7 +140,7 @@ button:focus {outline:0;}
   height: 200px;
   width: 250px;
   float: left;
-  border: 1px solid #f9f9f9;
+  /* border: 1px solid #f9f9f9; */
 }
 
 #demonstration_examples_view #task_preview .row {
@@ -153,7 +153,7 @@ button:focus {outline:0;}
   width: 250px;
   float: left;
   /* margin-left: 35px; */
-  border: 1px solid #f9f9f9;
+  /* border: 1px solid #f9f9f9; */
 }
 
 #toolbar {
@@ -336,18 +336,19 @@ input, button {
 }
 
 
-.preview_header span{
+.pair_preview div{
    position: relative;
 }
 
-.preview_header span:first-child::after {
+.pair_preview .input_preview::after {
   background: url(../img/arrow.svg) no-repeat 101% top;
   content: "";
   width: 30px;
   height: 20px;
   display: inline-block;
   position: absolute;
-  right: -9px;
+  right: -15px;
+  top: 75px;
 }
 
 @media(max-width:1200px) {
@@ -401,11 +402,6 @@ input, button {
     padding: 0;
   }
 
-  #editor_grid_control_btns {
-    
-   
-    
-  }
 
   #demonstration_examples_view #task_preview .pair_preview {
     padding: 20px 10px;
@@ -425,7 +421,7 @@ input, button {
 }
 
 @media(max-width: 579px) {
-.preview_header span:first-child::after {
+.pair_preview .input_preview::after {
   background: url(../img/arrow.svg) no-repeat center top;
   content: "";
   width: 30px;

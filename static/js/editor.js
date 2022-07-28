@@ -440,8 +440,8 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
                 <div id="symbol_picker" class="symbol_picker_cls_output_`+pairId+`">
-                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                    <div class="symbol_preview symbol_1" symbol="1"></div>
+                    <div class="symbol_preview symbol_0" symbol="0"></div>
+                    <div class="symbol_preview symbol_1 selected-symbol-preview" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
                     <div class="symbol_preview symbol_3" symbol="3"></div>
                     <div class="symbol_preview symbol_4" symbol="4"></div>
@@ -494,8 +494,8 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
                 <div id="symbol_picker" class="symbol_picker_cls_input_`+pairId+`">
-                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                    <div class="symbol_preview symbol_1" symbol="1"></div>
+                    <div class="symbol_preview symbol_0" symbol="0"></div>
+                    <div class="symbol_preview symbol_1 selected-symbol-preview" symbol="1"></div>
                     <div class="symbol_preview symbol_2" symbol="2"></div>
                     <div class="symbol_preview symbol_3" symbol="3"></div>
                     <div class="symbol_preview symbol_4" symbol="4"></div>

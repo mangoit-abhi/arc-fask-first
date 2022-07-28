@@ -25,7 +25,7 @@
                     <input type="text" id="task_name" name="task_name" value="">
                     <button id="download_task" onclick="downloadTask()">Download task</button>
                     <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
-                    <input type="button" class="browse-button" value="Browse for another task" onclick="document.getElementById('load_task_file_input').click();" />
+                    <input type="button" class="browse-button" value="Browse for a task" onclick="document.getElementById('load_task_file_input').click();" />
                     <button id="save_task" onclick="saveTask()">Submit to ARC 2</button>
                 </div>
             </div>
@@ -33,8 +33,8 @@
                 <div id="parent_pair">
                     <div class="pair_heading"><div class="pair_name"><b>Pair 1</b></div><span class="tutorial_icon" id="tutorialpopup" onclick="introjs.start()"><div class="tooltip "><img src="{{ url_for('static', filename='img/bi_question-circle-black.png') }}" /><span class="tooltiptext tooltip-left">If you want to start the tutorial <br> again, please click here.</span></div></span></div>
                     <div class="preview_header"><span class="header-left">Input 1 </span><span class="header-right">Output 1 </span></div>
-                    <div id="grids_space">
-                        <div id="input_window">
+                    <div id="grids_space" class="grids_space">
+                        <div id="input_window" class="input_window">
                             <div id="input_grid">
                                 <div class="edition_grid" id="edition_grid_"></div>
                             </div>
@@ -48,8 +48,8 @@
                                 <div class="symbol_toolbar-outer">
                                     <div id="symbol_toolbar" >
                                         <div id="symbol_picker" class="symbol_picker_cls">
-                                            <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                                            <div class="symbol_preview symbol_1" symbol="1"></div>
+                                            <div class="symbol_preview symbol_0" symbol="0"></div>
+                                            <div class="symbol_preview symbol_1 selected-symbol-preview" symbol="1"></div>
                                             <div class="symbol_preview symbol_2" symbol="2"></div>
                                             <div class="symbol_preview symbol_3" symbol="3"></div>
                                             <div class="symbol_preview symbol_4" symbol="4"></div>
@@ -83,7 +83,7 @@
     
                         </div>
 
-                        <div id="output_window">
+                        <div id="output_window" class="output_window">
                             <div id="output_grid">
                                 <div class="edition_grid" id="edition_grid_">
                                 </div>
@@ -98,8 +98,8 @@
                                 <div class="symbol_toolbar-outer">
                                     <div id="symbol_toolbar" >
                                         <div id="symbol_picker" class="symbol_picker_cls">
-                                            <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                                            <div class="symbol_preview symbol_1" symbol="1"></div>
+                                            <div class="symbol_preview symbol_0" symbol="0"></div>
+                                            <div class="symbol_preview symbol_1 selected-symbol-preview" symbol="1"></div>
                                             <div class="symbol_preview symbol_2" symbol="2"></div>
                                             <div class="symbol_preview symbol_3" symbol="3"></div>
                                             <div class="symbol_preview symbol_4" symbol="4"></div>
