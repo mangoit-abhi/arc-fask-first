@@ -421,15 +421,30 @@ input, button {
 }
 
 @media(max-width: 579px) {
-.pair_preview .input_preview::after {
-  background: url(../img/arrow.svg) no-repeat center top;
-  content: "";
-  width: 30px;
-  height: 20px;
-  display: inline-block;
-  position: absolute;
-  right: 45%;
-  top: 24px;
-  transform: rotate(90deg);
+  .pair_preview .input_preview::after {
+    background: url(../img/arrow.svg) no-repeat center top;
+    content: "";
+    width: 30px;
+    height: 20px;
+    display: inline-block;
+    position: absolute;
+    right: 45%;
+    top: 24px;
+    transform: rotate(90deg);
+  }
 }
+
+.evalution_outer_box div{
+  position: relative;
+}
+
+.evalution_outer_box .evalution_input-outer::after {
+ background: url(../img/arrow.svg) no-repeat 101% top;
+ content: "";
+ width: 60px;
+ height: 60px;
+ display: inline-block;
+ position: absolute;
+ right: -30px;
+ top: 120px;
 }
