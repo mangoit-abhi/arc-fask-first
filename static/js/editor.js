@@ -29,10 +29,8 @@ function resetTask() {
 
 function refreshEditionGrid(jqGrid, dataGrid, mode='input') {
     fillJqGridWithData(jqGrid, dataGrid);
-    
     setUpEditionGridListeners(jqGrid);
     fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_WIDTH);
-
     initializeSelectable(mode);
 }
 
@@ -139,15 +137,12 @@ function syncFromEditionGridsToNumGrids(mode='input', pairId='no') {
 
 function syncFromNumGridsToEditionGrids(mode='input', pairId='no') {
     if(pairId != 'no'){
-        
         refreshEditionGrid($('#input_grid_'+pairId+' .edition_grid'), CURRENT_INPUT_GRID, mode);
         refreshEditionGrid($('#output_grid_'+pairId+' .edition_grid'), CURRENT_OUTPUT_GRID, mode);
     } else {
-        
         refreshEditionGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID, mode);
         refreshEditionGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID, mode);
     }
-    
 }
 
 function singleColorNoiseOnGrid(mode, pairId='no') {
@@ -279,7 +274,6 @@ function evalExpressionOnInputGrid(pairId='no') {
         expr = $('#eval_expr_input').val();
         evalExpressionOnGrid("input", expr);
     }
-    
 }
 
 function evalExpressionOnOutputGrid(pairId='no') {
@@ -291,7 +285,6 @@ function evalExpressionOnOutputGrid(pairId='no') {
         evalExpressionOnGrid("output", expr);
     }
 }
-
 
 function resizeInputGrid(mode='input', pairId='no') {
     copyJqGridToDataGrid($('#input_grid_'+(pairId)+' .edition_grid'), CURRENT_INPUT_GRID);
@@ -327,6 +320,7 @@ function resizeInputGrid(mode='input', pairId='no') {
 function resizeOutputGrid(mode='output', pairId='no') {
     copyJqGridToDataGrid($('#output_grid_'+(pairId)+' .edition_grid'), CURRENT_OUTPUT_GRID);
     CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
+
     if(pairId != 'no'){
         size = $('#output_grid_size_'+pairId).val();
         size = parseSizeTuple(size);
@@ -339,7 +333,6 @@ function resizeOutputGrid(mode='output', pairId='no') {
         CURRENT_OUTPUT_GRID = new Grid(height, width, dataGrid);
         refreshEditionGrid(jqGrid, CURRENT_OUTPUT_GRID, mode);
     } else {
-        
         size = $('#output_grid_size').val();
         size = parseSizeTuple(size);
         height = size[0];
@@ -387,7 +380,9 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
     }
     var newPairId = pairId+1;
     var pairSlot = $('#parent_pair_' + pairId);
-    if (!pairSlot.length) {
+
+    if (pairSlot.length == 0) {
+
         pairSlot = $('<div id="parent_pair_' + pairId + '" class="parent_pair" index="' + pairId + '"><div id="modify_test_pairs_' + pairId + '" class="delete_mark_as_test_pairs"><button class="delete_pair_btn" onclick="deletePair(' + pairId + ')">Delete pair</button><button class="select_for_testing_button" onclick="selectPairForTesting(' + pairId + ')">Mark as test pair</button></div></div>');
         pairSlot.appendTo('#new_pairs');
     }
@@ -573,29 +568,6 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
 }
 
 function stashCurrentPair() {
-    if ((CURRENT_PAIR_INDEX-1) == 0){
-        copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
-        copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
-        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
-        var pair = {'id': CURRENT_PAIR_INDEX-1,
-        'input': CURRENT_INPUT_GRID.grid,
-        'output': CURRENT_OUTPUT_GRID.grid};
-
-        FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
-    } else {
-        if($('#parent_pair_' + (CURRENT_PAIR_INDEX-1)).length != 0) {
-            copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
-            copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
-            CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-            CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
-            var pair = {'id': CURRENT_PAIR_INDEX-1,
-            'input': CURRENT_INPUT_GRID.grid,
-            'output': CURRENT_OUTPUT_GRID.grid};
-    
-            FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
-        }
-    }
     // syncFromEditionGridsToNumGrids();
     CURRENT_INPUT_GRID = new Grid(16, 16);
     CURRENT_OUTPUT_GRID = new Grid(16, 16);
@@ -681,13 +653,18 @@ function deletePair(pairId='no') {
             pairSlot = $('#parent_pair_' + (pairId));
             pairSlot.remove();
         }
+        console.log(NEW_PAIRS);
     } else {
         PAIRS[0] = null;
         FULL_PAIRS[0] = null;
         FULL_PAIRS.splice($.inArray(FULL_PAIRS[0], FULL_PAIRS), 1);
-
-        NEW_PAIRS.splice(0, 1);
+        for(i=0; i < NEW_PAIRS.length; i++){
+            if(NEW_PAIRS[i]['id'] == 0){
+                NEW_PAIRS.splice($.inArray(NEW_PAIRS[i], NEW_PAIRS), 1);
+            }
+        }
         $('#parent_pair').remove();
+        console.log(NEW_PAIRS);
     }
 }
 
@@ -781,7 +758,7 @@ function selectPairForTesting(pairId='no') {
 
 function checkTaskComplete() {
     // Check that there are at least 3 pairs.
-    task_name = $('#task_name').val();
+    var task_name = $('#task_name').val();
     if (task_name == '') {
         alert('To save a task, Please Provide Task Name');
         return false;
@@ -796,25 +773,49 @@ function checkTaskComplete() {
         return false;
     }
     return true;
-
 }
 
 function getTaskData() {
-    if($('#parent_pair_' + (CURRENT_PAIR_INDEX-1)).length != 0) {
-        copyJqGridToDataGrid($('#input_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_INPUT_GRID);
-        copyJqGridToDataGrid($('#output_grid_'+(CURRENT_PAIR_INDEX-1)+' .edition_grid'), CURRENT_OUTPUT_GRID);
-        CURRENT_INPUT_GRID = convertSerializedGridToGridObject(CURRENT_INPUT_GRID.grid);
-        CURRENT_OUTPUT_GRID = convertSerializedGridToGridObject(CURRENT_OUTPUT_GRID.grid);
-        var pair = {'id': CURRENT_PAIR_INDEX-1,
-        'input': CURRENT_INPUT_GRID.grid,
-        'output': CURRENT_OUTPUT_GRID.grid};
-        for (var i = 0; i < CURRENT_PAIR_INDEX-1; i++) {
-        }
+    if($('#parent_pair').length){
+        var input_size = $('#input_grid_size').val();
+        var input_size_arr = input_size.split('x');
+        var output_size = $('#output_grid_size').val();
+        var output_size_arr = output_size.split('x');
+
+        var CURRENT_INPUT_GRID = new Grid(input_size_arr[0], input_size_arr[1]);
+        var CURRENT_OUTPUT_GRID = new Grid(output_size_arr[0], output_size_arr[1]);
+
+        copyJqGridToDataGrid($('#input_grid .edition_grid'), CURRENT_INPUT_GRID);
+        copyJqGridToDataGrid($('#output_grid .edition_grid'), CURRENT_OUTPUT_GRID);
+
+        var pair = {'id': 0,'input': CURRENT_INPUT_GRID.grid,'output': CURRENT_OUTPUT_GRID.grid};
+
         FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
-
+        console.log(FULL_PAIRS);
     }
+    var pair_length = $('#new_pairs').find('.parent_pair').last().attr('index');
+    console.log(pair_length);
+    for(i=1; i <= pair_length; i++){
+        console.log('799');
+        console.log($('#parent_pair_'+i).length);
+        if($('#parent_pair_'+i).length){
+            console.log('801');
+            var input_size = $('#input_grid_size_'+i).val();
+            var input_size_arr = input_size.split('x');
+            var output_size = $('#output_grid_size_'+i).val();
+            var output_size_arr = output_size.split('x');
 
-    if (!checkTaskComplete()) {return;}
+            var CURRENT_INPUT_GRID = new Grid(input_size_arr[0], input_size_arr[1]);
+            var CURRENT_OUTPUT_GRID = new Grid(output_size_arr[0], output_size_arr[1]);
+
+            copyJqGridToDataGrid($('#input_grid_'+(i)+' .edition_grid'), CURRENT_INPUT_GRID);
+            copyJqGridToDataGrid($('#output_grid_'+(i)+' .edition_grid'), CURRENT_OUTPUT_GRID);
+            var pair = {'id': i,'input': CURRENT_INPUT_GRID.grid,'output': CURRENT_OUTPUT_GRID.grid};
+
+            FULL_PAIRS.push(JSON.parse(JSON.stringify(pair)));
+        }
+    }
+    console.log(FULL_PAIRS);
 
     // Prepare dict containing two arrays of pairs: "train" and "test".    
     var taskDict = {};
@@ -830,9 +831,10 @@ function getTaskData() {
                     taskDict['train'].push(pair);
                 }
             }
-
         }
     }
+
+    if (!checkTaskComplete()) {return;}
 
     // Get task name.
     if (TASK_NAME == null) {
@@ -841,17 +843,18 @@ function getTaskData() {
     else {
         task_name = TASK_NAME;
     }
+    if (task_name == '') {
+        errorMsgFile('Please Enter a File Name');
+    }
     if (task_name.length < 1) {
         task_name = (Math.random() + 1).toString(36).substring(7);
     }
     taskDict['name'] = task_name;
-    if (task_name == '') {
-        errorMsgFile('Please Enter a File Name');
-    }
     return taskDict;
 }
 
 function downloadTask() {
+    FULL_PAIRS = new Array();
     taskDict = getTaskData();
     data = JSON.stringify(taskDict);
     filename = taskDict['name'] + '.json';
@@ -886,24 +889,22 @@ function saveTask() {
 
 function loadTask(e) {
     for (var i = 0; i < FULL_PAIRS.length; i++) {
-        $('#parent_pair_' + i).html('');
+        $('#parent_pair_' + i).remove();
     }
-
-
 
     var file = e.target.files[0];
     if (!file) {
-    errorMsgFile('No file selected');
-    return;
+        errorMsgFile('No file selected');
+        return;
     }
     var validExtensions = ['json', 'JSON'];
     var fileName = file.name;
     var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-    if ($.inArray(fileNameExt, validExtensions) == -1)
-    {
+    if ($.inArray(fileNameExt, validExtensions) == -1) {
         errorMsgFile('Invalid file type only json file allowed');
         return false;
     }
+
     var reader = new FileReader();
     reader.onload = function(e) {
         var contents = e.target.result;
@@ -918,24 +919,24 @@ function loadTask(e) {
         test = contents['test'];
         var pairs = train.concat(test);
 
-        if (pairs.length) {
-            var pair = pairs[0];
-            values = pair['input'];
-            input_grid = convertSerializedGridToGridObject(values)
-            values = pair['output'];
-            output_grid = convertSerializedGridToGridObject(values)
-            refreshEditionGrid($('#input_grid .edition_grid'), input_grid);
-            refreshEditionGrid($('#output_grid .edition_grid'), output_grid);
-        }
-        
-        for (var i = 1; i < pairs.length; i++) {
-            var pair = pairs[i];
-            values = pair['input'];
-            input_grid = convertSerializedGridToGridObject(values)
-            values = pair['output'];
-            output_grid = convertSerializedGridToGridObject(values)
-            if (i < pairs.length){
-                fillPairPreview((i), input_grid, output_grid, 1);
+        for (var i = 0; i < pairs.length; i++) {
+            if(i == 0){
+                var pair = pairs[i];
+                values = pair['input'];
+                input_grid = convertSerializedGridToGridObject(values)
+                values = pair['output'];
+                output_grid = convertSerializedGridToGridObject(values)
+                refreshEditionGrid($('#input_grid .edition_grid'), input_grid);
+                refreshEditionGrid($('#output_grid .edition_grid'), output_grid);
+            } else {
+                var pair = pairs[i];
+                values = pair['input'];
+                input_grid = convertSerializedGridToGridObject(values)
+                values = pair['output'];
+                output_grid = convertSerializedGridToGridObject(values)
+                if (i < pairs.length){
+                    fillPairPreview((i), input_grid, output_grid, 1);
+                }
             }
         }
 
@@ -953,6 +954,7 @@ function loadTask(e) {
             TEST_PAIR_INDICES.push(train.length + i);
         }
         CURRENT_PAIR_INDEX = (PAIRS.length);
+        console.log(NEW_PAIRS);
     };
   reader.readAsText(file);
 }
