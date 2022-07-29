@@ -14,10 +14,10 @@ var MAX_CELL_SIZE = 100;
 
 function resetTask() {
     CURRENT_INPUT_GRID = new Grid(3, 3);
+    resetOutputGrid();
     TEST_PAIRS = new Array();
     CURRENT_TEST_PAIR_INDEX = 0;
     $('#task_preview').html('');
-    resetOutputGrid();
 }
 
 function refreshEditionGrid(jqGrid, dataGrid) {
@@ -151,6 +151,7 @@ function display_task_name(task_name, task_index, number_of_tasks) {
 }
 
 function loadTaskFromFile(e) {
+    resetTask();
     var file = e.target.files[0];
     if (!file) {
         errorMsgFile('No file selected');

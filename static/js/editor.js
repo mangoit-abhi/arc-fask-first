@@ -31,17 +31,17 @@ function refreshEditionGrid(jqGrid, dataGrid, mode='input') {
     fillJqGridWithData(jqGrid, dataGrid);
     
     setUpEditionGridListeners(jqGrid);
-    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_HEIGHT);
+    fitCellsToContainer(jqGrid, dataGrid.height, dataGrid.width, EDITION_GRID_HEIGHT, EDITION_GRID_WIDTH);
 
     initializeSelectable(mode);
 }
 
 function getSelectedSymbol(divmode, pairId='no') {
     if(pairId != 'no') {
-        getClickValue = $('#' + divmode + '_window_'+pairId).children('#' + divmode + '_grid_'+pairId).siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar_'+pairId).children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
+        getClickValue = $('#input_window_'+pairId).children('#input_grid_'+pairId).siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar_'+pairId).children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
         return getClickValue;
     } else {
-        getClickValue = $('#' + divmode + '_window').children('#' + divmode + '_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
+        getClickValue = $('#input_window').children('#input_grid').siblings('.toolbar').children('.symbol_toolbar-outer').children('#symbol_toolbar').children('#symbol_picker').children('.selected-symbol-preview').attr('symbol');
         return getClickValue;
     }
 }
@@ -439,18 +439,6 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <button onclick="copyToInput('output', `+pairId+`)">Copy to Input</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
-                <div id="symbol_picker" class="symbol_picker_cls_output_`+pairId+`">
-                    <div class="symbol_preview symbol_0 selected-symbol-preview" symbol="0"></div>
-                    <div class="symbol_preview symbol_1" symbol="1"></div>
-                    <div class="symbol_preview symbol_2" symbol="2"></div>
-                    <div class="symbol_preview symbol_3" symbol="3"></div>
-                    <div class="symbol_preview symbol_4" symbol="4"></div>
-                    <div class="symbol_preview symbol_5" symbol="5"></div>
-                    <div class="symbol_preview symbol_6" symbol="6"></div>
-                    <div class="symbol_preview symbol_7" symbol="7"></div>
-                    <div class="symbol_preview symbol_8" symbol="8"></div>
-                    <div class="symbol_preview symbol_9" symbol="9"></div>
-                </div>
                 <div id="symbol_actions">
                     <input type="radio" id="tool_edit_`+pairId+`" name="tool_switching_output_`+pairId+`" class="toolbar_button" value="edit" checked>
                     <label for="tool_edit_`+pairId+`">Edit</label>
@@ -530,8 +518,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
     fillJqGridWithData(jqInputGrid, inputGrid);
     fitCellsToContainer(jqInputGrid, inputGrid.height, inputGrid.width, 470, 470);
     fillJqGridWithData(jqOutputGrid, outputGrid);
-    fitCellsToContainer(jqOutputGrid, inputGrid.height, inputGrid.width, 470, 470);
-
+    fitCellsToContainer(jqOutputGrid, outputGrid.height, outputGrid.width, 470, 470);
 
     $('.symbol_picker_cls_input_'+ pairId).click(function(event) {
         symbol_preview = $(event.target);
@@ -541,47 +528,38 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         symbol_preview_array =symbol_preview_id.split('_');
         divmode = symbol_preview_array[2];
 
-        $('#'+divmode+'_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
-            
+        $('#input_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        jqGrid = $('#'+divmode+'_grid_'+pairId).children('#edition_grid_' + pairId);
+        jqGrid = $('#input_grid_'+pairId).children('#edition_grid_' + pairId);
         setUpEditionGridListeners(jqGrid, pairId);
 
-        toolMode = $('input[name=tool_switching_' + divmode +'_' + pairId+']:checked').val();
+        toolMode = $('input[name=tool_switching_input_' + pairId+']:checked').val();
         if (toolMode == 'select') {
-            $('#'+divmode+'_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
-                symbol = getSelectedSymbol(divmode,pairId);
-                setCellSymbol($(cell), symbol, divmode,pairId);
+            $('#input_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol('input',pairId);
+                setCellSymbol($(cell), symbol, 'input',pairId);
             });
         }
-    });
-    $('.symbol_picker_cls_output_'+ pairId).click(function(event) {
-        symbol_preview = $(event.target);
 
-        symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
-        symbol_preview_id = symbol_preview_toolbar.attr('id');
-        symbol_preview_array =symbol_preview_id.split('_');
-        divmode = symbol_preview_array[2];
-
-        $('#'+divmode+'_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
-            
+        $('#output_window_'+pairId).find('.symbol_preview').each(function(i, preview) {
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        jqGrid = $('#'+divmode+'_grid_'+pairId).children('#edition_grid_' + pairId);
+        jqGrid = $('#output_grid_'+pairId).children('#edition_grid_' + pairId);
         setUpEditionGridListeners(jqGrid, pairId);
 
-        toolMode = $('input[name=tool_switching_' + divmode +'_' + pairId+']:checked').val();
+        toolMode = $('input[name=tool_switching_output_' + pairId+']:checked').val();
         if (toolMode == 'select') {
-            $('#'+divmode+'_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
-                symbol = getSelectedSymbol(divmode,pairId);
-                setCellSymbol($(cell), symbol, divmode,pairId);
+            $('#output_grid_'+pairId).find('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol('output',pairId);
+                setCellSymbol($(cell), symbol, 'output',pairId);
             });
         }
+
     });
     $('input[type=radio][name=tool_switching_input_'+pairId+']').change(function() {
         initializeSelectableCustom('input',pairId);
@@ -590,6 +568,8 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         initializeSelectableCustom('output',pairId);
     });
     syncFromEditionGridsToNumGrids(pairId);
+
+    $('.symbol_picker_cls_input_'+ pairId).find('.selected-symbol-preview').trigger('click');
 }
 
 function stashCurrentPair() {
@@ -889,7 +869,6 @@ function saveTask() {
             dataType: "json",
             success: function(data) 
             {
-                console.log(data);
                 if (!data) {
                     alert('Unable to save task.');
                     errorMsgFile('Unable to save task.')
@@ -1078,26 +1057,26 @@ $(document).ready(function () {
         PAIRS[CURRENT_PAIR_INDEX] = pair;
     }
     CURRENT_PAIR_INDEX = PAIRS.length;
-    $('.symbol_picker_cls').click(function(event) {
+
+    $('.symbol_picker_cls').find('.symbol_preview').click(function(event) {
         symbol_preview = $(event.target);
-
-        symbol_preview_toolbar = symbol_preview.parent().parent().parent().parent();
-        symbol_preview_id = symbol_preview_toolbar.attr('id');
-        symbol_preview_array =symbol_preview_id.split('_');
-        
-        divmode = symbol_preview_array[2];
-
-        $('#'+divmode+'_window').find('.symbol_preview').each(function(i, preview) {
-            
+        $('.symbol_picker_cls').find('.symbol_preview').each(function(i, preview) {
             $(preview).removeClass('selected-symbol-preview');
         })
         symbol_preview.addClass('selected-symbol-preview');
 
-        toolMode = $('input[name=tool_switching_' + divmode + ']:checked').val();
+        toolMode = $('input[name=tool_switching_input]:checked').val();
         if (toolMode == 'select') {
-            $('#'+divmode+'_grid').find('.ui-selected').each(function(i, cell) {
-                symbol = getSelectedSymbol(divmode);
-                setCellSymbol($(cell), symbol, divmode);
+            $('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol();
+                setCellSymbol($(cell), symbol, 'input');
+            });
+        }
+        toolMode = $('input[name=tool_switching_output]:checked').val();
+        if (toolMode == 'select') {
+            $('.ui-selected').each(function(i, cell) {
+                symbol = getSelectedSymbol();
+                setCellSymbol($(cell), symbol, 'output');
             });
         }
     });
