@@ -1,4 +1,3 @@
-
 // Internal state.
 var CURRENT_INPUT_GRID = new Grid(3, 3);
 var CURRENT_OUTPUT_GRID = new Grid(3, 3);
@@ -77,6 +76,7 @@ function resetOutputGrid() {
     syncFromEditionGridToDataGrid();
     CURRENT_OUTPUT_GRID = new Grid(3, 3);
     syncFromDataGridToEditionGrid();
+    $('#output_grid_size').val(CURRENT_OUTPUT_GRID.height + 'x' + CURRENT_OUTPUT_GRID.width);
     // resizeOutputGrid();
 }
 
