@@ -36,7 +36,7 @@
                     <div id="grids_space" class="grids_space">
                         <div id="input_window" class="input_window">
                             <div id="input_grid" class="input_grid">
-                                <div class="edition_grid" id="edition_grid_"></div>
+                                <div class="edition_grid_0 edition_grid" id="edition_grid_"></div>
                             </div>
 
                             <div class="toolbar" id="toolbar_color_input">
@@ -60,11 +60,11 @@
                                             <div class="symbol_preview symbol_9" symbol="9"></div>
                                         </div>
                                         <div id="symbol_actions">
-                                            <input type="radio" id="tool_edit" name="tool_switching_input" class="toolbar_button" value="edit" checked>
+                                            <input type="radio" id="tool_edit" name="tool_switching" class="toolbar_button" value="edit" checked>
                                             <label for="tool_edit">Edit</label>
-                                            <input type="radio" id="tool_select" name="tool_switching_input" class="toolbar_button" value="select">
+                                            <input type="radio" id="tool_select" name="tool_switching" class="toolbar_button" value="select">
                                             <label for="tool_select">Select</label>
-                                            <input type="radio" id="tool_floodfill" name="tool_switching_input" class="toolbar_button" value="floodfill">
+                                            <input type="radio" id="tool_floodfill" name="tool_switching" class="toolbar_button" value="floodfill">
                                             <label for="tool_floodfill">Flood fill</label>
                                         </div>
                                     </div>
@@ -85,7 +85,7 @@
 
                         <div id="output_window" class="output_window">
                             <div id="output_grid" class="output_grid">
-                                <div class="edition_grid" id="edition_grid_">
+                                <div class="edition_grid_0 edition_grid" id="edition_grid_">
                                 </div>
                             </div>
 
@@ -94,19 +94,7 @@
                                 <input type="text" id="output_grid_size" class="grid_size_field" name="size" value="16x16">
                                 <button onclick="resizeOutputGrid('output')">Resize</button>
                                 <button onclick="resetOutputGrid('output')">Reset grid</button>
-                                <button onclick="copyToInput('output')">Copy to input</button>
-                                <div class="symbol_toolbar-outer">
-                                    <div id="symbol_toolbar">                                 
-                                        <div id="symbol_actions">
-                                            <input type="radio" id="tool_edit" name="tool_switching_output" class="toolbar_button" value="edit" checked>
-                                            <label for="tool_edit">Edit</label>
-                                            <input type="radio" id="tool_select" name="tool_switching_output" class="toolbar_button" value="select">
-                                            <label for="tool_select">Select</label>
-                                            <input type="radio" id="tool_floodfill" name="tool_switching_output" class="toolbar_button" value="floodfill">
-                                            <label for="tool_floodfill">Flood fill</label>
-                                        </div>
-                                    </div>
-                                </div>                                
+                                <button onclick="copyToInput('output')">Copy to input</button>                              
                             </div>
 
                             <div class="toolbar">
