@@ -46,7 +46,7 @@ def login_post():
         if not valid:
             login_err_data = 'email/password combination mismatch'
             login_error = True
-            return jsonify(login_err_data,login_error)
+            return jsonify(login_err_data)
         flask_login.login_user(user, remember=True)
         login_error = False
         return jsonify(login_error)
