@@ -872,13 +872,10 @@ function loadTask(e) {
     var reader = new FileReader();
     reader.onload = function(e) {
         var contents = e.target.result;
-
         contents = JSON.parse(contents);
         // Actually load taks from JSON.
         resetTask();
-
-        var tsk_name = contents['name'];
-        $('#task_name').val(tsk_name);
+        $('#task_name').val(file.name);
         train = contents['train'];
         test = contents['test'];
         var pairs = train.concat(test);
@@ -919,7 +916,7 @@ function loadTask(e) {
         }
         CURRENT_PAIR_INDEX = (PAIRS.length);
     };
-  reader.readAsText(file);
+    reader.readAsText(file);
 }
 
 
