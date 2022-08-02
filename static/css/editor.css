@@ -2,7 +2,7 @@
 .toolbar {
     padding: 18px;
     margin: 10px 0 14px;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(130, 130, 130);
     border-radius: 10px;
   }
 
@@ -116,7 +116,7 @@ border-radius: 10px;
 .delete_mark_as_test_pairs{
     padding: 18px;
     margin: 10px 0 14px;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(175, 175, 175);
     border-radius: 10px;
     padding: 20px 0px 20px 40px;
     text-align: center;
@@ -125,7 +125,7 @@ border-radius: 10px;
 .new_pair_button {
     padding: 18px;
     margin: 10px 0 14px;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(175, 175, 175);
     border-radius: 10px;
     padding: 20px 0px 20px 40px;
     text-align: center;
@@ -134,7 +134,7 @@ border-radius: 10px;
 .pair_heading{
     padding: 18px;
     margin: 10px 0 14px;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(175, 175, 175);
     border-radius: 10px;
     padding: 20px 0px 20px 40px;
     text-align: center;
