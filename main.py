@@ -1,4 +1,5 @@
 import flask
+from flask import Flask, jsonify, render_template, Response
 import flask_login
 from flask_mail import Mail
 # from google.cloud import ndb
@@ -55,12 +56,6 @@ def load_user(user_id):
 def landing():
     return views.landing()
 
-
-# @app.route('/login')
-# def login():
-#     return views.login()
-
-
 @app.route('/logout')
 def logout():
     return views.logout()
@@ -69,11 +64,6 @@ def logout():
 @app.route('/login_post', methods=['POST'])
 def login_post():
     return views.login_post()
-
-
-# @app.route('/register')
-# def register():
-#     return views.register()
 
 
 @app.route('/register_post', methods=['POST'])
@@ -106,6 +96,25 @@ def reset_token(token):
 @app.route("/reset_done", methods=['GET','POST'])
 def reset_done():
     return flask.render_template('reset_thanks.html')
+
+
+from models import Task
+import json
+
+@app.route('/api/v1/resources/tasks/all', methods=['GET'])
+def download():
+    task_data = Task.query.all()
+    t = []
+    for task in task_data:
+        tasks = [
+            task.id,
+            task.data
+            ]
+        t.append(tasks)
+        save_task = json.dumps(t)
+        save_data = save_task.replace("\\", "")
+    return Response(save_data,mimetype="application/json",
+                       headers={"Content-Disposition":"attachment;filename=test.json"})
 
 if __name__ == '__main__':
     # This is used when running locally only. When deploying to Google App
