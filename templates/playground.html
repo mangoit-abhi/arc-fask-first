@@ -18,10 +18,10 @@
             <div id="errorMsgFile" style="display:none"></div>
             <div id="evaluation_output_editor" class="load-task">
                 <div id="load_task_control_btns">
-                    <label id='task_name' for="random_task_btn"> Task Name:</label>
+                    <label id='task_name'> Task Name:</label>
                     <div>
                         <input type="file" id="load_task_file_input" class="load_task" style="display: none;"/>
-                        <input type="button" value="Browse for another task" onclick="document.getElementById('load_task_file_input').click();" />
+                        <input type="button" value="Browse for a task" onclick="javascript:document.getElementById('load_task_file_input').click();" />
                         <button onclick="randomTask()" id="random_task_btn"> Show a new random task </button>
                     </div>
                 </div>

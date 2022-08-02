@@ -429,7 +429,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <input type="text" id="output_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
         <button onclick="resizeOutputGrid('output', `+pairId+`)">Resize</button>
         <button onclick="resetOutputGrid('output', `+pairId+`)">Reset grid</button>
-        <button onclick="copyToInput('output', `+pairId+`)">Copy to Input</button>
+        <button onclick="copyToOutput('input', `+pairId+`)">Copy from input</button>
     </div>
     <div class="toolbar" id="toolbar_expression_output">
         <button onclick="singleColorNoiseOnGrid('output',`+pairId+`)">Noise (single-color)</button>
@@ -459,7 +459,7 @@ function fillPairPreview(pairId, inputGrid, outputGrid, dwnld='no') {
         <input type="text" id="input_grid_size_`+pairId+`" class="grid_size_field" name="size" value="16x16">
         <button onclick="resizeInputGrid('input', `+pairId+`)">Resize</button>
         <button onclick="resetInputGrid('input', `+pairId+`)">Reset grid</button>
-        <button onclick="copyToOutput('input', `+pairId+`)">Copy to output</button>
+        <button onclick="copyToInput('output', `+pairId+`)">Copy from output</button>
         <div class="symbol_toolbar-outer">
             <div id="symbol_toolbar_`+pairId+`" >
                 <div id="symbol_picker" class="symbol_picker_cls_input_`+pairId+`">
@@ -810,9 +810,6 @@ function getTaskData() {
     if (task_name == '') {
         errorMsgFile('Please Enter a File Name');
     }
-    if (task_name.length < 1) {
-        task_name = (Math.random() + 1).toString(36).substring(7);
-    }
     taskDict['name'] = task_name;
     return taskDict;
 }
@@ -827,6 +824,7 @@ function downloadTask() {
 
 function saveTask() {
     if (confirm('Are you sure your task is ready to be saved? A saved task cannot be further edited.')) {
+        FULL_PAIRS = new Array();
         taskDict = getTaskData();
         $.ajax({
             url: "/create_task",
@@ -843,7 +841,7 @@ function saveTask() {
                     correctMsg('Task saved! Now make a new one.');
                     location.reload();
                 }
-            }            
+            }
           });
     } else {
         errorMsgFile('Finish your task before saving it.');
@@ -1014,6 +1012,9 @@ function initializeSelectable() {
 // Initial event binding.
 
 $(document).ready(function () {
+    var task_name = (Math.random() + 1).toString(36).substring(3);
+    $('#task_name').val(task_name);
+
     var pair = {'id':0,
     'input': CURRENT_INPUT_GRID.grid,
     'output': CURRENT_OUTPUT_GRID.grid};
@@ -1122,5 +1123,4 @@ function sendJSON(data, url, cbk) {
     $.ajax(url, {data : JSON.stringify(data),
                  contentType : 'application/json',
                  type : 'POST'}).done(cbk);
-        
 }
